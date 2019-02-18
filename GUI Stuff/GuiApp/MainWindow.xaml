@@ -7,25 +7,20 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <TextBox x:Name="Item1Info" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="DefaultText" VerticalAlignment="Top" Width="120" Margin="50,45,0,0"/>
-        <Label Content="Item 1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="83,15,0,0" Height="30"/>
-        <TextBox x:Name="Item2Info" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="DefaultText" VerticalAlignment="Top" Width="120" Margin="50,121,0,0"/>
-        <Label Content="Item 2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="83,91,0,0" Height="30"/>
-        <TextBox x:Name="Item3Info" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="DefaultText" VerticalAlignment="Top" Width="120" Margin="50,215,0,0"/>
-        <Label Content="Item 3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="83,185,0,0" Height="30"/>
-        <TextBox x:Name="Item4Info" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="DefaultText" VerticalAlignment="Top" Width="120" Margin="275,45,0,0"/>
-        <Label Content="Item 4;" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="308,15,0,0" Height="30"/>
-        <TextBox x:Name="Item5Info" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="DefaultText" VerticalAlignment="Top" Width="120" Margin="275,121,0,0"/>
-        <Label Content="Item 5;" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="308,91,0,0" Height="30"/>
-        <TextBox x:Name="Item6Info" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="DefaultText" VerticalAlignment="Top" Width="120" Margin="275,215,0,0"/>
-        <Label Content="Item 6;" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="308,185,0,0" Height="30"/>
-        <TextBox x:Name="Item7Info" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="DefaultText" VerticalAlignment="Top" Width="120" Margin="499,45,0,0"/>
-        <Label Content="Item 7;" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="532,15,0,0" Height="30"/>
-        <TextBox x:Name="Item8Info" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="DefaultText" VerticalAlignment="Top" Width="120" Margin="499,121,0,0"/>
-        <Label Content="Item 8;" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="532,91,0,0" Height="30"/>
-        <Label Content="Item 9;" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="532,185,0,0" Height="30"/>
-        <Button Content="Submit" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="298,324,0,0" Click="Button_Click"/>
-        <CheckBox x:Name="Item9Info" Content="Boolean" HorizontalAlignment="Left" Margin="518,215,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.549,0.467"/>
+        <TextBox x:Name="Item1Info" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="120" Margin="50,45,0,0"/>
+        <Label Content="ClassID" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="50,15,0,0" Height="30"/>
+        <TextBox x:Name="Item2Info" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="120" Margin="50,103,0,0"/>
+        <Label Content="SpeciesID" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="50,73,0,0" Height="30"/>
+        <TextBox x:Name="Item3Info" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="African Tiger" VerticalAlignment="Top" Width="120" Margin="50,161,0,0"/>
+        <Label Content="SpeciesName" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="50,131,0,0" Height="30"/>
+        <TextBox x:Name="Item4Info" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="Carnivore" VerticalAlignment="Top" Width="120" Margin="50,219,0,0"/>
+        <Label Content="Diet" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="50,189,0,0" Height="30"/>
+        <TextBox x:Name="Item5Info" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="120" Margin="50,277,0,0"/>
+        <Label Content="HandlerGroupID" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="50,247,0,0" Height="30"/>
+        <Button Content="Submit" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="330,343,0,0" Click="Button_Click"/>
+        <TextBox x:Name="Item6Info" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="-1" VerticalAlignment="Top" Width="120" Margin="50,335,0,0"/>
+        <Label Content="NumberOfAnimals" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="50,305,0,0" Height="30"/>
+        <Label Content="Species" HorizontalAlignment="Left" Margin="298,15,0,0" VerticalAlignment="Top" FontSize="36" FontWeight="Bold" FontFamily="Comic Sans MS"/>
 
     </Grid>
 </Window>

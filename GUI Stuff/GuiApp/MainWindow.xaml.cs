@@ -34,9 +34,6 @@ namespace GuiApp
             MessageBox.Show("Item4 Text Field: " + Item4Info.Text);
             MessageBox.Show("Item5 Text Field: " + Item5Info.Text);
             MessageBox.Show("Item6 Text Field: " + Item6Info.Text);
-            MessageBox.Show("Item7 Text Field: " + Item7Info.Text);
-            MessageBox.Show("Item8 Text Field: " + Item8Info.Text);
-            MessageBox.Show("Item9 Value: " + Item9Info.IsChecked);
         }
     }
 }
