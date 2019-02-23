@@ -7,6 +7,8 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Image x:Name="Background" Source="Color_03.jpg" Stretch="Fill"/>
+
         <TextBox x:Name="Item1Info" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="120" Margin="50,45,0,0"/>
         <Label Content="ClassID" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="50,15,0,0" Height="30"/>
         <TextBox x:Name="Item2Info" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="120" Margin="50,103,0,0"/>
