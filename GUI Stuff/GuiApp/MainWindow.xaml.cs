@@ -35,5 +35,15 @@ namespace GuiApp
             MessageBox.Show("Item5 Text Field: " + Item5Info.Text);
             MessageBox.Show("Item6 Text Field: " + Item6Info.Text);
         }
+
+        private void textBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
+
+        private void tabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }
