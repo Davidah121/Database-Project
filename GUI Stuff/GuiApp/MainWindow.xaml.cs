@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,10 +31,60 @@ namespace GuiApp
 
             MessageBox.Show("Item1 Text Field: " + Item1Info.Text);
             MessageBox.Show("Item2 Text Field: " + Item2Info.Text);
-            MessageBox.Show("Item3 Text Field: " + Item3Info.Text);
-            MessageBox.Show("Item4 Text Field: " + Item4Info.Text);
-            MessageBox.Show("Item5 Text Field: " + Item5Info.Text);
-            MessageBox.Show("Item6 Text Field: " + Item6Info.Text);
+        }
+
+        private void ConnectButton_Click(object sender, RoutedEventArgs e)
+        {
+            string connectionString;
+            SqlConnection cnn;
+
+            connectionString = @"Data Source=MSI; Initial Catalog=SmallAnimalDB;Integrated Security=true";
+
+            cnn = new SqlConnection(connectionString);
+
+            try {
+                
+                int id = Convert.ToInt32(Item1Info.Text);
+                string name = Item2Info.Text;
+
+                cnn.Open();
+                MessageBox.Show("Connection Open!");
+
+                string output = "";
+
+                SqlCommand com;
+                SqlDataReader daRead;
+                SqlDataAdapter adapter = new SqlDataAdapter();
+
+                com = new SqlCommand("Set Identity_Insert Animals ON", cnn);
+                com.ExecuteNonQuery();
+
+                com = new SqlCommand("Insert into Animals (SpeciesID, SpeciesName) values("+id+", '"+name+"')", cnn);
+
+                
+                adapter.InsertCommand = com;
+                adapter.InsertCommand.ExecuteNonQuery();
+                
+                com = new SqlCommand("Select * from Animals", cnn);
+                
+                daRead = com.ExecuteReader();
+
+                while(daRead.Read())
+                {
+                    output += daRead.GetValue(0) +" - " + daRead.GetValue(1) + "\n";
+                }
+
+                MessageBox.Show("All the species in the table: \n"+output);
+
+                com.Dispose();
+                cnn.Close();
+            }catch(SqlException q)
+            {
+                
+                for(int i=0;i<q.Errors.Count; i++)
+                 MessageBox.Show(q.Errors[i].ToString());
+            }
+            
         }
     }
 }
