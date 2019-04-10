@@ -28,12 +28,11 @@ namespace GuiApp
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-
             MessageBox.Show("Item1 Text Field: " + Item1Info.Text);
             MessageBox.Show("Item2 Text Field: " + Item2Info.Text);
         }
 
-        private void ConnectButton_Click(object sender, RoutedEventArgs e)
+        private void pretendImNotHear()
         {
             string connectionString;
             SqlConnection cnn;
@@ -42,8 +41,9 @@ namespace GuiApp
 
             cnn = new SqlConnection(connectionString);
 
-            try {
-                
+            try
+            {
+
                 int id = Convert.ToInt32(Item1Info.Text);
                 string name = Item2Info.Text;
 
@@ -59,32 +59,45 @@ namespace GuiApp
                 com = new SqlCommand("Set Identity_Insert Animals ON", cnn);
                 com.ExecuteNonQuery();
 
-                com = new SqlCommand("Insert into Animals (SpeciesID, SpeciesName) values("+id+", '"+name+"')", cnn);
+                com = new SqlCommand("Insert into Animals (SpeciesID, SpeciesName) values(" + id + ", '" + name + "')", cnn);
 
-                
+
                 adapter.InsertCommand = com;
                 adapter.InsertCommand.ExecuteNonQuery();
-                
+
                 com = new SqlCommand("Select * from Animals", cnn);
-                
+
                 daRead = com.ExecuteReader();
 
-                while(daRead.Read())
+                while (daRead.Read())
                 {
-                    output += daRead.GetValue(0) +" - " + daRead.GetValue(1) + "\n";
+                    output += daRead.GetValue(0) + " - " + daRead.GetValue(1) + "\n";
                 }
 
-                MessageBox.Show("All the species in the table: \n"+output);
+                MessageBox.Show("All the species in the table: \n" + output);
 
                 com.Dispose();
                 cnn.Close();
-            }catch(SqlException q)
+            }
+            catch (SqlException q)
             {
-                
-                for(int i=0;i<q.Errors.Count; i++)
-                 MessageBox.Show(q.Errors[i].ToString());
+                for (int i = 0; i < q.Errors.Count; i++)
+                    MessageBox.Show(q.Errors[i].ToString());
+            }
+        }
+
+        private void ConnectButton_Click(object sender, RoutedEventArgs e)
+        {
+            SQLCode.connect();
+            string output = SQLCode.executeCommand("Select * from Animals");
+            string[] output2 = output.Split((char)28);
+
+            for(int i=0; i<output2.Length; i++)
+            {
+                MessageBox.Show(output2[i]);
             }
             
+            SQLCode.disconnect();
         }
     }
 }
