@@ -1,2 +1,0 @@
-Put database stuff here.
-Whatever that stuff may be.
