@@ -12,17 +12,37 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Data;
 
 namespace DatabaseProject
 {
     partial class MainWindow : Window 
     {
-        #region Button Events
+        #region Events
 
 
-        private void Btn_submit_cmd_Click(object sender, RoutedEventArgs e)
+        private void Textbox_expmode_sql_TextChanged(object sender, TextChangedEventArgs e)
         {
 
+        }
+
+        private void Btn_expmode_submit_Click(object sender, RoutedEventArgs e)
+        {
+            string cmd = textbox_expmode_sql.Text;
+
+            if (String.IsNullOrWhiteSpace(cmd))
+            {
+                return;
+            }
+
+            DataTable table = connection.Query(cmd);
+
+            if (table == null)
+            {
+                MessageBox.Show("The query was unsuccessful.", "Unsuccessful Query", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+
+            datagrid_expmode.ItemsSource = table?.DefaultView;
         }
 
 

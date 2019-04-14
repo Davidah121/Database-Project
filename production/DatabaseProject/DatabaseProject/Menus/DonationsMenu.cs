@@ -17,7 +17,7 @@ namespace DatabaseProject
 {
     partial class MainWindow : Window 
     {
-        #region Button Events
+        #region Events
 
 
 

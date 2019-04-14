@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-D:\School\Database-Project\production\DatabaseProject\DatabaseProject\obj\Debug\
+D:\School\Database-Project\production\DatabaseProject\DatabaseProject\obj\Release\
 DatabaseProject
 none
 false
-DEBUG;TRACE
+TRACE
 D:\School\Database-Project\production\DatabaseProject\DatabaseProject\App.xaml
 11151548125
 
-12-1508456544
-141066371409
+11-73540396
+13-1505183044
 MainWindow.xaml;
 
-False
+True
 

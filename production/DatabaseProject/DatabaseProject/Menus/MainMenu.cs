@@ -17,14 +17,8 @@ namespace DatabaseProject
 {
     partial class MainWindow : Window 
     {
-
-        private void OpenMainMenu(object sender, RoutedEventArgs e)
-        {
-            OpenMenu(menu_main);
-        }
-
-
         #region Menu Buttons
+
 
         private void Btn_open_emp_Click(object sender, RoutedEventArgs e)
         {
@@ -43,7 +37,10 @@ namespace DatabaseProject
 
         private void Btn_open_expmode_Click(object sender, RoutedEventArgs e)
         {
-            OpenMenu(menu_expmode);
+            if (MessageBox.Show("Are you sure you want to enter expert mode?", "Warning!", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            {
+                OpenMenu(menu_expmode);
+            }
         }
 
         private void Btn_open_deliveries_Click(object sender, RoutedEventArgs e)
@@ -55,6 +52,12 @@ namespace DatabaseProject
         {
             OpenMenu(menu_donations);
         }
+
+        private void OpenMainMenu(object sender, RoutedEventArgs e)
+        {
+            OpenMenu(menu_main);
+        }
+
 
         #endregion
     }
