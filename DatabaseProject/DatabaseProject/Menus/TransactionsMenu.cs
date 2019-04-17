@@ -39,6 +39,11 @@ namespace DatabaseProject
         {
             MessageBox.Show("Deleting transaction!");
         }
+
+        private void comboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
         #endregion
     }
 }
