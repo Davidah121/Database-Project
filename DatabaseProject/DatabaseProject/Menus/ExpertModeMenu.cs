@@ -19,7 +19,7 @@ namespace DatabaseProject
 {
     partial class MainWindow : Window
     {
-        const string connectionString = "Data Source=MSI;Initial Catalog=MyGuitarShop;Integrated Security=True";
+        const string connectionString = "Data Source=MSI;Initial Catalog=Zoo;Integrated Security=True";
 
         #region Events
 
@@ -97,7 +97,7 @@ namespace DatabaseProject
                     command.ExecuteNonQuery();
                     MessageBox.Show("Non-query executed successfully!");
                 }
-                catch
+                catch(Exception e)
                 {
                     MessageBox.Show("Something went wrong!");
                 }
