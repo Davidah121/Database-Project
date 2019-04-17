@@ -22,9 +22,60 @@
             <Button x:Name="btn_emp" Content="Add Employee" HorizontalAlignment="Left" Margin="117,222,0,0" VerticalAlignment="Top" Width="136" Height="46"/>
             <Button x:Name="btn_emp_back" Content="Main Menu" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="30" Margin="10,10,0,0" Click="OpenMainMenu" />
         </Grid>
-        <Grid x:Name="menu_animals" Margin="10" Visibility="Hidden">
-            <Button x:Name="btn_animals" Content="Add Animal" HorizontalAlignment="Left" Margin="117,222,0,0" VerticalAlignment="Top" Width="136" Height="46"/>
+        <Grid x:Name="menu_animals" Margin="10" Visibility="Visible">
+            <Button x:Name="btn_animals_add" Content="Add Animal" HorizontalAlignment="Left" Margin="10,385,0,0" VerticalAlignment="Top" Width="120" Height="40"/>
+            <Button x:Name="btn_animals_delete" Content="Delete Animal" HorizontalAlignment="Left" Margin="135,430,0,0" VerticalAlignment="Top" Width="120" Height="40"/>
             <Button x:Name="btn_animals_back" Content="Main Menu" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="30" Margin="10,10,0,0" Click="OpenMainMenu" />
+            <Button x:Name="btn_animals_update" Content="Update Animal" HorizontalAlignment="Left" Margin="10,430,0,0" VerticalAlignment="Top" Width="120" Height="40"/>
+            <Button x:Name="btn_animals_get" Content="Get Animals" HorizontalAlignment="Left" Margin="135,385,0,0" VerticalAlignment="Top" Width="120" Height="40"/>
+
+            <Button x:Name="btn_animals_edit_habitats" Content="Edit Habitats" HorizontalAlignment="Left" Margin="115,10,0,0" VerticalAlignment="Top" Width="100" Height="30"/>
+            <Button x:Name="btn_animals_edit_species" Content="Edit Species" HorizontalAlignment="Left" Margin="220,10,0,0" VerticalAlignment="Top" Width="100" Height="30"/>
+
+            <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="-1" VerticalAlignment="Top" Width="120" Margin="10,91,0,0"/>
+            <Label Content="Animal ID" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.579,0.128" Margin="10,60,0,0"/>
+            <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="Paul" VerticalAlignment="Top" Width="120" Margin="10,145,0,0"/>
+            <Label Content="Animal Name" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.579,0.128" Margin="10,114,0,0"/>
+            <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="mm/dd/year" VerticalAlignment="Top" Width="120" Margin="10,199,0,0"/>
+            <Label Content="Animal Birthdate" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.579,0.128" Margin="10,168,0,0"/>
+            <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="# in pounds" VerticalAlignment="Top" Width="120" Margin="10,253,0,0"/>
+            <Label Content="Animal Weight" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.579,0.128" Margin="10,222,0,0"/>
+            <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="Carnivore" VerticalAlignment="Top" Width="120" Margin="10,307,0,0"/>
+            <Label Content="Animal Diet" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.579,0.128" Margin="10,276,0,0"/>
+            <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="-1" VerticalAlignment="Top" Width="120" Margin="158,91,0,0"/>
+            <Label Content="Habitat ID" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.579,0.128" Margin="158,60,0,0"/>
+            <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="-1" VerticalAlignment="Top" Width="120" Margin="158,145,0,0"/>
+            <Label Content="Species ID" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.579,0.128" Margin="158,114,0,0"/>
+        </Grid>
+        <Grid x:Name="menu_animals_habitat" Margin="10" Visibility="Hidden">
+            <Button x:Name="btn_animals_habitat_add" Content="Add Habitat" HorizontalAlignment="Left" Margin="10,385,0,0" VerticalAlignment="Top" Width="120" Height="40"/>
+            <Button x:Name="btn_animals_habitat_delete" Content="Delete Habitat" HorizontalAlignment="Left" Margin="135,430,0,0" VerticalAlignment="Top" Width="120" Height="40"/>
+            <Button x:Name="btn_animals_habitat_back" Content="Animals Menu" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="30" Margin="10,10,0,0" Click="OpenMainMenu" />
+            <Button x:Name="btn_animals_habitat_update" Content="Update Habitat" HorizontalAlignment="Left" Margin="10,430,0,0" VerticalAlignment="Top" Width="120" Height="40"/>
+            <Button x:Name="btn_animals_habitat_get" Content="Get Habitats" HorizontalAlignment="Left" Margin="135,385,0,0" VerticalAlignment="Top" Width="120" Height="40"/>
+
+            <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="-1" VerticalAlignment="Top" Width="120" Margin="10,82,0,0"/>
+            <Label Content="Habitat ID" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.579,0.128" Margin="10,51,0,0"/>
+            <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="-1" VerticalAlignment="Top" Width="120" Margin="10,136,0,0"/>
+            <Label Content="Habitat Name" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.579,0.128" Margin="10,105,0,0"/>
+            <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="-1" VerticalAlignment="Top" Width="120" Margin="10,190,0,0"/>
+            <Label Content="Habitat humidity" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.579,0.128" Margin="10,159,0,0"/>
+            <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="-1" VerticalAlignment="Top" Width="120" Margin="10,244,0,0"/>
+            <Label Content="Habitat temperature" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.579,0.128" Margin="10,213,0,0"/>
+        </Grid>
+        <Grid x:Name="menu_animals_species" Margin="10" Visibility="Hidden">
+            <Button x:Name="btn_animals_species_add" Content="Add Species" HorizontalAlignment="Left" Margin="10,385,0,0" VerticalAlignment="Top" Width="120" Height="40"/>
+            <Button x:Name="btn_animals_species_delete" Content="Delete Species" HorizontalAlignment="Left" Margin="135,430,0,0" VerticalAlignment="Top" Width="120" Height="40"/>
+            <Button x:Name="btn_animals_species_back" Content="Animals Menu" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="30" Margin="10,10,0,0" Click="OpenMainMenu" />
+            <Button x:Name="btn_animals_species_update" Content="Update Species" HorizontalAlignment="Left" Margin="10,430,0,0" VerticalAlignment="Top" Width="120" Height="40"/>
+            <Button x:Name="btn_animals_species_get" Content="Get Species" HorizontalAlignment="Left" Margin="135,385,0,0" VerticalAlignment="Top" Width="120" Height="40"/>
+
+            <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="-1" VerticalAlignment="Top" Width="120" Margin="10,94,0,0"/>
+            <Label Content="Species ID" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.579,0.128" Margin="10,63,0,0"/>
+            <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="-1" VerticalAlignment="Top" Width="120" Margin="10,148,0,0"/>
+            <Label Content="Species Name" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.579,0.128" Margin="10,117,0,0"/>
+            <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="-1" VerticalAlignment="Top" Width="120" Margin="10,202,0,0"/>
+            <Label Content="Species Class Name" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.579,0.128" Margin="10,171,0,0"/>
         </Grid>
         <Grid x:Name="menu_deliveries" Margin="10" Visibility="Hidden">
             <Button x:Name="btn_delivery" Content="Add New Delivery" HorizontalAlignment="Left" Margin="117,222,0,0" VerticalAlignment="Top" Width="136" Height="46" />

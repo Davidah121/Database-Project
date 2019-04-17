@@ -33,7 +33,9 @@ namespace DatabaseProject
                 menu_donations,
                 menu_deliveries,
                 menu_trans,
-                menu_expmode
+                menu_expmode,
+                menu_animals_habitat,
+                menu_animals_species
             };
 
 
