@@ -30,11 +30,25 @@
             <Button x:Name="btn_delivery" Content="Add New Delivery" HorizontalAlignment="Left" Margin="117,222,0,0" VerticalAlignment="Top" Width="136" Height="46" />
             <Button x:Name="btn_deliveries_back" Content="Main Menu" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="30" Margin="10,10,0,0" Click="OpenMainMenu" />
         </Grid>
-        <Grid x:Name="menu_trans" Margin="10" Visibility="Hidden">
-            <Button x:Name="btn_new_trans" Content="New Transaction" HorizontalAlignment="Left" Margin="117,222,0,0" VerticalAlignment="Top" Width="136" Height="46" Click="Btn_new_trans_Click"/>
+        <Grid x:Name="menu_trans" Margin="10" Visibility="Visible">
+            <Button x:Name="btn_delete_trans" Content="Delete" HorizontalAlignment="Left" Margin="220,424,0,0" VerticalAlignment="Top" Width="100" Height="46" Click="Btn_delete_trans_Click"/>
+            <Button x:Name="btn_view_trans" Content="View" HorizontalAlignment="Left" Margin="9,373,0,0" VerticalAlignment="Top" Width="100" Height="46" Click="Btn_view_trans_Click"/>
+            <Button x:Name="btn_new_trans" Content="New" HorizontalAlignment="Left" Margin="10,424,0,0" VerticalAlignment="Top" Width="100" Height="46" Click="Btn_new_trans_Click"/>
+            <Button x:Name="btn_update_trans" Content="Update" HorizontalAlignment="Left" Margin="115,424,0,0" VerticalAlignment="Top" Width="100" Height="46" Click="Btn_update_trans_Click"/>
             <Button x:Name="btn_trans_back" Content="Main Menu" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="30" Margin="10,10,0,0" Click="OpenMainMenu" />
+            <Label x:Name="TransactionIDLabel" Content="Transaction ID" HorizontalAlignment="Left" Height="41" Margin="9,87,0,0" VerticalAlignment="Top" Width="152" FontSize="14"/>
+            <Label x:Name="EmployeeIDLabel" Content="Employee ID" HorizontalAlignment="Left" Margin="10,128,0,0" VerticalAlignment="Top" Width="151" Height="36" RenderTransformOrigin="-0.589,1.908" FontSize="14"/>
+            <Label x:Name="DateLabel" Content="Date" HorizontalAlignment="Left" VerticalAlignment="Top" Width="151" Height="36" RenderTransformOrigin="-0.589,1.908" FontSize="14" Margin="10,169,0,0"/>
+            <Label x:Name="PaymentMethodLabel" Content="Payment Method" HorizontalAlignment="Left" VerticalAlignment="Top" Width="151" Height="36" RenderTransformOrigin="-0.589,1.908" FontSize="14" Margin="10,210,0,0"/>
+            <Label x:Name="AmountLabel" Content="Amount" HorizontalAlignment="Left" VerticalAlignment="Top" Width="151" Height="35" RenderTransformOrigin="-0.589,1.908" FontSize="14" Margin="10,246,0,0"/>
+            <TextBox x:Name="txt_transID" HorizontalAlignment="Left" Height="36" Margin="161,87,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="108"/>
+            <TextBox x:Name="txt_empID" HorizontalAlignment="Left" Height="36" TextWrapping="Wrap" VerticalAlignment="Top" Width="108" Margin="161,128,0,0"/>
+            <TextBox x:Name="txt_date" HorizontalAlignment="Left" Height="36" TextWrapping="Wrap" VerticalAlignment="Top" Width="108" Margin="161,169,0,0"/>
+            <TextBox x:Name="txt_payMethod" HorizontalAlignment="Left" Height="36" TextWrapping="Wrap" VerticalAlignment="Top" Width="108" Margin="161,210,0,0"/>
+            <TextBox x:Name="txt_amount" HorizontalAlignment="Left" Height="36" TextWrapping="Wrap" VerticalAlignment="Top" Width="108" Margin="161,252,0,0"/>
+
         </Grid>
-        <Grid x:Name="menu_expmode" Margin="10" Visibility="Visible">
+        <Grid x:Name="menu_expmode" Margin="10" Visibility="Hidden">
             <Button x:Name="btn_expmode_submit" Content="Submit" HorizontalAlignment="Left" Margin="10,448,0,0" VerticalAlignment="Top" Width="300" Height="22" Click="Btn_expmode_submit_Click"/>
             <Button x:Name="btn_expmode_back" Content="Main Menu" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="30" Margin="670,10,0,0" Click="OpenMainMenu" />
             <TextBox x:Name="textbox_expmode_sql" HorizontalAlignment="Left" Height="260" Margin="10,183,0,0" TextWrapping="Wrap" Text="Enter SQL here..." VerticalAlignment="Top" Width="300" FontSize="14" AcceptsReturn="True" AcceptsTab="True" AutoWordSelection="True"/>

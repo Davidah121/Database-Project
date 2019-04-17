@@ -25,7 +25,20 @@ namespace DatabaseProject
             MessageBox.Show("New transaction!");
         }
 
+        private void Btn_view_trans_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Viewing transaction!");
+        }
 
+        private void Btn_update_trans_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Updating transaction!");
+        }
+
+        private void Btn_delete_trans_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Deleting transaction!");
+        }
         #endregion
     }
 }
