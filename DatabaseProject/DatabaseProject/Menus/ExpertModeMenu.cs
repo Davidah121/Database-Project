@@ -19,7 +19,7 @@ namespace DatabaseProject
 {
     partial class MainWindow : Window
     {
-        const string connectionString = "Data Source=NICK-PC;Initial Catalog=MyGuitarShop;Integrated Security=True";
+        const string connectionString = "Data Source=NICK-Laptop;Initial Catalog=Zoo;Integrated Security=True";
 
         #region Events
 
@@ -77,16 +77,17 @@ namespace DatabaseProject
 
                     return table;
                 }
-                catch
+                catch (Exception ex)
                 {
                     MessageBox.Show("Something went wrong!");
+                    MessageBox.Show(ex.Message);
                     return null;
                 }
             }
         }
 
 
-        private void NonQuery(string query)
+        private bool NonQuery(string query)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             using (SqlCommand command = new SqlCommand(query, connection))
@@ -96,10 +97,13 @@ namespace DatabaseProject
                     connection.Open();
                     command.ExecuteNonQuery();
                     MessageBox.Show("Non-query executed successfully!");
+                    return true;
                 }
-                catch
+                catch (Exception ex)
                 {
                     MessageBox.Show("Something went wrong!");
+                    MessageBox.Show(ex.Message);
+                    return false;
                 }
             }
         }

@@ -37,7 +37,7 @@
         <Grid x:Name="menu_donations" Margin="10" Visibility="Visible">
             <Button x:Name="btn_donation_back" Content="Main Menu" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="30" Margin="10,10,0,0" Click="OpenMainMenu" />
             <Label Content="Donation ID" HorizontalAlignment="Left" Margin="10,52,0,0" VerticalAlignment="Top" Width="189" Height="23"/>
-            <TextBox x:Name="textbox_donator_id" HorizontalAlignment="Left" Height="23" Margin="10,75,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="189"/>
+            <TextBox x:Name="textbox_donation_id" HorizontalAlignment="Left" Height="23" Margin="10,75,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="189"/>
             <Label Content="Donator Name" HorizontalAlignment="Left" Margin="10,98,0,0" VerticalAlignment="Top" Width="189" Height="23"/>
             <TextBox x:Name="textbox_donator_name" HorizontalAlignment="Left" Height="23" Margin="10,121,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="189"/>
             <Label Content="Donator Email" HorizontalAlignment="Left" Margin="10,144,0,0" VerticalAlignment="Top" Width="189" Height="23"/>
@@ -53,6 +53,7 @@
                 <ComboBoxItem Content="Animal Adoption" HorizontalAlignment="Left" Width="187"/>
                 <ComboBoxItem Content="Habitat Donation" HorizontalAlignment="Left" Width="187"/>
             </ComboBox>
+            <DataGrid x:Name="datatable_donations" HorizontalAlignment="Left" Height="217" Margin="204,75,0,0" VerticalAlignment="Top" Width="566"/>
         </Grid>
         <Grid x:Name="menu_expmode" Margin="10" Visibility="Hidden">
             <Button x:Name="btn_expmode_submit" Content="Submit" HorizontalAlignment="Left" Margin="10,448,0,0" VerticalAlignment="Top" Width="300" Height="22" Click="Btn_expmode_submit_Click"/>

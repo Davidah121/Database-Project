@@ -16,38 +16,145 @@ using System.Data;
 
 namespace DatabaseProject
 {
-    partial class MainWindow : Window 
+    partial class MainWindow : Window
     {
+        #region Properties
+
+
+        public string DonationID
+        {
+            get => textbox_donation_id.Text;
+            set => textbox_donation_id.Text = value;
+        }
+
+        public string DonationAmount
+        {
+            get => textbox_donation_amount.Text;
+            set => textbox_donation_amount.Text = value;
+        }
+
+        public string DonatorName
+        {
+            get => textbox_donator_name.Text;
+            set => textbox_donator_name.Text = value;
+        }
+
+
+        public string DonatorEmail
+        {
+            get => textbox_donator_email.Text;
+            set => textbox_donator_email.Text = value;
+        }
+
+        public string DonationType
+        {
+            get => dropdown_donation_type.Text;
+            set => dropdown_donation_type.Text = value;
+        }
+
+
+        #endregion
+
         #region Events
 
 
         private void Btn_new_donation_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("New donation");
+            NewDonation();
+        }
 
-            DataTable table = Query($"select * from Addresses where CustomerID = {textbox_donator_id.Text}");
+        private void Btn_view_donation_Click(object sender, RoutedEventArgs e)
+        {
+            ViewDonation();
+        }
+
+
+        private void Btn_update_donation_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateDonation();
+        }
+
+        private void Btn_delete_donation_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteDonation();
+        }
+
+
+        #endregion
+
+
+        #region Methods
+
+
+        private void NewDonation()
+        {
+            if (string.IsNullOrWhiteSpace(DonationID)) return;
+            if (string.IsNullOrWhiteSpace(DonationAmount)) return;
+
+            string query = $"INSERT INTO Donation VALUES({DonationID}, {DonationAmount}, 1);";
+
+            NonQuery(query);
+        }
+
+
+        private void ViewDonation()
+        {
+            string query = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(textbox_donation_id.Text))
+            {
+                query = $"SELECT * FROM Donation;";
+            }
+            else
+            {
+                query = $"SELECT * FROM Donation WHERE donation_id = {textbox_donation_id.Text};";
+            }
+
+            DataTable table = Query(query);
 
             if (table == null)
             {
                 return;
             }
 
-            MessageBox.Show(table.Rows[0]["Line1"].ToString());
+            datatable_donations.ItemsSource = table.DefaultView;
         }
 
-        private void Btn_view_donation_Click(object sender, RoutedEventArgs e)
+
+        private void UpdateDonation()
         {
-            MessageBox.Show("View donation");
+            if (string.IsNullOrWhiteSpace(DonationID)) return;
+
+
+            if (MessageBox.Show("Are you sure you want to update this donation?", "Warning!", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+            {
+                return;
+            }
+
+            string query = $"UPDATE Donation SET amount = '{DonationAmount}' WHERE donation_id = {DonationID};";
+
+
+            NonQuery(query);
         }
 
-        private void Btn_update_donation_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Update donation");
-        }
 
-        private void Btn_delete_donation_Click(object sender, RoutedEventArgs e)
+        private void DeleteDonation()
         {
-            MessageBox.Show("Delete donation");
+            if (string.IsNullOrWhiteSpace(DonationID)) return;
+
+            if (MessageBox.Show("Are you sure you want to delete this donation?", "Warning!", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+            {
+                return;
+            }
+
+            string query = $"DELETE FROM Donation WHERE donation_id = {DonationID};";
+
+
+            if (NonQuery(query))
+            {
+                DonationID = string.Empty;
+                ViewDonation();
+            }
         }
 
 
