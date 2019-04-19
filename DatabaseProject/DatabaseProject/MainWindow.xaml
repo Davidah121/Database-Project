@@ -44,7 +44,7 @@
             <TextBox x:Name="txt_transID" HorizontalAlignment="Left" Height="36" Margin="161,87,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="100" TextChanged="txt_transID_TextChanged"/>
             <TextBox x:Name="txt_empID" HorizontalAlignment="Left" Height="36" TextWrapping="Wrap" VerticalAlignment="Top" Width="100" Margin="161,128,0,0"/>
             <TextBox x:Name="txt_date" HorizontalAlignment="Left" Height="36" TextWrapping="Wrap" VerticalAlignment="Top" Width="150" Margin="161,169,0,0"/>
-            <TextBox x:Name="txt_amount" HorizontalAlignment="Left" Height="36" TextWrapping="Wrap" VerticalAlignment="Top" Width="150" Margin="161,251,0,0"/>
+            <TextBox x:Name="txt_trans_amount" HorizontalAlignment="Left" Height="36" TextWrapping="Wrap" VerticalAlignment="Top" Width="150" Margin="161,251,0,0" TextChanged="Txt_trans_amount_TextChanged"/>
             <ComboBox x:Name="combo_payMethod" HorizontalAlignment="Left" Height="36" Margin="161,210,0,0" VerticalAlignment="Top" Width="150" SelectionChanged="comboBox_SelectionChanged"/>
 
         </Grid>
