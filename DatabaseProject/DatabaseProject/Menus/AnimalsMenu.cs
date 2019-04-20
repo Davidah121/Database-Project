@@ -103,5 +103,124 @@ namespace DatabaseProject
             }
         }
         #endregion
+
+        private void Btn_habitat_add_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                int idVal = int.Parse(txt_habitat_id.Text);
+                string habName = txt_habitat_name.Text;
+                int humiVal = int.Parse(txt_habitat_humidity.Text);
+                int tempVal = int.Parse(txt_habitat_temperature.Text);
+
+                NonQuery("INSERT INTO HABITAT (habitat_id, habitat_name, habitat_humidity, habitat_temperature) " +
+                    "VALUES ('" + idVal + "', '" + habName + "', '" + humiVal + "', '" + tempVal + "');");
+            }
+            catch
+            {
+                MessageBox.Show("One or more boxes are invalid because they are not numbers");
+            }
+        }
+
+        private void Btn_habitat_get_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Btn_habitat_update_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                int idVal = int.Parse(txt_habitat_id.Text);
+                string habName = txt_habitat_name.Text;
+                int humiVal = int.Parse(txt_habitat_humidity.Text);
+                int tempVal = int.Parse(txt_habitat_temperature.Text);
+
+                NonQuery("UPDATE ANIMAL " +
+                    "SET habitat_name='" + habName +
+                    "', habitat_humidity='" + humiVal +
+                    "', habitat_temperature='" + tempVal +
+                    "' WHERE habitat_id='" + idVal + "';");
+            }
+            catch
+            {
+                MessageBox.Show("One or more boxes are invalid because they are not numbers");
+            }
+        }
+
+        private void Btn_habitat_delete_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you want to delete this record?", "Warning!", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    int idVal = int.Parse(txt_habitat_id.Text);
+
+                    NonQuery("DELETE FROM HABITAT WHERE habitat_id='" + idVal + "';");
+                }
+                catch
+                {
+                    MessageBox.Show("The Habitat Id is not a number.");
+                }
+            }
+        }
+
+        private void Btn_species_add_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                int idVal = int.Parse(txt_species_id.Text);
+                string specName = txt_species_name.Text;
+                string specClass = txt_species_class.Text;
+
+                NonQuery("INSERT INTO HABITAT (species_id, species_name, species_class) " +
+                    "VALUES ('" + idVal + "', '" + specName + "', '" + specClass + "');");
+            }
+            catch
+            {
+                MessageBox.Show("One or more boxes are invalid because they are not numbers");
+            }
+        }
+
+        private void Btn_species_get_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Btn_species_update_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                int idVal = int.Parse(txt_species_id.Text);
+                string specName = txt_species_name.Text;
+                string specClass = txt_species_class.Text;
+
+                NonQuery("UPDATE SPECIES " +
+                    "SET species_name='" + specName +
+                    "', species_class='" + specClass +
+                    "' WHERE species_id='" + idVal + "';");
+            }
+            catch
+            {
+                MessageBox.Show("One or more boxes are invalid because they are not numbers");
+            }
+        }
+
+        private void Btn_species_delete_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show("Are you sure you want to delete this record?", "Warning!", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    int idVal = int.Parse(txt_species_id.Text);
+
+                    NonQuery("DELETE FROM SPECIES WHERE species_id='" + idVal + "';");
+                }
+                catch
+                {
+                    MessageBox.Show("The species Id is not a number.");
+                }
+            }
+        }
     }
 }
