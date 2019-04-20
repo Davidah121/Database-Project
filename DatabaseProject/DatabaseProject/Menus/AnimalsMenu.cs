@@ -44,13 +44,10 @@ namespace DatabaseProject
                 int wei = int.Parse(txt_animal_weight.Text);
                 int dietID = int.Parse(txt_animal_diet_id.Text);
 
-                NonQuery("INSERT INTO ANIMALS (animal_id, habitat_id, species_id, animal_name, birthday, weight, diet_id) " +
+                NonQuery("INSERT INTO ANIMAL (animal_id, habitat_id, species_id, animal_name, birthday, weight, diet_id) " +
                     "VALUES ('" + idVal + "', '" + habIdVal + "', '" + speIdVal + "', '" + animalName + "', '" + animalDate + "', '" + wei + "', '" + dietID + "');");
-
-                MessageBox.Show("Add Stuff");
-
             }
-            catch (Exception ex)
+            catch
             {
                 MessageBox.Show("One or more boxes are invalid because they are not numbers");
             }
@@ -64,18 +61,45 @@ namespace DatabaseProject
 
         private void Btn_animals_update_Click(object sender, RoutedEventArgs e)
         {
-            int idVal = 0;
-            int.TryParse(txt_animal_id.Text, out idVal);
+            try
+            {
+                int idVal = int.Parse(txt_animal_id.Text);
+                int habIdVal = int.Parse(txt_animal_habitat_id.Text);
+                int speIdVal = int.Parse(txt_animal_species_id.Text);
+                string animalName = txt_animal_name.Text;
+                string animalDate = txt_animal_birthdate.Text;
+                int wei = int.Parse(txt_animal_weight.Text);
+                int dietID = int.Parse(txt_animal_diet_id.Text);
 
-            MessageBox.Show("Update Stuff with ID: "+idVal);
+                NonQuery("UPDATE ANIMAL " +
+                    "SET habitat_id='" + habIdVal +
+                    "', species_id='" + speIdVal +
+                    "', animal_name='" + animalName +
+                    "', birthday='" + animalDate +
+                    "', weight='" + wei +
+                    "', diet_id='" + dietID +
+                    "' WHERE animal_id='" + idVal + "';");
+            }
+            catch
+            {
+                MessageBox.Show("One or more boxes are invalid because they are not numbers");
+            }
         }
 
         private void Btn_animals_delete_Click(object sender, RoutedEventArgs e)
         {
             if (MessageBox.Show("Are you sure you want to delete this record?", "Warning!", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
-                MessageBox.Show("Deleted Stuff");
-                //OpenMenu(menu_expmode);
+                try
+                {
+                    int idVal = int.Parse(txt_animal_id.Text);
+
+                    NonQuery("DELETE FROM ANIMAL WHERE animal_id='" + idVal + "';");
+                }
+                catch
+                {
+                    MessageBox.Show("The Animal Id is not a number.");
+                }
             }
         }
         #endregion
