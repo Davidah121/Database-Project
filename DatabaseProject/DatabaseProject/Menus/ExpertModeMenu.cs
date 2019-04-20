@@ -19,7 +19,7 @@ namespace DatabaseProject
 {
     partial class MainWindow : Window
     {
-        const string connectionString = "Data Source=SQLEXPRESS;Initial Catalog=Zoo;Integrated Security=True";
+        const string connectionString = @"Data Source=localhost\SQLEXPRESS;Initial Catalog=Zoo;Integrated Security=True";
 
         #region Events
 
