@@ -79,8 +79,7 @@ namespace DatabaseProject
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Something went wrong!");
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show(ex.Message, "Something went wrong.");
                     return null;
                 }
             }
@@ -101,8 +100,7 @@ namespace DatabaseProject
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Something went wrong!");
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show(ex.Message, "Something went wrong.");
                     return false;
                 }
             }
