@@ -97,7 +97,7 @@ namespace DatabaseProject
                     command.ExecuteNonQuery();
                     MessageBox.Show("Non-query executed successfully!");
                 }
-                catch(Exception e)
+                catch
                 {
                     MessageBox.Show("Something went wrong!");
                 }
