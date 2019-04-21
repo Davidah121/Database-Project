@@ -626,6 +626,21 @@ namespace DatabaseProject
         }
 
         internal System.Windows.Controls.TextBox txt_trans_amount;
+        internal System.Windows.Controls.DataGrid datatable_transactions;
+        internal System.Windows.Controls.TextBox textbox_donation_id;
+        internal System.Windows.Controls.TextBox textbox_donation_amount;
+        internal System.Windows.Controls.ComboBox dropdown_donation_type;
+        internal System.Windows.Controls.Label label_donation_animal;
+        internal System.Windows.Controls.ComboBox dropdown_donation_animal;
+        internal System.Windows.Controls.Label label_donation_habitat;
+        internal System.Windows.Controls.ComboBox dropdown_donation_habitat;
+        internal System.Windows.Controls.ComboBox dropdown_donation_donator;
+        internal System.Windows.Controls.Button btn_view_donation;
+        internal System.Windows.Controls.Button btn_update_donation;
+        internal System.Windows.Controls.Button btn_delete_donation;
+        internal System.Windows.Controls.DataGrid datatable_donations;
+        internal System.Windows.Controls.ComboBox combo_trans_type;
+        internal System.Windows.Controls.Label TransactionTypeLabel;
     }
 }
 
