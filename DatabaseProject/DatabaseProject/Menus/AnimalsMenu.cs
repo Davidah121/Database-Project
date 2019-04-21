@@ -44,8 +44,11 @@ namespace DatabaseProject
                 int wei = int.Parse(txt_animal_weight.Text);
                 int dietID = int.Parse(txt_animal_diet_id.Text);
 
-                NonQuery("INSERT INTO ANIMAL (animal_id, habitat_id, species_id, animal_name, birthday, weight, diet_id) " +
-                    "VALUES ('" + idVal + "', '" + habIdVal + "', '" + speIdVal + "', '" + animalName + "', '" + animalDate + "', '" + wei + "', '" + dietID + "');");
+                string query = "INSERT INTO ANIMAL (animal_id, habitat_id, species_id, animal_name, birthday, weight, diet_id) " +
+                    "VALUES ('" + idVal + "', '" + habIdVal + "', '" + speIdVal + "', '" + animalName + "', '" + animalDate + "', '" + wei + "', '" + dietID + "');";
+
+                query.Replace("''", "NULL");
+                NonQuery(query);
             }
             catch
             {
@@ -56,7 +59,61 @@ namespace DatabaseProject
         private void Btn_animals_get_Click(object sender, RoutedEventArgs e)
         {
             //If a text box is blank, do not include it in the search.
-            MessageBox.Show("Get Stuff");
+            try
+            {
+                int idVal, habIdVal, speIdVal, wei, dietID;
+                string animalName, animalDate;
+
+                string query = "SELECT * FROM ANIMAL WHERE ";
+
+                if (txt_animal_id.Text!="")
+                {
+                    idVal = int.Parse(txt_animal_id.Text);
+                    query += "animal_id = " + idVal + ", ";
+                }
+                if (txt_animal_habitat_id.Text != "")
+                {
+                    habIdVal = int.Parse(txt_animal_habitat_id.Text);
+                    query += "habitat_id = " + habIdVal + ", ";
+                }
+                if (txt_animal_species_id.Text != "")
+                {
+                    speIdVal = int.Parse(txt_animal_habitat_id.Text);
+                    query += "species_id = " + speIdVal + ", ";
+                }
+                if(txt_animal_name.Text != "")
+                {
+                    animalName = txt_animal_name.Text;
+                    query += "animal_name = '" + animalName + "', ";
+                }
+                if (txt_animal_birthdate.Text != "")
+                {
+                    animalDate = txt_animal_birthdate.Text;
+                    query += "birthday = '" + animalDate + "', ";
+                }
+                if (txt_animal_weight.Text != "")
+                {
+                    wei = int.Parse(txt_animal_weight.Text);
+                    query += "weight = " + wei + ", ";
+                }
+                if (txt_animal_diet_id.Text != "")
+                {
+                    dietID = int.Parse(txt_animal_diet_id.Text);
+                    query += "diet_id = " + dietID + ", ";
+                }
+
+                query += ";";
+                query.Replace("'NULL'", "NULL");
+                
+                query = query.Remove(query.Length - 3, 2);
+
+                datagrid_animals.ItemsSource = Query(query)?.DefaultView;
+            }
+            catch
+            {
+                MessageBox.Show("One or more boxes are invalid because they are not numbers");
+            }
+            
         }
 
         private void Btn_animals_update_Click(object sender, RoutedEventArgs e)
@@ -66,19 +123,25 @@ namespace DatabaseProject
                 int idVal = int.Parse(txt_animal_id.Text);
                 int habIdVal = int.Parse(txt_animal_habitat_id.Text);
                 int speIdVal = int.Parse(txt_animal_species_id.Text);
+
                 string animalName = txt_animal_name.Text;
                 string animalDate = txt_animal_birthdate.Text;
+
                 int wei = int.Parse(txt_animal_weight.Text);
                 int dietID = int.Parse(txt_animal_diet_id.Text);
 
-                NonQuery("UPDATE ANIMAL " +
+                string query = "UPDATE ANIMAL " +
                     "SET habitat_id='" + habIdVal +
                     "', species_id='" + speIdVal +
                     "', animal_name='" + animalName +
                     "', birthday='" + animalDate +
                     "', weight='" + wei +
                     "', diet_id='" + dietID +
-                    "' WHERE animal_id='" + idVal + "';");
+                    "' WHERE animal_id='" + idVal + "';";
+
+                query.Replace("''", "NULL");
+
+                NonQuery(query);
             }
             catch
             {
@@ -103,124 +166,5 @@ namespace DatabaseProject
             }
         }
         #endregion
-
-        private void Btn_habitat_add_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                int idVal = int.Parse(txt_habitat_id.Text);
-                string habName = txt_habitat_name.Text;
-                int humiVal = int.Parse(txt_habitat_humidity.Text);
-                int tempVal = int.Parse(txt_habitat_temperature.Text);
-
-                NonQuery("INSERT INTO HABITAT (habitat_id, habitat_name, habitat_humidity, habitat_temperature) " +
-                    "VALUES ('" + idVal + "', '" + habName + "', '" + humiVal + "', '" + tempVal + "');");
-            }
-            catch
-            {
-                MessageBox.Show("One or more boxes are invalid because they are not numbers");
-            }
-        }
-
-        private void Btn_habitat_get_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Btn_habitat_update_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                int idVal = int.Parse(txt_habitat_id.Text);
-                string habName = txt_habitat_name.Text;
-                int humiVal = int.Parse(txt_habitat_humidity.Text);
-                int tempVal = int.Parse(txt_habitat_temperature.Text);
-
-                NonQuery("UPDATE ANIMAL " +
-                    "SET habitat_name='" + habName +
-                    "', habitat_humidity='" + humiVal +
-                    "', habitat_temperature='" + tempVal +
-                    "' WHERE habitat_id='" + idVal + "';");
-            }
-            catch
-            {
-                MessageBox.Show("One or more boxes are invalid because they are not numbers");
-            }
-        }
-
-        private void Btn_habitat_delete_Click(object sender, RoutedEventArgs e)
-        {
-            if (MessageBox.Show("Are you sure you want to delete this record?", "Warning!", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
-            {
-                try
-                {
-                    int idVal = int.Parse(txt_habitat_id.Text);
-
-                    NonQuery("DELETE FROM HABITAT WHERE habitat_id='" + idVal + "';");
-                }
-                catch
-                {
-                    MessageBox.Show("The Habitat Id is not a number.");
-                }
-            }
-        }
-
-        private void Btn_species_add_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                int idVal = int.Parse(txt_species_id.Text);
-                string specName = txt_species_name.Text;
-                string specClass = txt_species_class.Text;
-
-                NonQuery("INSERT INTO HABITAT (species_id, species_name, species_class) " +
-                    "VALUES ('" + idVal + "', '" + specName + "', '" + specClass + "');");
-            }
-            catch
-            {
-                MessageBox.Show("One or more boxes are invalid because they are not numbers");
-            }
-        }
-
-        private void Btn_species_get_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Btn_species_update_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                int idVal = int.Parse(txt_species_id.Text);
-                string specName = txt_species_name.Text;
-                string specClass = txt_species_class.Text;
-
-                NonQuery("UPDATE SPECIES " +
-                    "SET species_name='" + specName +
-                    "', species_class='" + specClass +
-                    "' WHERE species_id='" + idVal + "';");
-            }
-            catch
-            {
-                MessageBox.Show("One or more boxes are invalid because they are not numbers");
-            }
-        }
-
-        private void Btn_species_delete_Click(object sender, RoutedEventArgs e)
-        {
-            if (MessageBox.Show("Are you sure you want to delete this record?", "Warning!", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
-            {
-                try
-                {
-                    int idVal = int.Parse(txt_species_id.Text);
-
-                    NonQuery("DELETE FROM SPECIES WHERE species_id='" + idVal + "';");
-                }
-                catch
-                {
-                    MessageBox.Show("The species Id is not a number.");
-                }
-            }
-        }
     }
 }
