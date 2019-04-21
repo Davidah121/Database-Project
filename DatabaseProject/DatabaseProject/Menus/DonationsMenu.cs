@@ -18,9 +18,10 @@ namespace DatabaseProject
 {
     partial class MainWindow : Window
     {
-        private const string NEW_DONATOR = "<New Donator>";
         private const string ANIMAL_ADOPTION = "Animal Adoption";
         private const string HABITAT_DONATION = "Habitat Donation";
+
+        private readonly List<Donor> donors = new List<Donor>();
 
         #region Properties
 
@@ -55,10 +56,10 @@ namespace DatabaseProject
             set => dropdown_donation_habitat.Text = value;
         }
 
-        private Donator Donator
+        private Donor Donor
         {
-            get => dropdown_donation_donator.SelectedItem as Donator;
-            set => dropdown_donation_donator.SelectedItem = value;
+            get => dropdown_donation_donor.SelectedItem as Donor;
+            set => dropdown_donation_donor.SelectedItem = value;
         }
 
 
@@ -73,7 +74,7 @@ namespace DatabaseProject
             {
                 // We were just been opened
 
-                ClearFields();
+                ClearDonationFields();
                 PopulateDonatorDropdown();
                 ViewDonation();
             }
@@ -117,6 +118,9 @@ namespace DatabaseProject
 
                 label_donation_animal.Visibility = value == ANIMAL_ADOPTION ? Visibility.Visible : Visibility.Collapsed;
                 dropdown_donation_animal.Visibility = value == ANIMAL_ADOPTION ? Visibility.Visible : Visibility.Collapsed;
+
+                PopulateHabitatDropdown();
+                PopulateAnimalDropdown();
             }
             catch
             {
@@ -129,19 +133,9 @@ namespace DatabaseProject
         }
 
 
-        private void Dropdown_donation_donator_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void Dropdown_donation_donor_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            try
-            {
-                if (dropdown_donation_donator.Text == NEW_DONATOR)
-                {
-                    MessageBox.Show("Create new donator!!");
-                }
-            }
-            catch
-            {
 
-            }
         }
 
 
@@ -149,13 +143,15 @@ namespace DatabaseProject
         {
             try
             {
-                DataRowView data = e.AddedItems[0] as DataRowView;
+                if (!(e.AddedItems[0] is DataRowView data)) return;
 
-                if (data == null) return;
+                string id = data.Row[0].ToString().Trim();
+                string amount = data.Row[1].ToString().Trim();
+                string donorid = data.Row[2].ToString().Trim();
 
-                DonationID = data.Row[0].ToString().Trim();
-                DonationAmount = data.Row[1].ToString().Trim();
-                // dropdown_donation_donator.SelectedItem = dropdown_donation_donator.Item
+                DonationID = id;
+                DonationAmount = amount;
+                Donor = donors?.Find(x => x.ID.ToString() == donorid) ?? Donor;
             }
             catch
             {
@@ -174,15 +170,15 @@ namespace DatabaseProject
         {
             if (!string.IsNullOrWhiteSpace(DonationID)) return;
             if (string.IsNullOrWhiteSpace(DonationAmount)) return;
-            if (Donator == null) return;
+            if (Donor == null) return;
 
-            int id = FindFirstNonIndex("sElEcT donation_id fRoM Donation order by 1");
+            int id = FindFirstNonIndex("SELECT donation_id FROM Donation");
 
-            string query = $"INSERT INTO Donation VALUES({id}, {DonationAmount}, {Donator.ID});";
+            string query = $"INSERT INTO Donation VALUES({id}, {DonationAmount}, {Donor.ID});";
 
             if (NonQuery(query))
             {
-                ClearFields();
+                ClearDonationFields();
                 ViewDonation();
             }
         }
@@ -222,7 +218,9 @@ namespace DatabaseProject
                 return;
             }
 
-            string query = $"UPDATE Donation SET amount = '{DonationAmount}' WHERE donation_id = {DonationID};";
+            string update_amount = string.IsNullOrWhiteSpace(DonationAmount) ? string.Empty : "";
+
+            string query = $"UPDATE Donation SET donation_id = {DonationID}, amount = '{DonationAmount}',  WHERE donation_id = {DonationID};";
 
 
             NonQuery(query);
@@ -269,12 +267,12 @@ namespace DatabaseProject
         }
 
 
-        private void ClearFields()
+        private void ClearDonationFields()
         {
             DonationID = string.Empty;
             DonationAmount = string.Empty;
             DonationType = string.Empty;
-            Donator = null;
+            Donor = null;
         }
 
 
@@ -290,21 +288,83 @@ namespace DatabaseProject
                     return;
                 }
 
-                dropdown_donation_donator.Items.Clear();
+                donors.Clear();
 
                 for (int i = 0; i < table.Rows.Count; i++)
                 {
-                    string id = table.Rows[i]["donator_id"].ToString().Trim();
+                    int id = int.Parse(table.Rows[i]["donator_id"].ToString().Trim());
                     string firstName = table.Rows[i]["first_name"].ToString().Trim();
                     string lastName = table.Rows[i]["last_name"].ToString().Trim();
                     string email = table.Rows[i]["email"].ToString().Trim();
 
-                    Donator donator = new Donator(id, firstName, lastName, email);
+                    Donor donor = new Donor(id, firstName, lastName, email);
 
-                    dropdown_donation_donator.Items.Add(donator);
+                    donors.Add(donor);
                 }
 
-                dropdown_donation_donator.Items.Add(NEW_DONATOR);
+                dropdown_donation_donor.ItemsSource = donors;
+            }
+            catch
+            {
+
+            }
+        }
+
+
+        private void PopulateHabitatDropdown()
+        {
+            try
+            {
+                string query = "SELECT * FROM Habitat";
+                DataTable table = Query(query);
+
+                if (table == null)
+                {
+                    return;
+                }
+
+                dropdown_donation_habitat.Items.Clear();
+
+                for (int i = 0; i < table.Rows.Count; i++)
+                {
+                    int id = int.Parse(table.Rows[i]["habitat_id"].ToString().Trim());
+                    string name = table.Rows[i]["habitat_name"].ToString().Trim();
+
+                    Habitat habitat = new Habitat(id, name);
+
+                    dropdown_donation_habitat.Items.Add(habitat);
+                }
+            }
+            catch
+            {
+
+            }
+        }
+
+
+        private void PopulateAnimalDropdown()
+        {
+            try
+            {
+                string query = "SELECT * FROM Animal";
+                DataTable table = Query(query);
+
+                if (table == null)
+                {
+                    return;
+                }
+
+                dropdown_donation_animal.Items.Clear();
+
+                for (int i = 0; i < table.Rows.Count; i++)
+                {
+                    int id = int.Parse(table.Rows[i]["animal_id"].ToString().Trim());
+                    string name = table.Rows[i]["animal_name"].ToString().Trim();
+
+                    Animal animal = new Animal(id, name);
+
+                    dropdown_donation_animal.Items.Add(animal);
+                }
             }
             catch
             {
@@ -317,9 +377,9 @@ namespace DatabaseProject
     }
 }
 
-class Donator
+class Donor
 {
-    public string ID
+    public int ID
     {
         get;
         private set;
@@ -343,7 +403,7 @@ class Donator
         private set;
     }
 
-    public Donator(string id, string firstName, string lastName, string email)
+    public Donor(int id, string firstName, string lastName, string email)
     {
         this.ID = id;
         this.FirstName = firstName;
@@ -354,5 +414,57 @@ class Donator
     public override string ToString()
     {
         return $"{this.ID}: {this.FirstName} {this.LastName} - {this.Email}";
+    }
+}
+
+class Habitat
+{
+    public int ID
+    {
+        get;
+        private set;
+    }
+
+    public string Name
+    {
+        get;
+        private set;
+    }
+
+    public Habitat(int id, string name)
+    {
+        this.ID = id;
+        this.Name = name;
+    }
+
+    public override string ToString()
+    {
+        return $"{this.ID}: {this.Name}";
+    }
+}
+
+class Animal
+{
+    public int ID
+    {
+        get;
+        private set;
+    }
+
+    public string Name
+    {
+        get;
+        private set;
+    }
+
+    public Animal(int id, string name)
+    {
+        this.ID = id;
+        this.Name = name;
+    }
+
+    public override string ToString()
+    {
+        return $"{this.ID}: {this.Name}";
     }
 }

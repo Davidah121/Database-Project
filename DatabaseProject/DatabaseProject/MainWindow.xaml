@@ -50,8 +50,8 @@
                 <ComboBox x:Name="dropdown_donation_animal" Visibility="Collapsed" HorizontalAlignment="Left" VerticalAlignment="Top" Width="189" />
                 <Label x:Name="label_donation_habitat" Content="Habitat" Visibility="Collapsed" HorizontalAlignment="Left" VerticalAlignment="Top" Width="189" Height="27"/>
                 <ComboBox x:Name="dropdown_donation_habitat" Visibility="Collapsed" HorizontalAlignment="Left" VerticalAlignment="Top" Width="189" />
-                <Label Content="Donator" Visibility="Visible" HorizontalAlignment="Left" VerticalAlignment="Top" Width="189" Height="27"/>
-                <ComboBox x:Name="dropdown_donation_donator" HorizontalAlignment="Left" VerticalAlignment="Top" Width="189" SelectionChanged="Dropdown_donation_donator_SelectionChanged" />
+                <Label Content="Donor" Visibility="Visible" HorizontalAlignment="Left" VerticalAlignment="Top" Width="189" Height="27"/>
+                <ComboBox x:Name="dropdown_donation_donor" HorizontalAlignment="Left" VerticalAlignment="Top" Width="189" SelectionChanged="Dropdown_donation_donor_SelectionChanged" />
             </StackPanel>
             <Button x:Name="btn_new_donation" Content="New Donation" HorizontalAlignment="Left" Margin="10,424,0,0" VerticalAlignment="Top" Width="187" Height="46" Background="#FF13D61C" Click="Btn_new_donation_Click"/>
             <Button x:Name="btn_view_donation" Content="View Donation" HorizontalAlignment="Left" Margin="201,424,0,0" VerticalAlignment="Top" Width="187" Height="46" Background="#FF0FC9B8" Click="Btn_view_donation_Click"/>
