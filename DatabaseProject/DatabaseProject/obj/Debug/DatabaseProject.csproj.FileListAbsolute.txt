@@ -1,1 +1,15 @@
 C:\Users\jn02798\Desktop\Database-Project-transaction\Database-Project-master\DatabaseProject\DatabaseProject\bin\Debug\DatabaseProject.exe.config
+C:\Users\jn02798\Desktop\Database-Project-transaction2\DatabaseProject\DatabaseProject\bin\Debug\DatabaseProject.exe.config
+C:\Users\jn02798\Desktop\Database-Project-transaction2\DatabaseProject\DatabaseProject\obj\Debug\DatabaseProject.csprojResolveAssemblyReference.cache
+C:\Users\jn02798\Desktop\Database-Project-transaction2\DatabaseProject\DatabaseProject\obj\Debug\MainWindow.g.cs
+C:\Users\jn02798\Desktop\Database-Project-transaction2\DatabaseProject\DatabaseProject\obj\Debug\App.g.cs
+C:\Users\jn02798\Desktop\Database-Project-transaction2\DatabaseProject\DatabaseProject\obj\Debug\DatabaseProject_MarkupCompile.cache
+C:\Users\jn02798\Desktop\Database-Project-transaction2\DatabaseProject\DatabaseProject\obj\Debug\DatabaseProject_MarkupCompile.lref
+C:\Users\jn02798\Desktop\Database-Project-transaction2\DatabaseProject\DatabaseProject\bin\Debug\DatabaseProject.exe
+C:\Users\jn02798\Desktop\Database-Project-transaction2\DatabaseProject\DatabaseProject\bin\Debug\DatabaseProject.pdb
+C:\Users\jn02798\Desktop\Database-Project-transaction2\DatabaseProject\DatabaseProject\obj\Debug\MainWindow.baml
+C:\Users\jn02798\Desktop\Database-Project-transaction2\DatabaseProject\DatabaseProject\obj\Debug\DatabaseProject.g.resources
+C:\Users\jn02798\Desktop\Database-Project-transaction2\DatabaseProject\DatabaseProject\obj\Debug\DatabaseProject.Properties.Resources.resources
+C:\Users\jn02798\Desktop\Database-Project-transaction2\DatabaseProject\DatabaseProject\obj\Debug\DatabaseProject.csproj.GenerateResource.Cache
+C:\Users\jn02798\Desktop\Database-Project-transaction2\DatabaseProject\DatabaseProject\obj\Debug\DatabaseProject.exe
+C:\Users\jn02798\Desktop\Database-Project-transaction2\DatabaseProject\DatabaseProject\obj\Debug\DatabaseProject.pdb

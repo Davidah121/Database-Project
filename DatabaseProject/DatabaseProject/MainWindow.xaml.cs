@@ -57,6 +57,5 @@ namespace DatabaseProject
                 m.Visibility = m == menu ? Visibility.Visible : Visibility.Hidden;
             }
         }
-
     }
 }

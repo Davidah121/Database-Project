@@ -18,46 +18,6 @@ namespace DatabaseProject
 {
     partial class MainWindow : Window 
     {
-        private const string NEW_TRANSACTION = "<New Transaction>";
-        private const string ITEM_SALE = "Item Sale";
-        private const string TICKET_SALE = "Ticket Sale";
-        #region Properties
-        
-        public string TransactionID
-        {
-            get => txt_transID.Text;
-            set => txt_transID.Text = value;
-        }
-
-        public string EmployeeID
-        {
-            get => txt_empID.Text;
-            set => txt_empID.Text = value;
-        }
-
-        public string Date
-        {
-            get => txt_date.Text;
-            set => txt_date.Text = value;
-        }
-
-        public string PaymentMethod
-        {
-            get => combo_payMethod.Text;
-            set => combo_payMethod.Text = value;
-        }
-
-        public string TransactionAmount
-        {
-            get => txt_trans_amount.Text;
-            set => txt_trans_amount.Text = value;
-        }
-
-        //Add item id
-        //add ticket type
-
-        #endregion
-
         #region Button Events
 
         private void Menu_transactions_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -65,7 +25,6 @@ namespace DatabaseProject
             if ((bool)e.NewValue)
             {
                 ClearFields();
-                //PopulateTransactionDropdown();
                 ViewTransaction();
             }
         }
@@ -96,8 +55,38 @@ namespace DatabaseProject
             {
                 string value = (e.AddedItems[0] as ComboBoxItem).Content as string;
 
-                //Add Item ID + quantity visibility
-                //Add TicketType visibility
+                if (value == "Item Sale")
+                {
+                    TicketLabel.Visibility = Visibility.Collapsed;
+                    combo_ticket_selection.Visibility = Visibility.Collapsed;
+                    TicketIDLabel.Visibility = Visibility.Collapsed;
+                    txt_ticket_id.Visibility = Visibility.Collapsed;
+                    list_ticket_cart.Visibility = Visibility.Collapsed;
+                    btn_add_ticket_to_cart.Visibility = Visibility.Collapsed;
+
+                    ItemLabel.Visibility = Visibility.Visible;
+                    combo_item_selection.Visibility = Visibility.Visible;
+                    QuantityLabel.Visibility = Visibility.Visible;
+                    txt_item_quantity.Visibility = Visibility.Visible;
+                    list_item_cart.Visibility = Visibility.Visible;
+                    btn_add_item_to_cart.Visibility = Visibility.Visible;
+                }
+                if (value == "Ticket Sale")
+                {
+                    ItemLabel.Visibility = Visibility.Collapsed;
+                    combo_item_selection.Visibility = Visibility.Collapsed;
+                    QuantityLabel.Visibility = Visibility.Collapsed;
+                    txt_item_quantity.Visibility = Visibility.Collapsed;
+                    list_item_cart.Visibility = Visibility.Collapsed;
+                    btn_add_item_to_cart.Visibility = Visibility.Collapsed;
+
+                    TicketLabel.Visibility = Visibility.Visible;
+                    combo_ticket_selection.Visibility = Visibility.Visible;
+                    TicketIDLabel.Visibility = Visibility.Visible;
+                    txt_ticket_id.Visibility = Visibility.Visible;
+                    list_ticket_cart.Visibility = Visibility.Visible;
+                    btn_add_ticket_to_cart.Visibility = Visibility.Visible;
+                }
 
             }
             catch
@@ -112,13 +101,12 @@ namespace DatabaseProject
 
         private void NewTransaction()
         {
-            if (!string.IsNullOrWhiteSpace(TransactionID)) return;
-            if (string.IsNullOrWhiteSpace(TransactionAmount)) return;
-            //if (Transaction == null) return;
+            if (!string.IsNullOrWhiteSpace(txt_transID.Text)) return;
 
-            int TransactionID = FindFirstNonIndex("Select transaction_id from Transaction order by 1");
-
-            string query = $"INSERT INTO Transaction VALUES({TransactionID}, {TransactionAmount}, 1);";
+            /*
+            int id = FindFirstNonIndex("Select transaction_id from Transaction order by 1");
+            */
+            string query = $"INSERT INTO Transaction VALUES(1);";
 
             if (NonQuery(query))
             {
@@ -133,8 +121,7 @@ namespace DatabaseProject
 
             if (string.IsNullOrWhiteSpace(txt_transID.Text))
             {
-                //TO DO
-                //query = $"SELECT * FROM Transaction;";
+                query = $"SELECT * FROM Transaction;";
             }
             else
             {
@@ -153,7 +140,7 @@ namespace DatabaseProject
 
         private void UpdateTransaction()
         {
-            if (string.IsNullOrWhiteSpace(TransactionID)) return;
+            if (string.IsNullOrWhiteSpace(txt_transID.Text)) return;
 
 
             if (MessageBox.Show("Are you sure you want to update this transaction?", "Warning!", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
@@ -161,31 +148,31 @@ namespace DatabaseProject
                 return;
             }
 
-            string query = $"UPDATE Transaction SET amount = '{TransactionAmount}' WHERE transaction_id = {TransactionID};";
-
+            //Handling Employee ID?
+            string query = $"UPDATE Transaction SET amount = '{txt_trans_amount.Text}', employee_id = '{txt_empID.Text}', transaction_date = '{txt_date.Text}', payment_method = '{combo_payMethod.Text}, transaction_type = '{combo_trans_type}' WHERE transaction_id = {txt_transID.Text};";
 
             NonQuery(query);
         }
 
         private void DeleteTransaction()
         {
-            if (string.IsNullOrWhiteSpace(TransactionID)) return;
+            if (string.IsNullOrWhiteSpace(txt_transID.Text)) return;
 
             if (MessageBox.Show("Are you sure you want to delete this transaction?", "Warning!", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
             {
                 return;
             }
 
-            string query = $"DELETE FROM Transaction WHERE transaction_id = {TransactionID};";
+            string query = $"DELETE FROM Transaction WHERE transaction_id = {txt_transID.Text};";
 
 
             if (NonQuery(query))
             {
-                TransactionID = string.Empty;
+                txt_transID.Text = string.Empty;
                 ViewTransaction();
             }
         }
-
+        /*
         private int FindFirstNonIndex(string query)
         {
             DataTable table = Query(query);
@@ -204,106 +191,19 @@ namespace DatabaseProject
 
             return firstAvailable;
         }
-
+        
+    */
         private void ClearFields()
         {
-            TransactionID = string.Empty;
-            EmployeeID = string.Empty;
-            Date = string.Empty;
-            PaymentMethod = string.Empty;
-            TransactionAmount = string.Empty;
+            txt_transID.Text = string.Empty;
+            txt_empID.Text = string.Empty;
+            txt_date.Text = string.Empty;
+            combo_payMethod.Text = string.Empty;
+            txt_trans_amount.Text = string.Empty;
+            combo_trans_type.Text = string.Empty;
 
-        }
-
-        private void PopulateTransactionDropdown()
-        {
-            try
-            {
-                string query = "SELECT * FROM Transaction";
-                DataTable table = Query(query);
-
-                if (table == null)
-                {
-                    return;
-                }
-
-                //dropdown_donation_donator.Items.Clear();
-
-                for (int i = 0; i < table.Rows.Count; i++)
-                {
-                    string TransactionID = table.Rows[i]["transaction_id"].ToString().Trim();
-                    string EmployeeID = table.Rows[i]["employee_id"].ToString().Trim();
-                    string Date = table.Rows[i]["date"].ToString().Trim();
-                    string PaymentMethod = table.Rows[i]["payment_method"].ToString().Trim();
-                    string TransactionAmount = table.Rows[i]["transaction_amount"].ToString().Trim();
-                    string TransactionType = table.Rows[i]["transaction_type"].ToString().Trim();
-
-                    Transaction transaction = new Transaction(TransactionID, EmployeeID, Date, PaymentMethod, TransactionAmount, TransactionType);
-
-                    //dropdown_donation_donator.Items.Add(transaction);
-                }
-
-                dropdown_donation_donator.Items.Add(NEW_TRANSACTION);
-            }
-            catch
-            {
-
-            }
         }
     }
 
-    class Transaction
-    {
-        public string TransactionID
-        {
-            get;
-            private set;
-        }
-
-        public string EmployeeID
-        {
-            get;
-            private set;
-        }
-
-        public string Date
-        {
-            get;
-            private set;
-        }
-
-        public string PaymentMethod
-        {
-            get;
-            private set;
-        }
-
-        public string TransactionAmount
-        {
-            get;
-            private set;
-        }
-        
-        public string TransactionType
-        {
-            get;
-            private set;
-        }
-
-        public Transaction(string TransactionID, string EmployeeID, string Date, string PaymentMethod, string TransactionAmount, string TransactionType)
-        {
-            this.TransactionID = TransactionID;
-            this.EmployeeID = EmployeeID;
-            this.Date = Date;
-            this.PaymentMethod = PaymentMethod;
-            this.TransactionAmount = TransactionAmount;
-            this.TransactionType = TransactionType;
-        }
-
-        //To Do
-        public override string ToString()
-        {
-            return "string";
-        }
-    }
+    #endregion
 }
