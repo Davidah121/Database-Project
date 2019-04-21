@@ -19,30 +19,35 @@
             <Button x:Name="btn_open_donations" Content="Donations" HorizontalAlignment="Left" Margin="96,369,0,0" VerticalAlignment="Top" Width="205" Height="46" Click="Btn_open_donations_Click"/>
         </Grid>
         <Grid x:Name="menu_employees" Margin="10" Visibility="Visible">
-            <DatePicker x:Name="emp_field_date" Margin="155,142,495,307" />
-            <Button x:Name="btn_emp_add" Content="Add Employee" HorizontalAlignment="Left" Margin="174,424,0,0" VerticalAlignment="Top" Width="136" Height="46"/>
+            <DatePicker x:Name="emp_field_date" Margin="155,84,495,370" Background="#FFDF7878" />
+            <Button x:Name="btn_emp_add" Content="Add Employee" HorizontalAlignment="Left" Margin="155,424,0,0" VerticalAlignment="Top" Width="136" Height="46" Click="Btn_emp_add_Click" Background="#FFFF4C4C"/>
             <Button x:Name="btn_emp_back" Content="Main Menu" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="30" Margin="10,10,0,0" Click="OpenMainMenu" />
-            <Button x:Name="btn_emp_remove" Content="Remove Employee" HorizontalAlignment="Left" Margin="10,424,0,0" VerticalAlignment="Top" Width="136" Height="46"/>
-            <Button x:Name="btn_emp_update" Content="Update Employee" HorizontalAlignment="Left" Margin="602,424,0,0" VerticalAlignment="Top" Width="136" Height="46" Click="Btn_emp_update_Click" />
-            <Button x:Name="btn_emp_get" Content="Get Employee" HorizontalAlignment="Left" Margin="421,424,0,0" VerticalAlignment="Top" Width="136" Height="46" Click="Btn_emp_get_Click"/>
+            <Button x:Name="btn_emp_remove" Content="Remove Employee" HorizontalAlignment="Left" Margin="10,424,0,0" VerticalAlignment="Top" Width="136" Height="46" Click="Btn_emp_remove_Click" Background="#FFFF4C4C"/>
+            <Button x:Name="btn_emp_update" Content="Update Employee" HorizontalAlignment="Left" Margin="460,424,0,0" VerticalAlignment="Top" Width="136" Height="46" Click="Btn_emp_update_Click" Background="#FFFF4C4C" />
+            <Button x:Name="btn_emp_get" Content="Get Employee" HorizontalAlignment="Left" Margin="307,424,0,0" VerticalAlignment="Top" Width="136" Height="46" Click="Btn_emp_get_Click" Background="#FFFF4C4C"/>
             <DataGrid x:Name="datagrid_emp" HorizontalAlignment="Left" Height="265" Margin="382,142,0,0" VerticalAlignment="Top" Width="375" IsReadOnly="True"/>
-            <TextBox x:Name="emp_field_fname" HorizontalAlignment="Left" Height="29" Margin="155,276,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="199" TextChanged="TextBox_TextChanged"/>
-            <TextBox x:Name="emp_field_lname" HorizontalAlignment="Left" Height="29" Margin="155,310,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="199"/>
-            <TextBox x:Name="emp_field_email" HorizontalAlignment="Left" Height="29" Margin="155,344,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="199"/>
-            <TextBox x:Name="emp_field_phone" HorizontalAlignment="Left" Height="29" Margin="155,378,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="199"/>
-            <Label Content="First Name:" HorizontalAlignment="Left" Margin="68,279,0,0" VerticalAlignment="Top" Width="78"/>
-            <Label Content="Last Name:" HorizontalAlignment="Left" Margin="72,314,0,0" VerticalAlignment="Top" Width="78"/>
-            <Label Content="Email:" HorizontalAlignment="Left" Margin="93,347,0,0" VerticalAlignment="Top" Width="53"/>
-            <Label Content="Phone:" HorizontalAlignment="Left" Margin="85,381,0,0" VerticalAlignment="Top" Width="61"/>
-            <TextBox x:Name="emp_field_id" HorizontalAlignment="Left" Height="29" Margin="475,101,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="199" TextChanged="TextBox_TextChanged"/>
-            <Label Content="Employee ID:" HorizontalAlignment="Left" Margin="382,105,0,0" VerticalAlignment="Top" Width="88" RenderTransformOrigin="0.566,0.469"/>
-            <Label Content="Employment Type:" HorizontalAlignment="Left" Margin="38,245,0,0" VerticalAlignment="Top" Width="112" RenderTransformOrigin="0.823,-1.742"/>
-            <TextBox x:Name="emp_field_type" HorizontalAlignment="Left" Height="29" Margin="155,242,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="199" TextChanged="TextBox_TextChanged"/>
-            <Label Content="Social Security Number:" HorizontalAlignment="Left" Margin="6,208,0,0" VerticalAlignment="Top" Width="140" RenderTransformOrigin="0.823,-1.742"/>
-            <PasswordBox x:Name="emp_field_ssn" HorizontalAlignment="Left" Height="29" Margin="155,208,0,0" VerticalAlignment="Top" Width="199"/>
-            <Label Content="Department Name:" HorizontalAlignment="Left" Margin="34,177,0,0" VerticalAlignment="Top" Width="112" RenderTransformOrigin="0.823,-1.742"/>
-            <TextBox x:Name="emp_field_department" HorizontalAlignment="Left" Height="29" Margin="155,173,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="199" TextChanged="TextBox_TextChanged"/>
-            <Label Content="Birthday:" HorizontalAlignment="Left" Margin="85,141,0,0" VerticalAlignment="Top" Width="61" RenderTransformOrigin="0.823,-1.742"/>
+            <TextBox x:Name="emp_field_fname" HorizontalAlignment="Left" Height="29" Margin="155,217,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="199" TextChanged="TextBox_TextChanged" Background="#FFDF7878"/>
+            <TextBox x:Name="emp_field_lname" HorizontalAlignment="Left" Height="29" Margin="155,251,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="199" Background="#FFDF7878"/>
+            <TextBox x:Name="emp_field_email" HorizontalAlignment="Left" Height="29" Margin="155,285,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="199" Background="#FFDF7878"/>
+            <TextBox x:Name="emp_field_phone" HorizontalAlignment="Left" Height="29" Margin="155,319,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="199" Background="#FFDF7878"/>
+            <Label Content="First Name:" HorizontalAlignment="Left" Margin="68,217,0,0" VerticalAlignment="Top" Width="78"/>
+            <Label Content="Last Name:" HorizontalAlignment="Left" Margin="72,251,0,0" VerticalAlignment="Top" Width="78"/>
+            <Label Content="Email:" HorizontalAlignment="Left" Margin="93,286,0,0" VerticalAlignment="Top" Width="53"/>
+            <Label Content="Phone:" HorizontalAlignment="Left" Margin="85,317,0,0" VerticalAlignment="Top" Width="61"/>
+            <TextBox x:Name="emp_field_id" HorizontalAlignment="Left" Height="29" Margin="155,50,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="199" TextChanged="TextBox_TextChanged" Background="#FFDF7878"/>
+            <Label Content="Employee ID:" HorizontalAlignment="Left" Margin="62,53,0,0" VerticalAlignment="Top" Width="88" RenderTransformOrigin="0.566,0.469"/>
+            <Label Content="Employment Type:" HorizontalAlignment="Left" Margin="34,183,0,0" VerticalAlignment="Top" Width="112" RenderTransformOrigin="0.823,-1.742"/>
+            <TextBox x:Name="emp_field_type" HorizontalAlignment="Left" Height="29" Margin="155,183,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="199" TextChanged="TextBox_TextChanged" Background="#FFDF7878"/>
+            <Label Content="Social Security Number:" HorizontalAlignment="Left" Margin="10,153,0,0" VerticalAlignment="Top" Width="140" RenderTransformOrigin="0.823,-1.742"/>
+            <PasswordBox x:Name="emp_field_ssn" HorizontalAlignment="Left" Height="29" Margin="155,149,0,0" VerticalAlignment="Top" Width="199" Background="#FFDF7878"/>
+            <Label Content="Department Name:" HorizontalAlignment="Left" Margin="34,115,0,0" VerticalAlignment="Top" Width="112" RenderTransformOrigin="0.823,-1.742"/>
+            <TextBox x:Name="emp_field_department" HorizontalAlignment="Left" Height="29" Margin="155,115,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="199" TextChanged="TextBox_TextChanged" Background="#FFDF7878"/>
+            <Label Content="Birthday:" HorizontalAlignment="Left" Margin="85,84,0,0" VerticalAlignment="Top" Width="61" RenderTransformOrigin="0.823,-1.742"/>
+            <Button x:Name="btn_dpt_remove" Content="Remove Department" HorizontalAlignment="Left" Margin="601,61,0,0" VerticalAlignment="Top" Width="156" Height="30" Click="Btn_dpt_remove_Click" Background="#FF0FEEBA" />
+            <Button x:Name="btn_dpt_get" Content="View Departments" HorizontalAlignment="Left" Margin="515,99,0,0" VerticalAlignment="Top" Width="156" Height="30" Click="Btn_dpt_remove_Click" Background="#FF0FEEBA" />
+            <TextBox x:Name="dpt_field_name" HorizontalAlignment="Left" Height="29" Margin="397,61,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="199" TextChanged="TextBox_TextChanged" Background="#FF9EEEDB"/>
+            <Label Content="Department Name:" HorizontalAlignment="Left" Margin="397,35,0,0" VerticalAlignment="Top" Width="130" RenderTransformOrigin="0.566,0.469"/>
+            <ComboBox x:Name="emp_combo_animal" HorizontalAlignment="Left" Margin="155,391,0,0" VerticalAlignment="Top" Width="199" Height="26" IsEditable="True"/>
         </Grid>
         <Grid x:Name="menu_animals" Margin="10" Visibility="Hidden">
             <Button x:Name="btn_animals" Content="Add Animal" HorizontalAlignment="Left" Margin="117,222,0,0" VerticalAlignment="Top" Width="136" Height="46"/>
@@ -98,7 +103,7 @@
             <ListBox x:Name="list_ticket_cart" Visibility="Collapsed" HorizontalAlignment="Left" Height="76" Margin="10,394,0,0" VerticalAlignment="Top" Width="274"/>
             <Button x:Name="btn_add_ticket_to_cart" Content="Add Ticket" Visibility="Collapsed" HorizontalAlignment="Left" Height="23" Margin="214,365,0,0" VerticalAlignment="Top" Width="70"/>
         </Grid>
-        <Grid x:Name="menu_donations" Margin="10" Visibility="Visible" IsVisibleChanged="Menu_donations_IsVisibleChanged">
+        <Grid x:Name="menu_donations" Margin="10" Visibility="Hidden" IsVisibleChanged="Menu_donations_IsVisibleChanged">
             <Button x:Name="btn_donation_back" Content="Main Menu" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="30" Margin="10,10,0,0" Click="OpenMainMenu" />
             <Button x:Name="btn_donation_new_donor" Content="New Donor" HorizontalAlignment="Left" VerticalAlignment="Top" Width="137" Height="37" Margin="347,10,0,0" Click="Btn_donation_new_donor_Click"/>
             <Button x:Name="btn_donation_view_donor" Content=" View Donor" HorizontalAlignment="Left" VerticalAlignment="Top" Width="136" Height="37" Margin="204,10,0,0" Click="Btn_donation_view_donor_Click"/>
