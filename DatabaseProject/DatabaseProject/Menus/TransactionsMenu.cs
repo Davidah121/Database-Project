@@ -49,6 +49,11 @@ namespace DatabaseProject
             DeleteTransaction();
         }
 
+        private void Btn_clear_fields_Click(object sender, RoutedEventArgs e)
+        {
+            ClearFields();
+        }
+
         private void combo_trans_type_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             try
@@ -142,7 +147,6 @@ namespace DatabaseProject
         {
             if (string.IsNullOrWhiteSpace(txt_transID.Text)) return;
 
-
             if (MessageBox.Show("Are you sure you want to update this transaction?", "Warning!", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
             {
                 return;
@@ -201,7 +205,6 @@ namespace DatabaseProject
             combo_payMethod.Text = string.Empty;
             txt_trans_amount.Text = string.Empty;
             combo_trans_type.Text = string.Empty;
-
         }
     }
 
