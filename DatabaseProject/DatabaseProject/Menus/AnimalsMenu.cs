@@ -61,53 +61,66 @@ namespace DatabaseProject
             //If a text box is blank, do not include it in the search.
             try
             {
+                bool hasParams = false;
                 int idVal, habIdVal, speIdVal, wei, dietID;
                 string animalName, animalDate;
+
+                string defaultQuery = "SELECT * FROM ANIMAL;";
 
                 string query = "SELECT * FROM ANIMAL WHERE ";
 
                 if (txt_animal_id.Text!="")
                 {
+                    hasParams = true;
                     idVal = int.Parse(txt_animal_id.Text);
-                    query += "animal_id = " + idVal + ", ";
+                    query += "animal_id = " + idVal + " and ";
                 }
                 if (txt_animal_habitat_id.Text != "")
                 {
+                    hasParams = true;
                     habIdVal = int.Parse(txt_animal_habitat_id.Text);
-                    query += "habitat_id = " + habIdVal + ", ";
+                    query += "habitat_id = " + habIdVal + " and ";
                 }
                 if (txt_animal_species_id.Text != "")
                 {
+                    hasParams = true;
                     speIdVal = int.Parse(txt_animal_habitat_id.Text);
-                    query += "species_id = " + speIdVal + ", ";
+                    query += "species_id = " + speIdVal + " and ";
                 }
                 if(txt_animal_name.Text != "")
                 {
+                    hasParams = true;
                     animalName = txt_animal_name.Text;
-                    query += "animal_name = '" + animalName + "', ";
+                    query += "animal_name = '" + animalName + "' and ";
                 }
                 if (txt_animal_birthdate.Text != "")
                 {
+                    hasParams = true;
                     animalDate = txt_animal_birthdate.Text;
-                    query += "birthday = '" + animalDate + "', ";
+                    query += "birthday = '" + animalDate + "' and ";
                 }
                 if (txt_animal_weight.Text != "")
                 {
+                    hasParams = true;
                     wei = int.Parse(txt_animal_weight.Text);
-                    query += "weight = " + wei + ", ";
+                    query += "weight = " + wei + " and ";
                 }
                 if (txt_animal_diet_id.Text != "")
                 {
+                    hasParams = true;
                     dietID = int.Parse(txt_animal_diet_id.Text);
-                    query += "diet_id = " + dietID + ", ";
+                    query += "diet_id = " + dietID + " and ";
                 }
 
                 query += ";";
                 query.Replace("'NULL'", "NULL");
                 
-                query = query.Remove(query.Length - 3, 2);
+                query = query.Remove(query.Length - 5, 4);
 
-                datagrid_animals.ItemsSource = Query(query)?.DefaultView;
+                if (hasParams)
+                    datagrid_animals.ItemsSource = Query(query)?.DefaultView;
+                else
+                    datagrid_animals.ItemsSource = Query(defaultQuery)?.DefaultView;
             }
             catch
             {

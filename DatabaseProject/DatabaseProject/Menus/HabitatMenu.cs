@@ -42,38 +42,47 @@ namespace DatabaseProject
             //If a text box is blank, do not include it in the search.
             try
             {
+                bool hasParams = false;
                 int idVal, humiVal, tempVal;
                 string habName;
+
+                string defaultQuery = "SELECT * FROM HABITAT;";
 
                 string query = "SELECT * FROM HABITAT WHERE ";
 
                 if (txt_habitat_id.Text != "")
                 {
+                    hasParams = true;
                     idVal = int.Parse(txt_habitat_id.Text);
-                    query += "habitat_id = " + idVal + ", ";
+                    query += "habitat_id = " + idVal + " and ";
                 }
                 if (txt_habitat_name.Text != "")
                 {
+                    hasParams = true;
                     habName = txt_habitat_name.Text;
-                    query += "habitat_name = " + habName + ", ";
+                    query += "habitat_name = " + habName + " and ";
                 }
                 if (txt_habitat_humidity.Text != "")
                 {
+                    hasParams = true;
                     humiVal = int.Parse(txt_habitat_humidity.Text);
-                    query += "humidity = " + humiVal + ", ";
+                    query += "humidity = " + humiVal + " and ";
                 }
                 if (txt_habitat_temperature.Text != "")
                 {
                     tempVal = int.Parse(txt_habitat_temperature.Text);
-                    query += "temperature = '" + tempVal + "', ";
+                    query += "temperature = '" + tempVal + "' and ";
                 }
 
                 query += ";";
                 query.Replace("'NULL'", "NULL");
 
-                query = query.Remove(query.Length - 3, 2);
+                query = query.Remove(query.Length - 5, 4);
 
-                datagrid_habitat.ItemsSource = Query(query)?.DefaultView;
+                if(hasParams)
+                    datagrid_habitat.ItemsSource = Query(query)?.DefaultView;
+                else
+                    datagrid_habitat.ItemsSource = Query(defaultQuery)?.DefaultView;
             }
             catch
             {
