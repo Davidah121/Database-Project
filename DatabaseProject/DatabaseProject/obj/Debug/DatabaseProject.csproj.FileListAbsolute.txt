@@ -28,3 +28,6 @@ C:\Users\Bao\Desktop\Database-Project-transaction2\DatabaseProject\DatabaseProje
 C:\Users\Bao\Desktop\Database-Project-transaction2\DatabaseProject\DatabaseProject\obj\Debug\DatabaseProject.csproj.CoreCompileInputs.cache
 C:\Users\Bao\Desktop\Database-Project-transaction2\DatabaseProject\DatabaseProject\obj\Debug\DatabaseProject.exe
 C:\Users\Bao\Desktop\Database-Project-transaction2\DatabaseProject\DatabaseProject\obj\Debug\DatabaseProject.pdb
+C:\Users\jn02798.AD\Desktop\Database-Project-transaction2\DatabaseProject\DatabaseProject\bin\Debug\DatabaseProject.exe.config
+C:\Users\jn02798.AD\Desktop\Database-Project-transaction2\DatabaseProject\DatabaseProject\obj\Debug\DatabaseProject.exe
+C:\Users\jn02798.AD\Desktop\Database-Project-transaction2\DatabaseProject\DatabaseProject\obj\Debug\DatabaseProject.pdb

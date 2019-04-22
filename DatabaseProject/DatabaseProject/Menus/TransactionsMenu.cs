@@ -111,17 +111,22 @@ namespace DatabaseProject
             string Date_Of_Transaction = txt_date.Text;
             string Payment_Method = combo_payMethod.Text;
             string Transaction_Amount = txt_trans_amount.Text;
+            string Ticket_ID = txt_ticket_id.Text;
+            string Ticket_Type = combo_ticket_selection.Text;
 
-            //if (string.IsNullOrWhiteSpace(txt_transID.Text)) return;
             if (!string.IsNullOrWhiteSpace(Transaction_ID)) return;
             if (string.IsNullOrWhiteSpace(Employee_ID)) return;
             if (string.IsNullOrWhiteSpace(Date_Of_Transaction)) return;
             if (string.IsNullOrWhiteSpace(Payment_Method)) return;
             if (string.IsNullOrWhiteSpace(Transaction_Amount)) return;
 
-            int id = FindFirstNonIndex("Select transaction_id fRoM Transactions order by 1");
+            int id = FindFirstNonIndex("Select transaction_id from Transactions order by 1");
             string query = $"INSERT INTO Transactions VALUES('{id}','{Employee_ID}', '{Date_Of_Transaction}', '{Payment_Method}', '{Transaction_Amount}')";
-            //string query = $"INSERT INTO Transactions VALUES('{Transaction_ID}', '{Employee_ID}', '{Date_Of_Transaction}', '{Payment_Method}', '{Transaction_Amount}')";
+            // Use foreach loop to get all tickets in cart to the right id
+            if (!string.IsNullOrWhiteSpace(Ticket_ID) && !string.IsNullOrWhiteSpace(Ticket_Type))
+            {
+                query = $"INSERT INTO Ticket VALUES('{id}', '{Ticket_ID}', '{Ticket_Type}'";
+            }
 
             if (NonQuery(query))
             {

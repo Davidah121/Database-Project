@@ -37,7 +37,7 @@
             <Button x:Name="btn_new_trans" Content="New" HorizontalAlignment="Left" Margin="520,430,0,0" VerticalAlignment="Top" Width="80" Height="40" Click="Btn_new_trans_Click"/>
             <Button x:Name="btn_update_trans" Content="Update" HorizontalAlignment="Left" Margin="605,430,0,0" VerticalAlignment="Top" Width="80" Height="40" Click="Btn_update_trans_Click"/>
             <Button x:Name="btn_trans_back" Content="Main Menu" HorizontalAlignment="Left" VerticalAlignment="Top" Width="80" Height="40" Margin="10,10,0,0" Click="OpenMainMenu" />
-            <Button x:Name="btn_clear_fields" Content="Clear Fields" HorizontalAlignment="Left" Height="40" Margin="350,430,0,0" VerticalAlignment="Top" Width="80" Click="Btn_clear_fields_Click"/>
+            <Button x:Name="btn_clear_fields" Content="Clear Fields" HorizontalAlignment="Left" Height="40" Margin="435,385,0,0" VerticalAlignment="Top" Width="80" Click="Btn_clear_fields_Click"/>
             <Label x:Name="TransactionIDLabel" Content="Transaction ID" HorizontalAlignment="Left" Height="23" Margin="10,50,0,0" VerticalAlignment="Top" Width="189"/>
             <Label x:Name="EmployeeIDLabel" Content="Employee ID" HorizontalAlignment="Left" Margin="10,96,0,0" VerticalAlignment="Top" Width="189" Height="27" RenderTransformOrigin="-0.589,1.908"/>
             <Label x:Name="DateLabel" Content="Date" HorizontalAlignment="Left" VerticalAlignment="Top" Width="189" Height="23" RenderTransformOrigin="-0.589,1.908" Margin="10,146,0,0"/>
@@ -47,7 +47,7 @@
             <TextBox x:Name="txt_transID" HorizontalAlignment="Left" Height="23" Margin="10,73,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="189"/>
             <TextBox x:Name="txt_empID" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="189" Margin="10,123,0,0"/>
             <TextBox x:Name="txt_date" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="189" Margin="10,169,0,0"/>
-            <TextBox x:Name="txt_trans_amount" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="189" Margin="10,265,0,0"/>
+            <TextBox x:Name="txt_trans_amount" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="189" Margin="10,265,0,0" TextChanged="txt_trans_amount_TextChanged"/>
             <ComboBox x:Name="combo_payMethod" HorizontalAlignment="Left" Height="23" Margin="10,219,0,0" VerticalAlignment="Top" Width="189"  MaxDropDownHeight="80">
                 <ComboBoxItem Content="Cash"/>
                 <ComboBoxItem Content="Credit"/>
