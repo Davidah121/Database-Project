@@ -35,7 +35,8 @@ namespace DatabaseProject
                 menu_trans,
                 menu_expmode,
                 menu_animals_habitat,
-                menu_animals_species
+                menu_animals_species,
+                menu_animals_diet
             };
 
 

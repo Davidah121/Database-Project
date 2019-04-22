@@ -31,6 +31,10 @@ namespace DatabaseProject
         {
             OpenMenu(menu_animals_species);
         }
+        private void OpenDietMenu(object sender, RoutedEventArgs e)
+        {
+            OpenMenu(menu_animals_diet);
+        }
 
         private void Btn_animals_add_Click(object sender, RoutedEventArgs e)
         {
@@ -40,7 +44,7 @@ namespace DatabaseProject
                 int habIdVal = int.Parse(txt_animal_habitat_id.Text);
                 int speIdVal = int.Parse(txt_animal_species_id.Text);
                 string animalName = txt_animal_name.Text;
-                string animalDate = txt_animal_birthdate.Text;
+                string animalDate = date_animal_birthday.Text;
                 int wei = int.Parse(txt_animal_weight.Text);
                 int dietID = int.Parse(txt_animal_diet_id.Text);
 
@@ -84,7 +88,7 @@ namespace DatabaseProject
                 if (txt_animal_species_id.Text != "")
                 {
                     hasParams = true;
-                    speIdVal = int.Parse(txt_animal_habitat_id.Text);
+                    speIdVal = int.Parse(txt_animal_species_id.Text);
                     query += "species_id = " + speIdVal + " and ";
                 }
                 if(txt_animal_name.Text != "")
@@ -93,10 +97,11 @@ namespace DatabaseProject
                     animalName = txt_animal_name.Text;
                     query += "animal_name = '" + animalName + "' and ";
                 }
-                if (txt_animal_birthdate.Text != "")
+                
+                if (date_animal_birthday.Text != "")
                 {
                     hasParams = true;
-                    animalDate = txt_animal_birthdate.Text;
+                    animalDate = date_animal_birthday.Text;
                     query += "birthday = '" + animalDate + "' and ";
                 }
                 if (txt_animal_weight.Text != "")
@@ -138,7 +143,7 @@ namespace DatabaseProject
                 int speIdVal = int.Parse(txt_animal_species_id.Text);
 
                 string animalName = txt_animal_name.Text;
-                string animalDate = txt_animal_birthdate.Text;
+                string animalDate = date_animal_birthday.Text;
 
                 int wei = int.Parse(txt_animal_weight.Text);
                 int dietID = int.Parse(txt_animal_diet_id.Text);
@@ -164,6 +169,8 @@ namespace DatabaseProject
 
         private void Btn_animals_delete_Click(object sender, RoutedEventArgs e)
         {
+            //Can only delete one entry at a time. For safety reasons. So you don't accidentally delete tons of records by leaving something filled out.
+            //Use expert mode to delete more by different parameters.
             if (MessageBox.Show("Are you sure you want to delete this record?", "Warning!", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
                 try
