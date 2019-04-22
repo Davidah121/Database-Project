@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -106,12 +106,22 @@ namespace DatabaseProject
 
         private void NewTransaction()
         {
-            if (!string.IsNullOrWhiteSpace(txt_transID.Text)) return;
+            string Transaction_ID = txt_transID.Text;
+            string Employee_ID = txt_empID.Text;
+            string Date_Of_Transaction = txt_date.Text;
+            string Payment_Method = combo_payMethod.Text;
+            string Transaction_Amount = txt_trans_amount.Text;
 
-            /*
-            int id = FindFirstNonIndex("Select transaction_id from Transaction order by 1");
-            */
-            string query = $"INSERT INTO Transaction VALUES(1);";
+            //if (string.IsNullOrWhiteSpace(txt_transID.Text)) return;
+            if (!string.IsNullOrWhiteSpace(Transaction_ID)) return;
+            if (string.IsNullOrWhiteSpace(Employee_ID)) return;
+            if (string.IsNullOrWhiteSpace(Date_Of_Transaction)) return;
+            if (string.IsNullOrWhiteSpace(Payment_Method)) return;
+            if (string.IsNullOrWhiteSpace(Transaction_Amount)) return;
+
+            int id = FindFirstNonIndex("Select transaction_id fRoM Transactions order by 1");
+            string query = $"INSERT INTO Transactions VALUES('{id}','{Employee_ID}', '{Date_Of_Transaction}', '{Payment_Method}', '{Transaction_Amount}')";
+            //string query = $"INSERT INTO Transactions VALUES('{Transaction_ID}', '{Employee_ID}', '{Date_Of_Transaction}', '{Payment_Method}', '{Transaction_Amount}')";
 
             if (NonQuery(query))
             {
@@ -126,11 +136,11 @@ namespace DatabaseProject
 
             if (string.IsNullOrWhiteSpace(txt_transID.Text))
             {
-                query = $"SELECT * FROM Transaction;";
+                query = $"SELECT * FROM Transactions;";
             }
             else
             {
-                query = $"SELECT * FROM Transaction WHERE transaction_id = {txt_transID.Text}";
+                query = $"SELECT * FROM Transactions WHERE transaction_id = {txt_transID.Text}";
             }
 
             DataTable table = Query(query);
@@ -153,7 +163,7 @@ namespace DatabaseProject
             }
 
             //Handling Employee ID?
-            string query = $"UPDATE Transaction SET amount = '{txt_trans_amount.Text}', employee_id = '{txt_empID.Text}', transaction_date = '{txt_date.Text}', payment_method = '{combo_payMethod.Text}, transaction_type = '{combo_trans_type}' WHERE transaction_id = {txt_transID.Text};";
+            string query = $"UPDATE Transactions SET amount = '{txt_trans_amount.Text}', employee_id = '{txt_empID.Text}', transaction_date = '{txt_date.Text}', payment_method = '{combo_payMethod.Text}' WHERE transaction_id = '{txt_transID.Text}';";
 
             NonQuery(query);
         }
@@ -167,7 +177,7 @@ namespace DatabaseProject
                 return;
             }
 
-            string query = $"DELETE FROM Transaction WHERE transaction_id = {txt_transID.Text};";
+            string query = $"DELETE FROM Transactions WHERE transaction_id = {txt_transID.Text};";
 
 
             if (NonQuery(query))
@@ -176,7 +186,7 @@ namespace DatabaseProject
                 ViewTransaction();
             }
         }
-        /*
+        
         private int FindFirstNonIndex(string query)
         {
             DataTable table = Query(query);
@@ -196,7 +206,7 @@ namespace DatabaseProject
             return firstAvailable;
         }
         
-    */
+    
         private void ClearFields()
         {
             txt_transID.Text = string.Empty;

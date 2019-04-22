@@ -19,7 +19,7 @@ namespace DatabaseProject
 {
     partial class MainWindow : Window
     {
-        const string connectionString = "Data Source=NICK-Laptop;Initial Catalog=Zoo;Integrated Security=True";
+        const string connectionString = "Data Source=DESKTOP-V87K7CH;Initial Catalog=Zoo;Integrated Security=True";
 
         #region Events
 
