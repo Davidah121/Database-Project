@@ -40,33 +40,41 @@ namespace DatabaseProject
         {
             try
             {
+                bool hasParams = false;
                 int idVal;
                 string specName, specClass;
 
+                string defaultQuery = "SELECT * FROM SPECIES;";
                 string query = "SELECT * FROM SPECIES WHERE ";
 
                 if (txt_species_id.Text != "")
                 {
+                    hasParams = true;
                     idVal = int.Parse(txt_species_id.Text);
-                    query += "species_id = " + idVal + ", ";
+                    query += "species_id = " + idVal + " and ";
                 }
                 if (txt_species_name.Text != "")
                 {
+                    hasParams = true;
                     specName = txt_species_name.Text;
-                    query += "species_name = " + specName + ", ";
+                    query += "species_name = '" + specName + "' and ";
                 }
                 if (txt_species_class.Text != "")
                 {
+                    hasParams = true;
                     specClass = txt_species_class.Text;
-                    query += "class_name = " + specClass + ", ";
+                    query += "class_name = '" + specClass + "' and ";
                 }
 
                 query += ";";
                 query.Replace("'NULL'", "NULL");
 
-                query = query.Remove(query.Length - 3, 2);
+                query = query.Remove(query.Length - 5, 4);
 
-                datagrid_species.ItemsSource = Query(query)?.DefaultView;
+                if(hasParams)
+                    datagrid_species.ItemsSource = Query(query)?.DefaultView;
+                else
+                    datagrid_species.ItemsSource = Query(defaultQuery)?.DefaultView;
             }
             catch
             {
