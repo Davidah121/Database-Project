@@ -48,7 +48,10 @@ namespace DatabaseProject
             }
             else
             {
-                Database.NonQuery(query);
+                if (Database.NonQuery(query))
+                {
+                    MessageBox.Show("Query executed successfully!");
+                }
             }
         }
 

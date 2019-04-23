@@ -101,6 +101,7 @@ namespace DatabaseProject
                 ClearDonationFields();
                 PopulateDonorDropdown();
                 ViewDonation();
+                ViewDonor();
 
                 Donor.onAllUpdated += PopulateDonorDropdown;
                 Animal.onAllUpdated += PopulateAnimalDropdown;
@@ -218,15 +219,9 @@ namespace DatabaseProject
                     return;
                 }
 
-                //MessageBox.Show(donation.Donor.ToString());
-
                 DonationID = donation.ID;
                 DonationAmount = donation.Amount;
                 Donor = Donor.All.Find(x => x.ID == donation.Donor.ID);
-
-                //MessageBox.Show(Donor?.ToString() ?? "Null");
-
-                //MessageBox.Show(dropdown_donation_donor.Items.Count.ToString());
 
                 if (donation is AnimalAdoption adoption)
                 {
@@ -241,7 +236,20 @@ namespace DatabaseProject
                     Animal = null;
                 }
             }
-            catch (Exception ex) { }
+            catch { }
+        }
+
+        private void Datatable_donors_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                if (!(e.AddedItems[0] is DataRowView data)) return;
+
+                int id = int.TryParse(data?.Row[0]?.ToString().Trim() ?? string.Empty, out int i) ? i : -1;
+
+                Donor = Donor.All.Find(x => x.ID == id);
+            }
+            catch { }
         }
 
 
@@ -427,6 +435,7 @@ namespace DatabaseProject
             donor?.Update();
 
             Donor = Donor.All.Find(x => x.ID == donor.ID);
+            ViewDonor();
         }
 
 
@@ -436,7 +445,7 @@ namespace DatabaseProject
 
             DataTable table = Database.Query(query);
 
-            datatable_donations.ItemsSource = table?.DefaultView;
+            datatable_donors.ItemsSource = table?.DefaultView;
         }
 
         private void UpdateDonor()
@@ -467,6 +476,7 @@ namespace DatabaseProject
 
             Donor = Donor.All.Find(x => x.ID == id);
 
+            ViewDonor();
             ViewDonation();
         }
 
@@ -481,7 +491,9 @@ namespace DatabaseProject
             Donor.Delete();
 
             ClearDonationFields();
+
             ViewDonor();
+            ViewDonation();
         }
 
         private Donor CreateDonor()
