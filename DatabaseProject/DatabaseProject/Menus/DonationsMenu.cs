@@ -124,7 +124,7 @@ namespace DatabaseProject
 
         private void Btn_view_donation_Click(object sender, RoutedEventArgs e)
         {
-            ViewDonation();
+            ViewDonation(true);
         }
 
 
@@ -342,12 +342,11 @@ namespace DatabaseProject
                 MessageBox.Show("Please select an animal.");
                 return;
             }
-            else if (DonationType == HABITAT_DONATION && Habitat == null)
+            if (DonationType == HABITAT_DONATION && Habitat == null)
             {
                 MessageBox.Show("Please select a habitat.");
                 return;
             }
-
             if (Donor == null)
             {
                 MessageBox.Show("Please select a donor.");
@@ -358,8 +357,12 @@ namespace DatabaseProject
 
             if (donation == null) return;
 
-            donation.Amount = DonationAmount;
-            donation.Donor = Donor;
+            if (donation is AnimalAdoption && DonationType == HABITAT_DONATION || donation is HabitatDonation && DonationType == ANIMAL_ADOPTION)
+            {
+                donation.Delete();
+                donation = CreateDonation(donation.ID);
+                donation?.Update();
+            }
 
             if (donation is AnimalAdoption adoption)
             {
@@ -369,6 +372,9 @@ namespace DatabaseProject
             {
                 habitat.Habitat = Habitat;
             }
+
+            donation.Amount = DonationAmount;
+            donation.Donor = Donor;
 
 
             donation.Update();
@@ -396,9 +402,12 @@ namespace DatabaseProject
         }
 
 
-        private Donation CreateDonation()
+        private Donation CreateDonation(int id = -1)
         {
-            int id = FindFirstNonIndex("SELECT donation_id FROM Donation");
+            if (id < 0)
+            {
+                id = FindFirstNonIndex("SELECT donation_id FROM Donation");
+            }
 
             if (DonationType == ANIMAL_ADOPTION)
             {
@@ -535,24 +544,18 @@ namespace DatabaseProject
 
         private void PopulateDonorDropdown()
         {
-            //MessageBox.Show("PopulateDonorDropdown");
-
             dropdown_donation_donor.ItemsSource = Donor.All;
         }
 
 
         private void PopulateHabitatDropdown()
         {
-            //MessageBox.Show("PopulateHabitatDropdown");
-
             dropdown_donation_habitat.ItemsSource = Habitat.All;
         }
 
 
         private void PopulateAnimalDropdown()
         {
-            //MessageBox.Show("PopulateAnimalDropdown");
-
             dropdown_donation_animal.ItemsSource = Animal.All;
         }
 
