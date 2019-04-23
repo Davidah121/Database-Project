@@ -36,10 +36,10 @@
         </Grid>
         <Grid x:Name="menu_donations" Margin="10" Visibility="Visible" IsVisibleChanged="Menu_donations_IsVisibleChanged">
             <Button x:Name="btn_donation_back" Content="Main Menu" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="30" Margin="10,10,0,0" Click="OpenMainMenu" />
-            <Button x:Name="btn_donation_new_donor" Content="New Donor" HorizontalAlignment="Left" VerticalAlignment="Top" Width="137" Height="37" Margin="347,10,0,0" Click="Btn_donation_update_donor_Click" />
-            <Button x:Name="btn_donation_view_donor" Content=" View Donor" HorizontalAlignment="Left" VerticalAlignment="Top" Width="136" Height="37" Margin="204,10,0,0" Click="Btn_donation_update_donor_Click" />
+            <Button x:Name="btn_donation_new_donor" Content="New Donor" HorizontalAlignment="Left" VerticalAlignment="Top" Width="137" Height="37" Margin="347,10,0,0" Click="Btn_donation_new_donor_Click"/>
+            <Button x:Name="btn_donation_view_donor" Content=" View Donor" HorizontalAlignment="Left" VerticalAlignment="Top" Width="136" Height="37" Margin="204,10,0,0" Click="Btn_donation_view_donor_Click"/>
             <Button x:Name="btn_donation_update_donor" Content=" Update Donor" HorizontalAlignment="Left" VerticalAlignment="Top" Width="137" Height="37" Margin="490,10,0,0" Click="Btn_donation_update_donor_Click" />
-            <Button x:Name="btn_donation_delete_donor" Content="Delete Donor" HorizontalAlignment="Left" VerticalAlignment="Top" Width="136" Height="37" Margin="634,10,0,0" Click="Btn_donation_update_donor_Click" />
+            <Button x:Name="btn_donation_delete_donor" Content="Delete Donor" HorizontalAlignment="Left" VerticalAlignment="Top" Width="136" Height="37" Margin="634,10,0,0" Click="Btn_donation_delete_donor_Click"/>
             <ScrollViewer Margin="10,52,555,61" >
                 <StackPanel Orientation="Vertical"  Height="477" Width="189">
                     <Label Content="Donation ID" HorizontalAlignment="Left" VerticalAlignment="Top" Width="189" Height="23"/>

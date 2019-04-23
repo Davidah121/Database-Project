@@ -44,11 +44,11 @@ namespace DatabaseProject
         {
             if (query.StartsWith("select", StringComparison.OrdinalIgnoreCase))
             {
-                datagrid_expmode.ItemsSource = Query(query)?.DefaultView;
+                datagrid_expmode.ItemsSource = Database.Query(query)?.DefaultView;
             }
             else
             {
-                NonQuery(query);
+                Database.NonQuery(query);
             }
         }
 

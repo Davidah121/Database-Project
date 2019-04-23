@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data;
+using System.Data.SqlClient;
 using DatabaseProject;
 
 namespace DatabaseProject
@@ -38,7 +39,7 @@ namespace DatabaseProject
         {
             get
             {
-                return double.TryParse(textbox_donation_id.Text.Trim(), out double i) ? i : 0;
+                return double.TryParse(textbox_donation_amount.Text.Trim(), out double i) ? i : 0;
             }
             set => textbox_donation_amount.Text = value < 0 ? string.Empty : value.ToString();
         }
@@ -100,10 +101,17 @@ namespace DatabaseProject
                 ClearDonationFields();
                 PopulateDonorDropdown();
                 ViewDonation();
+
+                Donor.onAllUpdated += PopulateDonorDropdown;
+                Animal.onAllUpdated += PopulateAnimalDropdown;
+                Habitat.onAllUpdated += PopulateHabitatDropdown;
             }
             else
             {
                 // We were just closed
+                Donor.onAllUpdated -= PopulateDonorDropdown;
+                Animal.onAllUpdated -= PopulateAnimalDropdown;
+                Habitat.onAllUpdated -= PopulateHabitatDropdown;
             }
         }
 
@@ -155,10 +163,24 @@ namespace DatabaseProject
             }
         }
 
+        private void Btn_donation_view_donor_Click(object sender, RoutedEventArgs e)
+        {
+            ViewDonor();
+        }
+
+        private void Btn_donation_new_donor_Click(object sender, RoutedEventArgs e)
+        {
+            NewDonor();
+        }
 
         private void Btn_donation_update_donor_Click(object sender, RoutedEventArgs e)
         {
+            UpdateDonor();
+        }
 
+        private void Btn_donation_delete_donor_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteDonor();
         }
 
 
@@ -196,9 +218,15 @@ namespace DatabaseProject
                     return;
                 }
 
+                //MessageBox.Show(donation.Donor.ToString());
+
                 DonationID = donation.ID;
                 DonationAmount = donation.Amount;
-                Donor = donation.Donor;
+                Donor = Donor.All.Find(x => x.ID == donation.Donor.ID);
+
+                //MessageBox.Show(Donor?.ToString() ?? "Null");
+
+                //MessageBox.Show(dropdown_donation_donor.Items.Count.ToString());
 
                 if (donation is AnimalAdoption adoption)
                 {
@@ -206,21 +234,18 @@ namespace DatabaseProject
                     Animal = adoption.Animal;
                     Habitat = null;
                 }
-                else if(donation is HabitatDonation habitat)
+                else if (donation is HabitatDonation habitat)
                 {
                     DonationType = HABITAT_DONATION;
                     Habitat = habitat.Habitat;
                     Animal = null;
                 }
             }
-            catch(Exception ex)
-            {
-            }
+            catch (Exception ex) { }
         }
 
 
         #endregion
-
 
         #region Methods
 
@@ -256,40 +281,32 @@ namespace DatabaseProject
                 return;
             }
 
-            int id = FindFirstNonIndex("SELECT donation_id FROM Donation");
+            Donation donation = CreateDonation();
 
-            string query = $"INSERT INTO Donation VALUES({id}, {DonationAmount}, {Donor.ID});";
-
-            if (NonQuery(query))
+            if (donation == null)
             {
-                if (DonationType == ANIMAL_ADOPTION)
-                {
-                    query = $"INSERT INTO Animal_Adoption VALUES({id}, {Animal.ID})";
-                    NonQuery(query);
-                }
-                else if (DonationType == HABITAT_DONATION)
-                {
-                    query = $"INSERT INTO Habitat_Donation VALUES({id}, {Habitat.ID})";
-                    NonQuery(query);
-                }
-
-                ClearDonationFields();
-                ViewDonation();
+                MessageBox.Show("Could not create new donation.");
+                return;
             }
+
+            donation.Update();
+
+            ClearDonationFields();
+            ViewDonation();
         }
 
 
-        private void ViewDonation()
+        private void ViewDonation(bool reduced = false)
         {
             string query;
 
-            if (string.IsNullOrWhiteSpace(textbox_donation_id.Text))
+            if (!string.IsNullOrWhiteSpace(textbox_donation_id.Text) && reduced)
             {
-                query = $"SELECT donation_id, amount, Donation.donor_id, first_name, last_name, email FROM Donation left join Donor on Donation.donor_id = Donor.donor_id;";
+                query = $"SELECT donation_id, amount, Donation.donor_id, first_name, last_name, email FROM Donation left join Donor on Donation.donor_id = Donor.donor_id WHERE donation_id = {textbox_donation_id.Text};";
             }
             else
             {
-                query = $"SELECT * FROM Donation WHERE donation_id = {textbox_donation_id.Text};";
+                query = $"SELECT donation_id, amount, Donation.donor_id, first_name, last_name, email FROM Donation left join Donor on Donation.donor_id = Donor.donor_id;";
             }
 
             DataTable table = Query(query);
@@ -302,38 +319,176 @@ namespace DatabaseProject
         {
             if (DonationID < 0) return;
 
-
-            if (MessageBox.Show("Are you sure you want to update this donation?", "Warning!", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+            if (DonationAmount <= 0)
             {
+                MessageBox.Show("Please enter a positive donation amount.");
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(DonationType))
+            {
+                MessageBox.Show("Please select a donation type.");
+                return;
+            }
+            if (DonationType == ANIMAL_ADOPTION && Animal == null)
+            {
+                MessageBox.Show("Please select an animal.");
+                return;
+            }
+            else if (DonationType == HABITAT_DONATION && Habitat == null)
+            {
+                MessageBox.Show("Please select a habitat.");
                 return;
             }
 
-            string update_amount = DonationAmount <= 0 ? string.Empty : $",amount = '{DonationAmount}'";
-            string update_donor = Donor == null ? string.Empty : $",donor_id = {Donor.ID}";
-
-            string query = $"UPDATE Donation SET donation_id = {DonationID}{update_amount}{update_donor} WHERE donation_id = {DonationID};";
-
-
-            if (NonQuery(query))
+            if (Donor == null)
             {
-                if (Animal != null)
-                {
-                    NonQuery($"UPDATE Animal_Adoption set animal_id = {Animal.ID} WHERE donation_id = {DonationID};");
-                }
-                else if (Habitat != null)
-                {
-                    NonQuery($"UPDATE Habitat_Donation set habitat_id = {Habitat.ID} WHERE donation_id = {DonationID};");
-                }
-
-                ClearDonationFields();
-                ViewDonation();
+                MessageBox.Show("Please select a donor.");
+                return;
             }
+
+            Donation donation = Donation.All.Find(x => x.ID == DonationID);
+
+            if (donation == null) return;
+
+            donation.Amount = DonationAmount;
+            donation.Donor = Donor;
+
+            if (donation is AnimalAdoption adoption)
+            {
+                adoption.Animal = Animal;
+            }
+            else if (donation is HabitatDonation habitat)
+            {
+                habitat.Habitat = Habitat;
+            }
+
+
+            donation.Update();
+
+
+            ClearDonationFields();
+            ViewDonation();
         }
 
 
         private void DeleteDonation()
         {
+            if (DonationID < 0)
+            {
+                MessageBox.Show("Please enter a valid id.");
+                return;
+            }
 
+            Donation donation = Donation.All.Find(x => x.ID == DonationID);
+
+            donation.Delete();
+
+            ClearDonationFields();
+            ViewDonation();
+        }
+
+
+        private Donation CreateDonation()
+        {
+            int id = FindFirstNonIndex("SELECT donation_id FROM Donation");
+
+            if (DonationType == ANIMAL_ADOPTION)
+            {
+                return new AnimalAdoption(id, DonationAmount, Donor, Animal);
+            }
+            else if (DonationType == HABITAT_DONATION)
+            {
+                return new HabitatDonation(id, DonationAmount, Donor, Habitat);
+            }
+
+            return null;
+        }
+
+        private void NewDonor()
+        {
+            if (string.IsNullOrEmpty(DonorFName))
+            {
+                MessageBox.Show("Please enter a first name.");
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(DonorLName))
+            {
+                MessageBox.Show("Please enter a last name.");
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(DonorEmail))
+            {
+                MessageBox.Show("Please enter an email.");
+                return;
+            }
+
+            Donor donor = CreateDonor();
+
+            donor?.Update();
+
+            Donor = Donor.All.Find(x => x.ID == donor.ID);
+        }
+
+
+        private void ViewDonor()
+        {
+            string query = $"SELECT * FROM Donor";
+
+            DataTable table = Database.Query(query);
+
+            datatable_donations.ItemsSource = table?.DefaultView;
+        }
+
+        private void UpdateDonor()
+        {
+            if (string.IsNullOrWhiteSpace(DonorFName))
+            {
+                MessageBox.Show("Please enter a first name.");
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(DonorLName))
+            {
+                MessageBox.Show("Please enter a last name.");
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(DonorEmail))
+            {
+                MessageBox.Show("Please enter a email.");
+                return;
+            }
+
+            int id = Donor.ID;
+
+            Donor.FirstName = DonorFName;
+            Donor.LastName = DonorLName;
+            Donor.Email = DonorEmail;
+
+            Donor.Update();
+
+            Donor = Donor.All.Find(x => x.ID == id);
+
+            ViewDonation();
+        }
+
+        private void DeleteDonor()
+        {
+            if (Donor == null)
+            {
+                MessageBox.Show("No donor selected");
+                return;
+            }
+
+            Donor.Delete();
+
+            ClearDonationFields();
+            ViewDonor();
+        }
+
+        private Donor CreateDonor()
+        {
+            int id = FindFirstNonIndex($"SELECT donor_id FROM Donor");
+
+            return new Donor(id, DonorFName, DonorLName, DonorEmail);
         }
 
 
@@ -368,18 +523,24 @@ namespace DatabaseProject
 
         private void PopulateDonorDropdown()
         {
+            //MessageBox.Show("PopulateDonorDropdown");
+
             dropdown_donation_donor.ItemsSource = Donor.All;
         }
 
 
         private void PopulateHabitatDropdown()
         {
+            //MessageBox.Show("PopulateHabitatDropdown");
+
             dropdown_donation_habitat.ItemsSource = Habitat.All;
         }
 
 
         private void PopulateAnimalDropdown()
         {
+            //MessageBox.Show("PopulateAnimalDropdown");
+
             dropdown_donation_animal.ItemsSource = Animal.All;
         }
 
@@ -396,8 +557,20 @@ interface IDatabaseObject
 
 abstract class Donation : IDatabaseObject
 {
+    public static event Action onAllUpdated;
+
     protected static List<Donation> all;
-    protected static bool allDirty;
+
+    private static bool _allDirty;
+    protected static bool allDirty
+    {
+        get => _allDirty;
+        set
+        {
+            _allDirty = value;
+            if (_allDirty) onAllUpdated?.Invoke();
+        }
+    }
 
     public static List<Donation> All
     {
@@ -406,6 +579,7 @@ abstract class Donation : IDatabaseObject
             if (all == null || allDirty)
             {
                 all = GetAll();
+                allDirty = false;
             }
 
             return all;
@@ -421,13 +595,13 @@ abstract class Donation : IDatabaseObject
     public double Amount
     {
         get;
-        protected set;
+        set;
     }
 
     public Donor Donor
     {
         get;
-        protected set;
+        set;
     }
 
     public Donation(int id, double amount, Donor donor)
@@ -489,7 +663,7 @@ class AnimalAdoption : Donation
     public Animal Animal
     {
         get;
-        private set;
+        set;
     }
 
 
@@ -500,9 +674,9 @@ class AnimalAdoption : Donation
 
     public static Animal GetAnimal(int donationid)
     {
-        string query = $"SELECT animal_id FROM Animal_Adoption WHERE donation_id = {donationid}";
+        string query = $"SELECT animal_id FROM Animal_Adoption WHERE donation_id = @ID";
 
-        DataTable table = Database.Query(query);
+        DataTable table = Database.Query(query, ("@ID", donationid));
 
         if (table?.Rows?.Count == 0) return null;
 
@@ -513,6 +687,31 @@ class AnimalAdoption : Donation
 
     public override bool Update()
     {
+        if (!All.Exists(x => x.ID == this.ID))
+        {
+            if (Database.NonQuery($"INSERT INTO Donation VALUES(@ID, @Amount, @Donor);", ("@ID", ID), ("@Amount", Amount), ("@Donor", Donor.ID)))
+            {
+                Database.NonQuery($"INSERT INTO Animal_Adoption VALUES(@ID, @Animal)", ("@ID", ID), ("@Animal", Animal.ID));
+                allDirty = true;
+                return true;
+            }
+            return false;
+        }
+
+        if (MessageBox.Show("Are you sure you want to update this donation?", "Warning!", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+        {
+            return false;
+        }
+
+        string query = $"UPDATE Donation SET amount = @Amount, donor_id = @Donor WHERE donation_id = @ID;";
+
+
+        if (Database.NonQuery(query, ("@ID", ID), ("@Amount", Amount), ("@Donor", Donor.ID)))
+        {
+            Database.NonQuery($"UPDATE Animal_Adoption set animal_id = @Animal WHERE donation_id = @ID;", ("@ID", ID), ("@Animal", Animal.ID));
+            allDirty = true;
+            return true;
+        }
         return false;
     }
 
@@ -523,7 +722,14 @@ class AnimalAdoption : Donation
             return false;
         }
 
-        return Database.NonQuery($"DELETE FROM Donation WHERE donation_id = {this.ID};") && Database.NonQuery($"DELETE FROM Animal_Adoption WHERE donation_id = {this.ID};");
+        if (Database.NonQuery($"DELETE FROM Donation WHERE donation_id = @ID;", ("@ID", ID)))
+        {
+            Database.NonQuery($"DELETE FROM Animal_Adoption WHERE donation_id = @ID;", ("@ID", ID));
+            allDirty = true;
+            return true;
+        }
+
+        return false;
     }
 }
 
@@ -532,7 +738,7 @@ class HabitatDonation : Donation
     public Habitat Habitat
     {
         get;
-        private set;
+        set;
     }
 
 
@@ -543,9 +749,9 @@ class HabitatDonation : Donation
 
     public static Habitat GetHabitat(int donationid)
     {
-        string query = $"SELECT habitat_id FROM Habitat_Donation WHERE donation_id = {donationid}";
+        string query = $"SELECT habitat_id FROM Habitat_Donation WHERE donation_id = @ID";
 
-        DataTable table = Database.Query(query);
+        DataTable table = Database.Query(query, ("@ID", donationid));
 
         if (table?.Rows?.Count == 0) return null;
 
@@ -556,7 +762,33 @@ class HabitatDonation : Donation
 
     public override bool Update()
     {
-        throw new NotImplementedException();
+        if (!All.Exists(x => x.ID == this.ID))
+        {
+            MessageBox.Show("Adding new donation!");
+            if (Database.NonQuery($"INSERT INTO Donation VALUES(@ID, @Amount, @Donor);", ("@ID", ID), ("@Amount", Amount), ("@Donor", Donor.ID)))
+            {
+                Database.NonQuery($"INSERT INTO Habitat_Donation VALUES(@ID, @Habitat)", ("@ID", ID), ("@Habitat", Habitat.ID));
+                allDirty = true;
+                return true;
+            }
+            return false;
+        }
+
+        if (MessageBox.Show("Are you sure you want to update this donation?", "Warning!", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+        {
+            return false;
+        }
+
+        string update_amount = Amount <= 0 ? string.Empty : $"";
+        string update_donor = Donor == null ? string.Empty : $",donor_id = {Donor.ID}";
+
+        if (Database.NonQuery($"UPDATE Donation SET donation_id = @ID, amount = @Amount, donor_id = @Donor WHERE donation_id = @ID;", ("@ID", ID), ("@Amount", Amount), ("@Donor", Donor.ID)))
+        {
+            Database.NonQuery($"UPDATE Habitat_Donation set habitat_id = @Habitat WHERE donation_id = @ID;", ("ID", ID), ("@Habitat", Habitat.ID));
+            allDirty = true;
+            return true;
+        }
+        return false;
     }
 
     public override bool Delete()
@@ -566,15 +798,32 @@ class HabitatDonation : Donation
             return false;
         }
 
-
-        return (Database.NonQuery($"DELETE FROM Donation WHERE donation_id = {this.ID};") && Database.NonQuery($"DELETE FROM Habitat_Donation WHERE donation_id = {this.ID};"));
+        if (Database.NonQuery($"DELETE FROM Donation WHERE donation_id = @ID;", ("@ID", ID)))
+        {
+            Database.NonQuery($"DELETE FROM Habitat_Donation WHERE donation_id = @ID;", ("@ID", ID));
+            allDirty = true;
+            return true;
+        }
+        return false;
     }
 }
 
 class Donor : IDatabaseObject
 {
+    public static event Action onAllUpdated;
+
     private static List<Donor> all;
-    private static bool allDirty;
+
+    private static bool _allDirty;
+    private static bool allDirty
+    {
+        get => _allDirty;
+        set
+        {
+            _allDirty = value;
+            if (_allDirty) onAllUpdated?.Invoke();
+        }
+    }
 
     public static List<Donor> All
     {
@@ -583,6 +832,7 @@ class Donor : IDatabaseObject
             if (all == null || allDirty)
             {
                 all = GetAll();
+                allDirty = false;
             }
 
             return all;
@@ -598,19 +848,19 @@ class Donor : IDatabaseObject
     public string FirstName
     {
         get;
-        private set;
+        set;
     }
 
     public string LastName
     {
         get;
-        private set;
+        set;
     }
 
     public string Email
     {
         get;
-        private set;
+        set;
     }
 
     public Donor(int id, string firstName, string lastName, string email)
@@ -627,7 +877,7 @@ class Donor : IDatabaseObject
 
         try
         {
-            string query = "SELECT * FROM Donor";
+            string query = "SELECT * FROM Donor order by donor_id";
             DataTable table = Database.Query(query);
             int count = table?.Rows?.Count ?? 0;
 
@@ -658,19 +908,64 @@ class Donor : IDatabaseObject
 
     public bool Update()
     {
-        return false;//TODO
+        if (!All.Exists(x => x.ID == this.ID))
+        {
+            if (Database.NonQuery($"INSERT INTO Donor VALUES(@ID, @FName, @LName, @Email);", ("@ID", ID), ("@FName", FirstName), ("@LName", LastName), ("@Email", Email)))
+            {
+                allDirty = true;
+                return true;
+            }
+            return false;
+        }
+
+        if (MessageBox.Show("Are you sure you want to update this donor?", "Warning!", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+        {
+            return false;
+        }
+
+        string query = $"UPDATE Donor SET donor_id = @ID,first_name = @FName, last_name = @LName, email = @Email WHERE donor_id = @ID;";
+
+        if (Database.NonQuery(query, ("@ID", ID), ("@FName", FirstName), ("@LName", LastName), ("@Email", Email)))
+        {
+            allDirty = true;
+            return true;
+        }
+        return false;
     }
 
     public bool Delete()
     {
-        return false;//TODO
+        if (MessageBox.Show("Are you sure you want to delete this donor?", "Warning!", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+        {
+            return false;
+        }
+
+        if (Database.NonQuery($"DELETE FROM Donor WHERE donor_id = @ID", ("@ID", ID)))
+        {
+            allDirty = true;
+            return true;
+        }
+
+        return false;
     }
 }
 
 class Habitat : IDatabaseObject
 {
+    public static event Action onAllUpdated;
+
     private static List<Habitat> all;
-    private static bool allDirty;
+
+    private static bool _allDirty;
+    private static bool allDirty
+    {
+        get => _allDirty;
+        set
+        {
+            _allDirty = value;
+            if (_allDirty) onAllUpdated?.Invoke();
+        }
+    }
 
     public static List<Habitat> All
     {
@@ -679,6 +974,7 @@ class Habitat : IDatabaseObject
             if (all == null || allDirty)
             {
                 all = GetAll();
+                allDirty = false;
             }
 
             return all;
@@ -709,8 +1005,7 @@ class Habitat : IDatabaseObject
 
         try
         {
-
-            string query = "SELECT * FROM Habitat";
+            string query = "SELECT * FROM Habitat order by habitat_id";
             DataTable table = Database.Query(query);
             int count = table?.Rows?.Count ?? 0;
 
@@ -737,7 +1032,13 @@ class Habitat : IDatabaseObject
 
     public bool Delete()
     {
-        return false; //TODO
+        if (Database.NonQuery($"DELETE FROM Habitat WHERE habitat_id = @ID", ("@ID", ID)))
+        {
+            allDirty = true;
+            return true;
+        }
+
+        return false;
     }
 
     public override string ToString()
@@ -748,8 +1049,20 @@ class Habitat : IDatabaseObject
 
 class Animal : IDatabaseObject
 {
+    public static event Action onAllUpdated;
+
     private static List<Animal> all;
-    private static bool allDirty;
+
+    private static bool _allDirty;
+    private static bool allDirty
+    {
+        get => _allDirty;
+        set
+        {
+            _allDirty = value;
+            if (_allDirty) onAllUpdated?.Invoke();
+        }
+    }
 
     public static List<Animal> All
     {
@@ -795,7 +1108,7 @@ class Animal : IDatabaseObject
 
         try
         {
-            string query = "SELECT * FROM Animal";
+            string query = "SELECT * FROM Animal order by animal_id";
             DataTable table = Database.Query(query);
             int count = table?.Rows?.Count ?? 0;
 
@@ -824,7 +1137,13 @@ class Animal : IDatabaseObject
 
     public bool Delete()
     {
-        return false; // TODO
+        if (Database.NonQuery($"DELETE FROM Animal WHERE animal_id = @ID", ("@ID", ID)))
+        {
+            allDirty = true;
+            return true;
+        }
+
+        return false;
     }
 
     public override string ToString()

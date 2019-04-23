@@ -13,13 +13,20 @@ namespace DatabaseProject
     {
         const string connectionString = "Data Source=NICK-Laptop;Initial Catalog=Zoo;Integrated Security=True";
 
-        public static DataTable Query(string query)
+        public static DataTable Query(string query, params (string key, object value)[] p)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             using (SqlCommand command = new SqlCommand(query, connection))
             {
                 try
                 {
+                    // Add parameters
+                    if (p.Length > 0)
+                    {
+                        SqlParameter[] sqlParameters = p.Select(x => new SqlParameter(x.key, x.value)).ToArray();
+                        command.Parameters.AddRange(sqlParameters);
+                    }
+
                     // Open the connection to the database
                     connection.Open();
 
@@ -46,16 +53,21 @@ namespace DatabaseProject
         }
 
 
-        public static bool NonQuery(string query)
+        public static bool NonQuery(string query, params (string key, object value)[] p)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             using (SqlCommand command = new SqlCommand(query, connection))
             {
                 try
                 {
+                    if (p.Length > 0)
+                    {
+                        SqlParameter[] sqlParameters = p.Select(x => new SqlParameter(x.key, x.value)).ToArray();
+                        command.Parameters.AddRange(sqlParameters);
+                    }
+
                     connection.Open();
-                    command.ExecuteNonQuery();
-                    return true;
+                    return command.ExecuteNonQuery() > 0;
                 }
                 catch (Exception ex)
                 {
