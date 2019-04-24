@@ -47,12 +47,15 @@ namespace DatabaseProject
                 string animalDate = date_animal_birthday.Text;
                 int wei = int.Parse(txt_animal_weight.Text);
                 int dietID = int.Parse(txt_animal_diet_id.Text);
-
+                //string query = $"UPDATE Transactions SET amount = '{txt_trans_amount.Text}', employee_id = '{txt_empID.Text}', transaction_date = '{txt_date.Text}', payment_method = '{combo_payMethod.Text}' WHERE transaction_id = '{txt_transID.Text}';";
+                //Database.NonQuery($"INSERT INTO Animal_Adoption VALUES(@ID, @Animal)", ("@ID", ID), ("@Animal", Animal.ID));
+                string query = "INSERT INTO Animal_Adoption VALUES(@ID, @HABID, @SPEID, @NAME, @BIRTHDAY, @WEIGHT, @DIETID)";
+                /*
                 string query = "INSERT INTO ANIMAL (animal_id, habitat_id, species_id, animal_name, birthday, weight, diet_id) " +
-                    "VALUES ('" + idVal + "', '" + habIdVal + "', '" + speIdVal + "', '" + animalName + "', '" + animalDate + "', '" + wei + "', '" + dietID + "');";
-
+                    $"VALUES (@animal_id,id, '" + habIdVal + "', '" + speIdVal + "', '" + animalName + "', '" + animalDate + "', '" + wei + "', '" + dietID + "');";
+                */
                 query.Replace("''", "NULL");
-                NonQuery(query);
+                //Database.NonQuery(query);
             }
             catch
             {
