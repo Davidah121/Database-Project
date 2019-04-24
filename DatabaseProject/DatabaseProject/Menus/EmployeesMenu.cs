@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Data;
 
 namespace DatabaseProject
 {
@@ -24,6 +25,39 @@ namespace DatabaseProject
 
 
         #endregion
+        private string Get_AnimalId(string animal_rawSelected)
+        {
+            string possibleStr = animal_rawSelected[animal_rawSelected.Length-1] + "";
+            if(possibleStr=="0"|| possibleStr == "1" || possibleStr == "2" || possibleStr == "3" || possibleStr == "4" || possibleStr == "5" || possibleStr == "6" || possibleStr == "7" || possibleStr == "8" || possibleStr == "9")
+            {
+                return possibleStr;
+            }
+            else
+            {
+                return "-1";
+            }
+        }
+        private Boolean isHandlerOf(string animal_id, string handler_id)
+        {
+            string query;
+            if (animal_id == "")
+            {
+                query = "select * from handler where employee_id=@HANDLER_ID;";
+            }
+            else
+            {
+                query = "select * from handler where animal_id=" + animal_id + " AND employee_id=@HANDLER_ID;";
+            }
+            try
+            {
+                var testHandler = Query(query).Rows[0].ItemArray.Select(x => x.ToString().Trim()).ToArray()[0];
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
         private string Get_Department(string department_name)
         {
             if (department_name.Equals(""))
@@ -71,9 +105,18 @@ namespace DatabaseProject
             {
                 string get_dep_id = Get_Department(emp_field_department.Text);
                 //MessageBox.Show(get_dep_id);
-                query = $"select * from employee where"+" department_id="+get_dep_id + ((!emp_field_ssn.Password.Equals("")) ? " AND ssn=" + emp_field_ssn.Password : "") + ((!emp_field_email.Text.Equals("")) ? " AND email='" + emp_field_email.Text + "'" : "") + ((!emp_field_lname.Text.Equals("")) ? " AND last_name='" + emp_field_lname.Text + "'" : "") + ((!emp_field_fname.Text.Equals("")) ? " AND first_name='" + emp_field_fname.Text + "'" : "") + ((!emp_field_phone.Text.Equals("")) ? " AND phone_number='" + emp_field_phone.Text + "'" : "") + ((!emp_field_type.Text.Equals("")) ? " AND employment_type='" + emp_field_type.Text + "'" : "") + ((!emp_field_date.Text.Equals("")) ? " AND birthday='" + emp_field_date.Text + "'" : "") + ";";
-                if (query.Equals("select * from employee where;")){
-                    query = "select * from employee;";
+                if (emp_combo_animal.Text == "" || emp_combo_animal.Text == "None")
+                {
+                    query = $"select * from employee where" + ((!get_dep_id.Equals("-1")) ? " department_id=" + get_dep_id : "") + ((!emp_field_ssn.Password.Equals("")) ? ((!get_dep_id.Equals("-1")) ? " AND" : "") + " ssn=" + emp_field_ssn.Password : "") + ((!emp_field_email.Text.Equals("")) ? ((!get_dep_id.Equals("-1")) || (!emp_field_ssn.Password.Equals("")) ? " AND" : "") + " email='" + emp_field_email.Text + "'" : "") + ((!emp_field_lname.Text.Equals("")) ? ((!get_dep_id.Equals("-1")) || (!emp_field_ssn.Password.Equals("")) || (!emp_field_email.Text.Equals("")) ? " AND" : "") + " last_name='" + emp_field_lname.Text + "'" : "") + ((!emp_field_fname.Text.Equals("")) ? ((!get_dep_id.Equals("-1")) || (!emp_field_ssn.Password.Equals("")) || (!emp_field_email.Text.Equals("")) || (!emp_field_lname.Text.Equals("")) ? " AND" : "") + " first_name='" + emp_field_fname.Text + "'" : "") + ((!emp_field_phone.Text.Equals("")) ? ((!get_dep_id.Equals("-1")) || (!emp_field_ssn.Password.Equals("")) || (!emp_field_email.Text.Equals("")) || (!emp_field_lname.Text.Equals("")) || (!emp_field_fname.Text.Equals("")) ? " AND" : "") + " phone_number='" + emp_field_phone.Text + "'" : "") + ((!emp_field_type.Text.Equals("")) ? ((!get_dep_id.Equals("-1")) || (!emp_field_ssn.Password.Equals("")) || (!emp_field_email.Text.Equals("")) || (!emp_field_lname.Text.Equals("")) || (!emp_field_fname.Text.Equals("")) || (!emp_field_phone.Text.Equals("")) ? " AND" : "") + " employment_type='" + emp_field_type.Text + "'" : "") + ((!emp_field_date.Text.Equals("")) ? ((!get_dep_id.Equals("-1")) || (!emp_field_ssn.Password.Equals("")) || (!emp_field_email.Text.Equals("")) || (!emp_field_lname.Text.Equals("")) || (!emp_field_fname.Text.Equals("")) || (!emp_field_phone.Text.Equals("")) || (!emp_field_type.Text.Equals("")) ? " AND" : "") + " birthday='" + emp_field_date.Text + "'" : "") + ";";
+                    if (query.Equals("select * from employee where;"))
+                    {
+                        query = "select * from employee;";
+                    }
+                }
+                else
+                {
+                    query = $"select animal_id,employee.employee_id,department_id,first_name,last_name,email,phone_number,employment_type,birthday,ssn from employee join handler on employee.employee_id=handler.employee_id where animal_id=" + Get_AnimalId(emp_combo_animal.Text) + ((!get_dep_id.Equals("-1")) ? " AND department_id=" + get_dep_id : "") + ((!emp_field_ssn.Password.Equals("")) ? " AND ssn=" + emp_field_ssn.Password : "") + ((!emp_field_email.Text.Equals("")) ? " AND email='" + emp_field_email.Text + "'" : "") + ((!emp_field_lname.Text.Equals("")) ? " AND last_name='" + emp_field_lname.Text + "'" : "") + ((!emp_field_fname.Text.Equals("")) ? " AND first_name='" + emp_field_fname.Text + "'" : "") + ((!emp_field_phone.Text.Equals("")) ? " AND phone_number='" + emp_field_phone.Text + "'" : "") + ((!emp_field_type.Text.Equals("")) ? " AND employment_type='" + emp_field_type.Text + "'" : "") + ((!emp_field_date.Text.Equals("")) ? " AND birthday='" + emp_field_date.Text + "'" : "") + ";";
+                    MessageBox.Show(query);
                 }
             }
             //MessageBox.Show(query);
@@ -95,6 +138,23 @@ namespace DatabaseProject
                     var testEmployee = Query(query).Rows[0].ItemArray.Select(x => x.ToString().Trim()).ToArray()[0];
                     query = "update employee set employee_id="+emp_field_id.Text + ((!get_dep_id.Equals("-1")) ? ", department_id=" + get_dep_id : "")  + ((!emp_field_ssn.Password.Equals("")) ? ", ssn=" + emp_field_ssn.Password : "") + ((!emp_field_email.Text.Equals("")) ? ", email='" + emp_field_email.Text + "'" : "") + ((!emp_field_lname.Text.Equals("")) ? ", last_name='" + emp_field_lname.Text + "'" : "") + ((!emp_field_fname.Text.Equals("")) ? ", first_name='" + emp_field_fname.Text + "'" : "") + ((!emp_field_phone.Text.Equals("")) ? ", phone_number='" + emp_field_phone.Text + "'" : "") + ((!emp_field_type.Text.Equals("")) ? ", employment_type='" + emp_field_type.Text + "'" : "") + ((!emp_field_date.Text.Equals("")) ? ", birthday='" + emp_field_date.Text + "'" : "") + " where employee_id="+ emp_field_id.Text +";";
                     NonQuery(query);
+                    if (!emp_combo_animal.Text.Equals("")) {
+                        if (emp_combo_animal.Text.Equals("None"))
+                        {
+                            query = "delete from handler where employee_id=" + emp_field_id.Text;
+                            NonQuery(query);
+                        }
+                        else
+                        {
+                            if (isHandlerOf("", emp_field_id.Text))
+                            {
+                                query = "delete from handler where employee_id=" + emp_field_id.Text;
+                                NonQuery(query);
+                            }
+                            query = "insert into handler (employee_id, animal_id) values (" + emp_field_id.Text + ", " + Get_AnimalId(emp_combo_animal.Text)+");";
+                            NonQuery(query);
+                        }
+                    }
                     MessageBox.Show("Updated Employee with id: " + emp_field_id.Text);
                 }
                 catch
@@ -121,6 +181,8 @@ namespace DatabaseProject
                     {
                         query = "delete from employee where employee_id=" + emp_field_id.Text;
                         NonQuery(query);
+                        query = "delete from handler where employee_id=" + emp_field_id.Text;
+                        NonQuery(query);
                     }
                 }
                 catch
@@ -146,6 +208,11 @@ namespace DatabaseProject
                     int next_emp_id = FindFirstNonIndex(query);
                     query = "insert into employee (employee_id, department_id, first_name, last_name, email, phone_number, employment_type, birthday, ssn) VALUES ("+ next_emp_id +", "+ get_dep_id +", '"+ emp_field_fname.Text + "', '" + emp_field_lname.Text + "', '" + emp_field_email.Text + "', '" + emp_field_phone.Text + "', '" + emp_field_type.Text + "', '" + emp_field_date.Text + "', '" + emp_field_ssn.Password +"');";
                     NonQuery(query);
+                    if (!emp_combo_animal.Text.Equals("") && !emp_combo_animal.Text.Equals("None"))
+                    {
+                        query = "insert into handler (employee_id, animal_id) values ("+next_emp_id+", "+Get_AnimalId(emp_combo_animal.Text)+");";
+                        NonQuery(query);
+                    }
                     MessageBox.Show("Added " + emp_field_fname.Text + " to the database.");
                 }
             }
@@ -157,17 +224,78 @@ namespace DatabaseProject
         }
         private void Btn_dpt_remove_Click(object sender, RoutedEventArgs e)
         {
-            
+            string query;
+            if (dpt_field_name.Text.Equals(""))
+            {
+                MessageBox.Show("Please specfiy the department by name to remove.");
+            }
+            else
+            {
+                string get_dep_id = Get_Department(dpt_field_name.Text);
+                if (get_dep_id.Equals("-1"))
+                {
+                    MessageBox.Show("Department with name: " + dpt_field_name.Text);
+                }
+                else
+                {
+                    query = "select * from employee where department_id=" + get_dep_id;
+                    if (Query(query).Rows.Count>0)
+                    {
+                        MessageBox.Show("Cannot delete department: " + dpt_field_name.Text + ", because " + Query(query).Rows.Count + " user(s) are still in that department.");
+                    }
+                    else
+                    {
+                        query = "delete from department where department_id=" + get_dep_id + ";";
+                        NonQuery(query);
+                        MessageBox.Show("Successfully removed the department with name: " + dpt_field_name.Text);
+                    }
+                }
+            }
         }
+        private void Btn_dpt_get_Click(object sender, RoutedEventArgs e)
+        {
+            string query;
+            if (dpt_field_name.Text.Equals(""))
+            {
+                query = $"select * from department;";
+            }
+            else
+            {
+                string get_dep_id = Get_Department(dpt_field_name.Text);
+                query = "select * from department where department_id="+get_dep_id;
+            }
+            //MessageBox.Show(query);
+            datagrid_emp.ItemsSource = Query(query)?.DefaultView;
+        }
+
         private void populateEmpAnimalCombo()
         {
             try
             {
+                string query = "SELECT * FROM animal";
+                DataTable table = Query(query);
 
+                if (table == null)
+                {
+                    return;
+                }
+
+                emp_combo_animal.Items.Clear();
+                emp_combo_animal.Items.Add("");
+                emp_combo_animal.Items.Add("None");
+                for (int i = 0; i < table.Rows.Count; i++)
+                {
+                    string id = table.Rows[i]["animal_id"].ToString().Trim();
+                    string name = table.Rows[i]["animal_name"].ToString().Trim();
+
+                    string item = name + ", id=" + id;
+
+                    emp_combo_animal.Items.Add(item);
+                }
             }
-            catch
+            catch(Exception ex)
             {
-
+                MessageBox.Show(ex.ToString());
             }
         }
     }
