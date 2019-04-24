@@ -1,4 +1,4 @@
-﻿﻿<Window x:Class="DatabaseProject.MainWindow"
+﻿<Window x:Class="DatabaseProject.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -30,7 +30,7 @@
             <Button x:Name="btn_delivery" Content="Add New Delivery" HorizontalAlignment="Left" Margin="117,222,0,0" VerticalAlignment="Top" Width="136" Height="46" />
             <Button x:Name="btn_deliveries_back" Content="Main Menu" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="30" Margin="10,10,0,0" Click="OpenMainMenu" />
         </Grid>
-                <Grid x:Name="menu_trans" Margin="10" Visibility= "Visible" IsVisibleChanged = "Menu_transactions_IsVisibleChanged">
+        <Grid x:Name="menu_trans" Margin="10" Visibility= "Hidden" IsVisibleChanged = "Menu_transactions_IsVisibleChanged">
             <Button x:Name="btn_delete_trans" Content="Delete" HorizontalAlignment="Left" Margin="690,430,0,0" VerticalAlignment="Top" Width="80" Height="40" Click="Btn_delete_trans_Click"/>
             <Button x:Name="btn_manage_items" Content="Manage Items" Visibility="Visible" HorizontalAlignment="Left" Height="40" Margin="643,385,0,0" VerticalAlignment="Top" Width="127"/>
             <Button x:Name="btn_view_trans" Content="View" HorizontalAlignment="Left" Margin="435,430,0,0" VerticalAlignment="Top" Width="80" Height="40" Click="Btn_view_trans_Click"/>

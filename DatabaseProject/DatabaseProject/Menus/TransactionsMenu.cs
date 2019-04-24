@@ -192,25 +192,6 @@ namespace DatabaseProject
             }
         }
         
-        private int FindFirstNonIndex(string query)
-        {
-            DataTable table = Query(query);
-
-            List<int> values = new List<int>();
-
-            for (int i = 0; i < table.Rows.Count; i++)
-            {
-                if (int.TryParse(table.Rows[i][0].ToString(), out int val))
-                {
-                    values.Add(val);
-                }
-            }
-
-            int firstAvailable = Enumerable.Range(0, int.MaxValue).Except(values).FirstOrDefault();
-
-            return firstAvailable;
-        }
-        
     
         private void ClearFields()
         {
