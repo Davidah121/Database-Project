@@ -4,65 +4,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Data;
 using System.Data.SqlClient;
 
 namespace DatabaseProject
 {
-    partial class MainWindow : Window
+    class Database
     {
         const string connectionString = "Data Source=DESKTOP-V87K7CH;Initial Catalog=Zoo;Integrated Security=True";
 
-        #region Events
-
-
-        private void Btn_expmode_submit_Click(object sender, RoutedEventArgs e)
-        {
-            string cmd = textbox_expmode_sql.Text;
-
-            if (String.IsNullOrWhiteSpace(cmd))
-            {
-                return;
-            }
-
-            Submit(cmd);
-        }
-
-
-        #endregion
-
-
-        private void Submit(string query)
-        {
-            if (query.StartsWith("select", StringComparison.OrdinalIgnoreCase))
-            {
-                datagrid_expmode.ItemsSource = Database.Query(query)?.DefaultView;
-            }
-            else
-            {
-                if (Database.NonQuery(query))
-                {
-                    MessageBox.Show("Query executed successfully!");
-                }
-            }
-        }
-
-
-        private DataTable Query(string query)
+        public static DataTable Query(string query, params (string key, object value)[] p)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             using (SqlCommand command = new SqlCommand(query, connection))
             {
                 try
                 {
+                    // Add parameters
+                    if (p.Length > 0)
+                    {
+                        SqlParameter[] sqlParameters = p.Select(x => new SqlParameter(x.key, x.value)).ToArray();
+                        command.Parameters.AddRange(sqlParameters);
+                    }
+
                     // Open the connection to the database
                     connection.Open();
 
@@ -89,16 +53,21 @@ namespace DatabaseProject
         }
 
 
-        private bool NonQuery(string query)
+        public static bool NonQuery(string query, params (string key, object value)[] p)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             using (SqlCommand command = new SqlCommand(query, connection))
             {
                 try
                 {
+                    if (p.Length > 0)
+                    {
+                        SqlParameter[] sqlParameters = p.Select(x => new SqlParameter(x.key, x.value)).ToArray();
+                        command.Parameters.AddRange(sqlParameters);
+                    }
+
                     connection.Open();
-                    command.ExecuteNonQuery();
-                    return true;
+                    return command.ExecuteNonQuery() > 0;
                 }
                 catch (Exception ex)
                 {
