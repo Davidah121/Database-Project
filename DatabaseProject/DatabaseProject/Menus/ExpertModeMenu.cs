@@ -19,8 +19,6 @@ namespace DatabaseProject
 {
     partial class MainWindow : Window
     {
-        const string connectionString = "Data Source=NICK-Laptop;Initial Catalog=Zoo;Integrated Security=True";
-
         #region Events
 
 
