@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Data.SqlClient;
 
 namespace DatabaseProject
 {
@@ -52,11 +53,6 @@ namespace DatabaseProject
         private void Btn_clear_fields_Click(object sender, RoutedEventArgs e)
         {
             ClearFields();
-        }
-
-        private void Btn_add_ticket_to_cart_Click(object sender, RoutedEventArgs e)
-        {
-            list_ticket_cart.Items.Add(txt_ticket_id.Text + "', '" + combo_ticket_selection.Text);
         }
 
         private void combo_trans_type_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -127,13 +123,6 @@ namespace DatabaseProject
 
             int id = FindFirstNonIndex("Select transaction_id from Transactions order by 1");
             string query = $"INSERT INTO Transactions VALUES('{id}','{Employee_ID}', '{Date_Of_Transaction}', '{Payment_Method}', '{Transaction_Amount}')";
-            NonQuery(query);
-
-            foreach (var listBoxItem in list_ticket_cart.Items)
-            {
-                System.Diagnostics.Debug.WriteLine(id + " " + listBoxItem.ToString());
-            }
-
             // Use foreach loop to get all tickets in cart to the right id
             if (list_ticket_cart.HasItems)
             {
@@ -142,7 +131,6 @@ namespace DatabaseProject
                     query = $"INSERT INTO Ticket (transaction_id, ticket_id, ticket_type) VALUES('{id}', '{listBoxItem.ToString()}');";
                 }
             }
-
 
             if (NonQuery(query))
             {
@@ -183,10 +171,10 @@ namespace DatabaseProject
                 return;
             }
 
-
+            //Handling Employee ID?
             string query = $"UPDATE Transactions SET amount = '{txt_trans_amount.Text}', employee_id = '{txt_empID.Text}', transaction_date = '{txt_date.Text}', payment_method = '{combo_payMethod.Text}' WHERE transaction_id = '{txt_transID.Text}';";
+
             NonQuery(query);
-            //query = $"UPDATE Ticket SET WHERE transaction_id '{txt_transID.Text}'"
         }
 
         private void DeleteTransaction()
@@ -204,25 +192,6 @@ namespace DatabaseProject
             NonQuery(query);
             query = $"Delete FROM Item_Sale WHERE transaction_id = {txt_transID.Text};";
             NonQuery(query);
-        }
-        
-        private int FindFirstNonIndex(string query)
-        {
-            DataTable table = Query(query);
-
-            List<int> values = new List<int>();
-
-            for (int i = 0; i < table.Rows.Count; i++)
-            {
-                if (int.TryParse(table.Rows[i][0].ToString(), out int val))
-                {
-                    values.Add(val);
-                }
-            }
-
-            int firstAvailable = Enumerable.Range(0, int.MaxValue).Except(values).FirstOrDefault();
-
-            return firstAvailable;
         }
         
     

@@ -57,5 +57,10 @@ namespace DatabaseProject
                 m.Visibility = m == menu ? Visibility.Visible : Visibility.Hidden;
             }
         }
+
+        private void txt_trans_amount_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }
