@@ -37,7 +37,7 @@ namespace DatabaseProject
                 return "-1";
             }
         }
-        private Boolean isHandlerOf(string animal_id, string handler_id)
+        private bool isHandlerOf(string animal_id, string handler_id)
         {
             string query;
             if (animal_id == "")
@@ -46,11 +46,11 @@ namespace DatabaseProject
             }
             else
             {
-                query = "select * from handler where animal_id=" + animal_id + " AND employee_id=@HANDLER_ID;";
+                query = $"select * from handler where animal_id=@Animal AND employee_id=@HANDLER_ID;";
             }
             try
             {
-                var testHandler = Query(query).Rows[0].ItemArray.Select(x => x.ToString().Trim()).ToArray()[0];
+                var testHandler = Database.Query(query, ("@HANDLER_ID", handler_id), ("@Animal", animal_id)).Rows[0].ItemArray.Select(x => x.ToString().Trim()).ToArray()[0];
                 return true;
             }
             catch
@@ -65,11 +65,11 @@ namespace DatabaseProject
                 return "" + -1;
             }
             //MessageBox.Show(department_name);
-            string query = "select department_id from department where department_name='" + department_name + "';";
+            string query = "select department_id from department where department_name=@Dept;";
             string stringDep_id;
             try
             {
-                stringDep_id = Query(query).Rows[0].ItemArray.Select(x => x.ToString().Trim()).ToArray()[0];
+                stringDep_id = Database.Query(query, ("@Dept", department_name)).Rows[0].ItemArray.Select(x => x.ToString().Trim()).ToArray()[0];
             }
             catch
             {
@@ -78,8 +78,8 @@ namespace DatabaseProject
                 {
                     query = "select department_id from department;";
                     int next_id = FindFirstNonIndex(query);
-                    query = "insert into department (department_id, department_name) values (" + next_id + ", '" + department_name + "');";
-                    NonQuery(query);
+                    query = "insert into department (department_id, department_name) values(@next, @DeptName);";
+                    Database.NonQuery(query, ("@next", next_id), ("@DeptName", department_name));
                     MessageBox.Show("Added Department with name: " + department_name);
                     stringDep_id = "" + next_id;
                 }
@@ -99,7 +99,7 @@ namespace DatabaseProject
             string query;
             if (!(emp_field_id.Text.Equals("")))
             {
-                query = $"select * from employee where employee_id={emp_field_id.Text};";
+                query = $"select * from employee where employee_id=@EID;";
             }
             else
             {
@@ -120,7 +120,7 @@ namespace DatabaseProject
                 }
             }
             //MessageBox.Show(query);
-            datagrid_emp.ItemsSource = Query(query)?.DefaultView;
+            datagrid_emp.ItemsSource = Query(query, ("@EID", emp_field_id.Text)?.DefaultView;
         }
         private void Btn_emp_update_Click(object sender, RoutedEventArgs e)
         {
@@ -132,12 +132,12 @@ namespace DatabaseProject
             else
             {
                 string get_dep_id = Get_Department(emp_field_department.Text);
-                query = "select * from employee where employee_id=" + emp_field_id.Text;
+                query = "select * from employee where employee_id=@EID;";
                 try
                 {
-                    var testEmployee = Query(query).Rows[0].ItemArray.Select(x => x.ToString().Trim()).ToArray()[0];
+                    var testEmployee = Database.Query(query, ("@EID", emp_field_id.Text)).Rows[0].ItemArray.Select(x => x.ToString().Trim()).ToArray()[0];
                     query = "update employee set employee_id="+emp_field_id.Text + ((!get_dep_id.Equals("-1")) ? ", department_id=" + get_dep_id : "")  + ((!emp_field_ssn.Password.Equals("")) ? ", ssn=" + emp_field_ssn.Password : "") + ((!emp_field_email.Text.Equals("")) ? ", email='" + emp_field_email.Text + "'" : "") + ((!emp_field_lname.Text.Equals("")) ? ", last_name='" + emp_field_lname.Text + "'" : "") + ((!emp_field_fname.Text.Equals("")) ? ", first_name='" + emp_field_fname.Text + "'" : "") + ((!emp_field_phone.Text.Equals("")) ? ", phone_number='" + emp_field_phone.Text + "'" : "") + ((!emp_field_type.Text.Equals("")) ? ", employment_type='" + emp_field_type.Text + "'" : "") + ((!emp_field_date.Text.Equals("")) ? ", birthday='" + emp_field_date.Text + "'" : "") + " where employee_id="+ emp_field_id.Text +";";
-                    NonQuery(query);
+                    Database.NonQuery(query);
                     if (!emp_combo_animal.Text.Equals("")) {
                         if (emp_combo_animal.Text.Equals("None"))
                         {
@@ -148,11 +148,11 @@ namespace DatabaseProject
                         {
                             if (isHandlerOf("", emp_field_id.Text))
                             {
-                                query = "delete from handler where employee_id=" + emp_field_id.Text;
-                                NonQuery(query);
+                                query = "delete from handler where employee_id=@EID;";
+                                Database.NonQuery(query, ("@EID", emp_field_id.Text));
                             }
-                            query = "insert into handler (employee_id, animal_id) values (" + emp_field_id.Text + ", " + Get_AnimalId(emp_combo_animal.Text)+");";
-                            NonQuery(query);
+                            query = "insert into handler (employee_id, animal_id) values (@EID, @Animal);";
+                            Database.NonQuery(query, ("@EID", emp_field_id.Text), ("@Animal", Get_AnimalId(emp_combo_animal.Text));
                         }
                     }
                     MessageBox.Show("Updated Employee with id: " + emp_field_id.Text);
@@ -175,14 +175,14 @@ namespace DatabaseProject
             {
                 try
                 {
-                    query = "select * from employee where employee_id="+emp_field_id.Text;
+                    query = "select * from employee where employee_id=@EID;";
                     var employee_exists = Query(query).Rows[0].ItemArray.Select(x => x.ToString().Trim()).ToArray()[0];
                     if(MessageBox.Show("Are you sure you want to remove employee with id: " + emp_field_id.Text + "?", "Warning!", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
-                        query = "delete from employee where employee_id=" + emp_field_id.Text;
-                        NonQuery(query);
-                        query = "delete from handler where employee_id=" + emp_field_id.Text;
-                        NonQuery(query);
+                        query = "delete from employee where employee_id=@EID";
+                        Database.NonQuery(query, ("@EID", emp_field_id.Text));
+                        query = "delete from handler where employee_id=@EID";
+                        Database.NonQuery(query, ("@EID", emp_field_id.Text));
                     }
                 }
                 catch
@@ -238,15 +238,15 @@ namespace DatabaseProject
                 }
                 else
                 {
-                    query = "select * from employee where department_id=" + get_dep_id;
-                    if (Query(query).Rows.Count>0)
+                    query = "select * from employee where department_id=@Dept;";
+                    if (Database.Query(query, ("@Dept", get_dep_id)).Rows.Count>0)
                     {
-                        MessageBox.Show("Cannot delete department: " + dpt_field_name.Text + ", because " + Query(query).Rows.Count + " user(s) are still in that department.");
+                        MessageBox.Show("Cannot delete department: " + dpt_field_name.Text + ", because " + Database.Query(query).Rows.Count + " user(s) are still in that department.");
                     }
                     else
                     {
-                        query = "delete from department where department_id=" + get_dep_id + ";";
-                        NonQuery(query);
+                        query = $"delete from department where department_id=@Dept;";
+                        Database.NonQuery(query, ("@Dept", get_dep_id));
                         MessageBox.Show("Successfully removed the department with name: " + dpt_field_name.Text);
                     }
                 }
@@ -254,6 +254,7 @@ namespace DatabaseProject
         }
         private void Btn_dpt_get_Click(object sender, RoutedEventArgs e)
         {
+            string get_dep_id = Get_Department(dpt_field_name.Text);
             string query;
             if (dpt_field_name.Text.Equals(""))
             {
@@ -261,11 +262,10 @@ namespace DatabaseProject
             }
             else
             {
-                string get_dep_id = Get_Department(dpt_field_name.Text);
-                query = "select * from department where department_id="+get_dep_id;
+                query = "select * from department where department_id=@Dept";
             }
             //MessageBox.Show(query);
-            datagrid_emp.ItemsSource = Query(query)?.DefaultView;
+            datagrid_emp.ItemsSource = Database.Query(query, ("@Dept", get_dep_id))?.DefaultView;
         }
 
         private void populateEmpAnimalCombo()
@@ -273,7 +273,7 @@ namespace DatabaseProject
             try
             {
                 string query = "SELECT * FROM animal";
-                DataTable table = Query(query);
+                DataTable table = Database.Query(query);
 
                 if (table == null)
                 {
