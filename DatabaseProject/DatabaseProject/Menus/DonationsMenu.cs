@@ -310,14 +310,14 @@ namespace DatabaseProject
 
             if (!string.IsNullOrWhiteSpace(textbox_donation_id.Text) && reduced)
             {
-                query = $"SELECT donation_id, amount, Donation.donor_id, first_name, last_name, email FROM Donation left join Donor on Donation.donor_id = Donor.donor_id WHERE donation_id = {textbox_donation_id.Text};";
+                query = $"SELECT donation_id, amount, Donation.donor_id, first_name, last_name, email FROM Donation left join Donor on Donation.donor_id = Donor.donor_id WHERE donation_id = @ID;";
             }
             else
             {
                 query = $"SELECT donation_id, amount, Donation.donor_id, first_name, last_name, email FROM Donation left join Donor on Donation.donor_id = Donor.donor_id;";
             }
 
-            DataTable table = Query(query);
+            DataTable table = Database.Query(query, ("@ID", DonationID));
 
             datatable_donations.ItemsSource = table?.DefaultView;
         }
@@ -515,7 +515,7 @@ namespace DatabaseProject
 
         private int FindFirstNonIndex(string query)
         {
-            DataTable table = Query(query);
+            DataTable table = Database.Query(query);
 
             List<int> values = new List<int>();
 

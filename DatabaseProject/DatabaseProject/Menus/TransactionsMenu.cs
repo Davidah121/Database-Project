@@ -128,7 +128,7 @@ namespace DatabaseProject
                 query = $"INSERT INTO Ticket VALUES('{id}', '{Ticket_ID}', '{Ticket_Type}'";
             }
 
-            if (NonQuery(query))
+            if (Database.NonQuery(query))
             {
                 ClearFields();
                 ViewTransaction();
@@ -148,7 +148,7 @@ namespace DatabaseProject
                 query = $"SELECT * FROM Transactions WHERE transaction_id = {txt_transID.Text}";
             }
 
-            DataTable table = Query(query);
+            DataTable table = Database.Query(query);
 
             if (table == null)
             {
@@ -170,7 +170,7 @@ namespace DatabaseProject
             //Handling Employee ID?
             string query = $"UPDATE Transactions SET amount = '{txt_trans_amount.Text}', employee_id = '{txt_empID.Text}', transaction_date = '{txt_date.Text}', payment_method = '{combo_payMethod.Text}' WHERE transaction_id = '{txt_transID.Text}';";
 
-            NonQuery(query);
+            Database.NonQuery(query);
         }
 
         private void DeleteTransaction()
@@ -185,7 +185,7 @@ namespace DatabaseProject
             string query = $"DELETE FROM Transactions WHERE transaction_id = {txt_transID.Text};";
 
 
-            if (NonQuery(query))
+            if (Database.NonQuery(query))
             {
                 txt_transID.Text = string.Empty;
                 ViewTransaction();
