@@ -19,6 +19,7 @@ namespace DatabaseProject
 {
     partial class MainWindow : Window 
     {
+
         #region Button Events
 
         private void Menu_transactions_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -53,6 +54,11 @@ namespace DatabaseProject
         private void Btn_clear_fields_Click(object sender, RoutedEventArgs e)
         {
             ClearFields();
+        }
+
+        private void Btn_add_ticket_to_cart_Click(object sender, RoutedEventArgs e)
+        {
+            list_ticket_cart.Items.Add(txt_ticket_id.Text + "', '" + combo_ticket_selection.Text);
         }
 
         private void combo_trans_type_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -123,6 +129,7 @@ namespace DatabaseProject
 
             int id = FindFirstNonIndex("Select transaction_id from Transactions order by 1");
             string query = $"INSERT INTO Transactions VALUES('{id}','{Employee_ID}', '{Date_Of_Transaction}', '{Payment_Method}', '{Transaction_Amount}')";
+            Database.Query(query);
             // Use foreach loop to get all tickets in cart to the right id
             if (list_ticket_cart.HasItems)
             {
@@ -203,6 +210,12 @@ namespace DatabaseProject
             combo_payMethod.Text = string.Empty;
             txt_trans_amount.Text = string.Empty;
             combo_trans_type.Text = string.Empty;
+            txt_ticket_id.Text = string.Empty;
+            combo_ticket_selection.Text = string.Empty;
+            list_ticket_cart.Items.Clear();
+
+            list_item_cart.Items.Clear();
+
         }
     }
 
