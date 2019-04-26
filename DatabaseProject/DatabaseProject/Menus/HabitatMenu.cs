@@ -28,8 +28,9 @@ namespace DatabaseProject
                 int humiVal = int.Parse(txt_habitat_humidity.Text);
                 int tempVal = int.Parse(txt_habitat_temperature.Text);
 
-                NonQuery("INSERT INTO HABITAT (habitat_id, habitat_name, humidity, temperature) " +
-                    "VALUES ('" + idVal + "', '" + habName + "', '" + humiVal + "', '" + tempVal + "');");
+                string query = "INSERT INTO HABITAT VALUES(@ID, @HABNAME, @HUMI, @TEMP);";
+                Database.NonQuery(query, ("@ID", idVal), ("@HABNAME", habName), ("@HUMI", humiVal),
+                                        ("@TEMP", tempVal));
             }
             catch
             {
@@ -75,14 +76,13 @@ namespace DatabaseProject
                 }
 
                 query += ";";
-                query.Replace("'NULL'", "NULL");
 
                 query = query.Remove(query.Length - 5, 4);
 
                 if(hasParams)
-                    datagrid_habitat.ItemsSource = Query(query)?.DefaultView;
+                    datagrid_habitat.ItemsSource = Database.Query(query)?.DefaultView;
                 else
-                    datagrid_habitat.ItemsSource = Query(defaultQuery)?.DefaultView;
+                    datagrid_habitat.ItemsSource = Database.Query(defaultQuery)?.DefaultView;
             }
             catch
             {
@@ -99,11 +99,15 @@ namespace DatabaseProject
                 int humiVal = int.Parse(txt_habitat_humidity.Text);
                 int tempVal = int.Parse(txt_habitat_temperature.Text);
 
-                NonQuery("UPDATE ANIMAL " +
-                    "SET habitat_name='" + habName +
-                    "', humidity='" + humiVal +
-                    "', temperature='" + tempVal +
-                    "' WHERE habitat_id='" + idVal + "';");
+
+                string query = "UPDATE HABITAT " +
+                                "SET habitat_name=(@HABNAME), " +
+                                "humidity=(@HUMIVAL), " +
+                                "temperature=(@TEMP), " +
+                                "WHERE habitat_id=(@ID);";
+
+                Database.NonQuery(query, ("@ID", idVal), ("@HABNAME", habName), ("@HUMI", humiVal),
+                                        ("@TEMP", tempVal));
             }
             catch
             {
@@ -119,7 +123,24 @@ namespace DatabaseProject
                 {
                     int idVal = int.Parse(txt_habitat_id.Text);
 
-                    NonQuery("DELETE FROM HABITAT WHERE habitat_id='" + idVal + "';");
+                    string query = "DELETE FROM HABITAT WHERE habitat_id=(@ID);";
+
+                    bool notInAnimal = Database.Query("SELECT * FROM ANIMAL WHERE habitat_id=(@ID);", ("@ID", idVal)).Rows.Count > 0;
+
+                    if (notInAnimal)
+                    {
+                        bool validID = Database.NonQuery(query, ("@ID", idVal));
+
+                        if (validID == false)
+                        {
+                            MessageBox.Show("Could not delete because no habitat has the ID value");
+                        }
+                    }
+
+                    if (notInAnimal == false)
+                    {
+                        MessageBox.Show("This Habitat is still listed in Animal and can't be deleted");
+                    }
                 }
                 catch
                 {

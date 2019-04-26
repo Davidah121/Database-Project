@@ -47,15 +47,15 @@ namespace DatabaseProject
                 string animalDate = date_animal_birthday.Text;
                 int wei = int.Parse(txt_animal_weight.Text);
                 int dietID = int.Parse(txt_animal_diet_id.Text);
-                //string query = $"UPDATE Transactions SET amount = '{txt_trans_amount.Text}', employee_id = '{txt_empID.Text}', transaction_date = '{txt_date.Text}', payment_method = '{combo_payMethod.Text}' WHERE transaction_id = '{txt_transID.Text}';";
-                //Database.NonQuery($"INSERT INTO Animal_Adoption VALUES(@ID, @Animal)", ("@ID", ID), ("@Animal", Animal.ID));
-                string query = "INSERT INTO Animal_Adoption VALUES(@ID, @HABID, @SPEID, @NAME, @BIRTHDAY, @WEIGHT, @DIETID)";
+                
+                string query = "INSERT INTO ANIMAL VALUES(@ID, @HABID, @SPEID, @NAME, @BIRTHDAY, @WEIGHT, @DIETID);";
+                Database.NonQuery(query, ("@ID", idVal), ("@HABID", habIdVal), ("@SPEID", speIdVal),
+                                        ("@NAME", animalName), ("@BIRTHDAY", animalDate), ("@WEIGHT", wei),
+                                        ("@DIETID", dietID));
                 /*
                 string query = "INSERT INTO ANIMAL (animal_id, habitat_id, species_id, animal_name, birthday, weight, diet_id) " +
                     $"VALUES (@animal_id,id, '" + habIdVal + "', '" + speIdVal + "', '" + animalName + "', '" + animalDate + "', '" + wei + "', '" + dietID + "');";
                 */
-                query.Replace("''", "NULL");
-                //Database.NonQuery(query);
             }
             catch
             {
@@ -121,14 +121,13 @@ namespace DatabaseProject
                 }
 
                 query += ";";
-                query.Replace("'NULL'", "NULL");
                 
                 query = query.Remove(query.Length - 5, 4);
 
                 if (hasParams)
-                    datagrid_animals.ItemsSource = Query(query)?.DefaultView;
+                    datagrid_animals.ItemsSource = Database.Query(query)?.DefaultView;
                 else
-                    datagrid_animals.ItemsSource = Query(defaultQuery)?.DefaultView;
+                    datagrid_animals.ItemsSource = Database.Query(defaultQuery)?.DefaultView;
             }
             catch
             {
@@ -152,17 +151,18 @@ namespace DatabaseProject
                 int dietID = int.Parse(txt_animal_diet_id.Text);
 
                 string query = "UPDATE ANIMAL " +
-                    "SET habitat_id='" + habIdVal +
-                    "', species_id='" + speIdVal +
-                    "', animal_name='" + animalName +
-                    "', birthday='" + animalDate +
-                    "', weight='" + wei +
-                    "', diet_id='" + dietID +
-                    "' WHERE animal_id='" + idVal + "';";
+                    "SET habitat_id=(@HABID), " +
+                    "species_id=(@SPEID), " +
+                    "animal_name=(@NAME), "+
+                    "birthday=(@BIRTHDAY), "+
+                    "weight=(@WEIGHT), "+
+                    "diet_id=(@DIETID), "+
+                    "WHERE animal_id=(@ID);";
 
-                query.Replace("''", "NULL");
 
-                NonQuery(query);
+                Database.NonQuery(query, ("@ID", idVal), ("@HABID", habIdVal), ("@SPEID", speIdVal),
+                                        ("@NAME", animalName), ("@BIRTHDAY", animalDate), ("@WEIGHT", wei),
+                                        ("@DIETID", dietID));
             }
             catch
             {
@@ -180,7 +180,31 @@ namespace DatabaseProject
                 {
                     int idVal = int.Parse(txt_animal_id.Text);
 
-                    NonQuery("DELETE FROM ANIMAL WHERE animal_id='" + idVal + "';");
+                    string query = "DELETE FROM ANIMAL WHERE animal_id=(@ID);";
+
+                    bool notInHandler = Database.Query("SELECT * FROM HANDLER WHERE animal_id=(@ID);", ("@ID", idVal)).Rows.Count > 0;
+                    bool notInAdopt = Database.Query("SELECT * FROM ANIMAL_ADOPTION WHERE animal_id=(@ID);", ("@ID", idVal)).Rows.Count > 0;
+                    
+
+                    if(notInAdopt && notInAdopt)
+                    {
+                        bool validID = Database.NonQuery(query, ("@ID", idVal));
+
+                        if(validID==false)
+                        {
+                            MessageBox.Show("Could not delete because no animal has the ID value");
+                        }
+                    }
+
+                    if(notInAdopt==false)
+                    {
+                        MessageBox.Show("This animal is still listed in Animal Adoption and can't be deleted");
+                    }
+
+                    if (notInHandler == false)
+                    {
+                        MessageBox.Show("This animal is still listed in Handlers and can't be deleted");
+                    }
                 }
                 catch
                 {

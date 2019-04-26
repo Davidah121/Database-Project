@@ -27,8 +27,8 @@ namespace DatabaseProject
                 string specName = txt_species_name.Text;
                 string specClass = txt_species_class.Text;
 
-                NonQuery("INSERT INTO SPECIES (species_id, species_name, class_name) " +
-                    "VALUES ('" + idVal + "', '" + specName + "', '" + specClass + "');");
+                string query = "INSERT INTO SPECIES VALUES(@ID, @SPENAME, @CLASSNAME);";
+                Database.NonQuery(query, ("@ID", idVal), ("@SPENAME", specName), ("@CLASSNAME", specClass));
             }
             catch
             {
@@ -67,14 +67,13 @@ namespace DatabaseProject
                 }
 
                 query += ";";
-                query.Replace("'NULL'", "NULL");
 
                 query = query.Remove(query.Length - 5, 4);
 
                 if(hasParams)
-                    datagrid_species.ItemsSource = Query(query)?.DefaultView;
+                    datagrid_species.ItemsSource = Database.Query(query)?.DefaultView;
                 else
-                    datagrid_species.ItemsSource = Query(defaultQuery)?.DefaultView;
+                    datagrid_species.ItemsSource = Database.Query(defaultQuery)?.DefaultView;
             }
             catch
             {
@@ -90,10 +89,12 @@ namespace DatabaseProject
                 string specName = txt_species_name.Text;
                 string specClass = txt_species_class.Text;
 
-                NonQuery("UPDATE SPECIES " +
-                    "SET species_name='" + specName +
-                    "', class_name='" + specClass +
-                    "' WHERE species_id='" + idVal + "';");
+                string query = "UPDATE SPECIES " +
+                            "SET species_name=(@SPENAME), " +
+                            "class_name=(@CLASSNAME) " +
+                            "WHERE species_id=(@ID);";
+
+                Database.NonQuery(query, ("@ID", idVal), ("@SPENAME", specName), ("@CLASSNAME", specClass));
             }
             catch
             {
@@ -109,7 +110,24 @@ namespace DatabaseProject
                 {
                     int idVal = int.Parse(txt_species_id.Text);
 
-                    NonQuery("DELETE FROM SPECIES WHERE species_id='" + idVal + "';");
+                    string query = "DELETE FROM SPECIES WHERE species_id=(@ID);";
+
+                    bool notInAnimal = Database.Query("SELECT * FROM ANIMAL WHERE species_id=(@ID);", ("@ID", idVal)).Rows.Count > 0;
+
+                    if (notInAnimal)
+                    {
+                        bool validID = Database.NonQuery(query, ("@ID", idVal));
+
+                        if (validID == false)
+                        {
+                            MessageBox.Show("Could not delete because no species has the ID value");
+                        }
+                    }
+
+                    if (notInAnimal == false)
+                    {
+                        MessageBox.Show("This Habitat is still listed in Animal and can't be deleted");
+                    }
                 }
                 catch
                 {

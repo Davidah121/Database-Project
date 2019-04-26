@@ -30,11 +30,10 @@ namespace DatabaseProject
                 string dSecondary = txt_diet_secondary_food.Text;
                 string dTreats = txt_diet_treats.Text;
 
-                string query = "INSERT INTO DIET (diet_id, dietary_type, restrictions, primary_food, secondary_food, treats) " +
-                    "VALUES ('" + idVal + "', '" + dType + "', '" + dRestrictions + "', '" + dPrimary + "', '" + dSecondary + "', '" + dTreats + "');";
-
-                query.Replace("''", "NULL");
-                NonQuery(query);
+                string query = "INSERT INTO DIET VALUES(@ID, @DTYPE, @RES, @PRIM, @SECO, @TREATS); ";
+                
+                Database.NonQuery(query, ("@ID", idVal), ("@DTYPE", dType), ("@RES", dRestrictions), 
+                                ("@PRIM", dPrimary), ("@SECO", dSecondary), ("@TREATS", dTreats));
             }
             catch
             {
@@ -95,14 +94,13 @@ namespace DatabaseProject
                 
 
                 query += ";";
-                query.Replace("'NULL'", "NULL");
                 
                 query = query.Remove(query.Length - 5, 4);
 
                 if (hasParams)
-                    datagrid_diet.ItemsSource = Query(query)?.DefaultView;
+                    datagrid_diet.ItemsSource = Database.Query(query)?.DefaultView;
                 else
-                    datagrid_diet.ItemsSource = Query(defaultQuery)?.DefaultView;
+                    datagrid_diet.ItemsSource = Database.Query(defaultQuery)?.DefaultView;
             }
             catch
             {
@@ -123,16 +121,16 @@ namespace DatabaseProject
                 string dTreats = txt_diet_treats.Text;
 
                 string query = "UPDATE DIET " +
-                    "SET dietary_type='" + dType +
-                    "', restrictions='" + dRestrictions +
-                    "', primary_food='" + dPrimary +
-                    "', secondary_food='" + dSecondary +
-                    "', treats='" + dTreats+
-                    "' WHERE diet_id='" + idVal + "';";
+                    "SET dietary_type=(@DTYPE), " +
+                    "restrictions=(@RES), " +
+                    "primary_food=(@PRIM), " +
+                    "secondary_food=(@SECO), " +
+                    "treats=(@TREATS) " +
+                    "WHERE diet_id=(@ID);";
 
-                query.Replace("''", "NULL");
 
-                NonQuery(query);
+                Database.NonQuery(query, ("@ID", idVal), ("@DTYPE", dType), ("@RES", dRestrictions),
+                                                ("@PRIM", dPrimary), ("@SECO", dSecondary), ("@TREATS", dTreats));
             }
             catch
             {
@@ -150,7 +148,24 @@ namespace DatabaseProject
                 {
                     int idVal = int.Parse(txt_diet_id.Text);
 
-                    NonQuery("DELETE FROM DIET WHERE diet_id='" + idVal + "';");
+                    string query = "DELETE FROM DIET WHERE diet_id=(@ID);";
+
+                    bool notInAnimal = Database.Query("SELECT * FROM ANIMAL WHERE diet_id=(@ID);", ("@ID", idVal)).Rows.Count > 0;
+                    
+                    if (notInAnimal)
+                    {
+                        bool validID = Database.NonQuery(query, ("@ID", idVal));
+
+                        if (validID == false)
+                        {
+                            MessageBox.Show("Could not delete because no diet has the ID value");
+                        }
+                    }
+
+                    if (notInAnimal == false)
+                    {
+                        MessageBox.Show("This Diet is still listed in Animal and can't be deleted");
+                    }
                 }
                 catch
                 {
