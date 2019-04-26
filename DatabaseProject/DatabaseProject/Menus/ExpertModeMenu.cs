@@ -19,8 +19,6 @@ namespace DatabaseProject
 {
     partial class MainWindow : Window
     {
-        const string connectionString = "Data Source=MSI;Initial Catalog=Zoo;Integrated Security=True";
-
         #region Events
 
 
@@ -28,7 +26,7 @@ namespace DatabaseProject
         {
             string cmd = textbox_expmode_sql.Text;
 
-            if (String.IsNullOrWhiteSpace(cmd))
+            if (string.IsNullOrWhiteSpace(cmd))
             {
                 return;
             }
@@ -44,62 +42,13 @@ namespace DatabaseProject
         {
             if (query.StartsWith("select", StringComparison.OrdinalIgnoreCase))
             {
-                datagrid_expmode.ItemsSource = Query(query)?.DefaultView;
+                datagrid_expmode.ItemsSource = Database.Query(query)?.DefaultView;
             }
             else
             {
-                NonQuery(query);
-            }
-        }
-
-
-        private DataTable Query(string query)
-        {
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            using (SqlCommand command = new SqlCommand(query, connection))
-            {
-                try
+                if (Database.NonQuery(query))
                 {
-                    // Open the connection to the database
-                    connection.Open();
-
-
-                    // Create an adapter object. This will help us retrieve the rows from the database
-                    SqlDataAdapter adapter = new SqlDataAdapter(command);
-
-
-                    // Create an new table
-                    DataTable table = new DataTable();
-
-
-                    // Populate the table with the rows from the database
-                    adapter.Fill(table);
-
-                    return table;
-                }
-                catch
-                {
-                    MessageBox.Show("Something went wrong!");
-                    return null;
-                }
-            }
-        }
-
-
-        private void NonQuery(string query)
-        {
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            using (SqlCommand command = new SqlCommand(query, connection))
-            {
-                try
-                {
-                    connection.Open();
-                    command.ExecuteNonQuery();
-                    MessageBox.Show("Non-query executed successfully!");
-                }
-                catch
-                {
-                    MessageBox.Show("Something went wrong!");
+                    MessageBox.Show("Query executed successfully!");
                 }
             }
         }

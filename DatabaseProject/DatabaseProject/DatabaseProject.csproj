@@ -67,6 +67,7 @@
     <Compile Include="Menus\DietMenu.cs" />
     <Compile Include="Menus\SpeciesMenu.cs" />
     <Compile Include="Menus\HabitatMenu.cs" />
+    <Compile Include="Database.cs" />
     <Compile Include="Menus\DonationsMenu.cs" />
     <Compile Include="Menus\AnimalsMenu.cs" />
     <Compile Include="Menus\EmployeesMenu.cs" />
