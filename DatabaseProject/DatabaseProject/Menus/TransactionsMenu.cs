@@ -76,14 +76,14 @@ namespace DatabaseProject
         {
             if (string.IsNullOrWhiteSpace(txt_ticket_id.Text)) return;
             if (string.IsNullOrWhiteSpace(combo_ticket_selection.Text)) return;
-            list_ticket_cart.Items.Add(txt_ticket_id.Text + "', '" + combo_ticket_selection.Text);
+            list_ticket_cart.Items.Add(txt_ticket_id.Text + " " + combo_ticket_selection.Text);
         }
 
         private void Btn_add_item_to_cart_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txt_item_id.Text)) return;
             if (string.IsNullOrWhiteSpace(txt_item_quantity.Text)) return;
-            list_item_cart.Items.Add(txt_item_id.Text + "', '" + txt_item_quantity.Text);
+            list_item_cart.Items.Add(txt_item_id.Text + " " + txt_item_quantity.Text);
         }
 
         private void combo_trans_type_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -153,23 +153,27 @@ namespace DatabaseProject
             if (string.IsNullOrWhiteSpace(Transaction_Amount)) return;
 
             int id = FindFirstNonIndex("Select transaction_id from Transactions order by 1");
-            string query = $"INSERT INTO Transactions VALUES('{id}','{Employee_ID}', '{Date_Of_Transaction}', '{Payment_Method}', '{Transaction_Amount}')";
-            Database.Query(query);
+            string query = $"INSERT INTO Transactions VALUES(@ID, @empID, @date, @payMethod, @amount)";
+            Database.Query(query, ("@ID", id), ("@empID", txt_empID.Text), ("@date", txt_date.Text), ("@payMethod", combo_payMethod.Text), ("@amount", txt_trans_amount.Text));
             // Use foreach loop to get all tickets in cart to the right id
+
             if (list_ticket_cart.HasItems)
             {
                 foreach (var listBoxItem in list_ticket_cart.Items)
                 {
-                    query = $"INSERT INTO Ticket (transaction_id, ticket_id, ticket_type) VALUES('{id}', '{listBoxItem.ToString()}');";
-                    Database.Query(query);
+                    string[] splitval = listBoxItem.ToString().Split(' ');
+
+                    query = $"INSERT INTO Ticket (transaction_id, ticket_id, ticket_type) VALUES (@ID, @ticket_id, @ticket_type);";
+                    Database.Query(query, ("@ID", id), ("@ticket_id", splitval[0]), ("@ticket_type", splitval[1]));
                 }
             }
             else if (list_item_cart.HasItems)
             {
                 foreach (var listBoxItem in list_item_cart.Items)
                 {
-                    query = $"INSERT INTO Item_Sale (transaction_id, item_id, quantity) VALUES('{id}', '{listBoxItem.ToString()}');";
-                    Database.Query(query);
+                    string[] splitval = listBoxItem.ToString().Split(' ');
+                    query = $"INSERT INTO Item_Sale (transaction_id, item_id, quantity) VALUES(@ID, @item_id, @quantity);";
+                    Database.Query(query, ("@ID", id), ("@item_id", splitval[0]), ("@quantity", splitval[1]));
                 }
             }
 
@@ -207,11 +211,11 @@ namespace DatabaseProject
 
             if (string.IsNullOrWhiteSpace(txt_transID.Text))
             {
-                query = $"SELECT * FROM Transactions FULL OUTER JOIN Ticket ON Transactions.transaction_id = Ticket.transaction_id";
+                query = $"SELECT * FROM Ticket Left JOIN Transactions ON Transactions.transaction_id = Ticket.transaction_id";
             }
             else
             {
-                query = $"SELECT * FROM Transactions FULL OUTER JOIN Ticket ON Transactions.transaction_id = Ticket.transaction_id WHERE Transactions.transaction_id = {txt_transID.Text}";
+                query = $"SELECT * FROM Ticket Left JOIN Transactions ON Transactions.transaction_id = Ticket.transaction_id WHERE Transactions.transaction_id = {txt_transID.Text}";
             }
 
             DataTable table = Query(query);
@@ -230,11 +234,11 @@ namespace DatabaseProject
 
             if (string.IsNullOrWhiteSpace(txt_transID.Text))
             {
-                query = $"SELECT * FROM Transactions FULL OUTER JOIN Item_Sale ON Transactions.transaction_id = Item_Sale.transaction_id";
+                query = $"SELECT * FROM Item_Sale Left JOIN Transactions ON Transactions.transaction_id = Item_Sale.transaction_id";
             }
             else
             {
-                query = $"SELECT * FROM Transactions FULL OUTER JOIN Item_Sale ON Transactions.transaction_id = Item_Sale.transaction_id WHERE Transactions.transaction_id = {txt_transID.Text}";
+                query = $"SELECT * FROM Item_Sale Left JOIN Transactions ON Transactions.transaction_id = Item_Sale.transaction_id WHERE Transactions.transaction_id = {txt_transID.Text}";
             }
 
             DataTable table = Query(query);
@@ -259,16 +263,19 @@ namespace DatabaseProject
             }
 
             //Handling Employee ID?
-            string query = $"UPDATE Transactions SET amount = '{txt_trans_amount.Text}', employee_id = '{txt_empID.Text}', transaction_date = '{txt_date.Text}', payment_method = '{combo_payMethod.Text}' WHERE transaction_id = '{txt_transID.Text}';";
-            Database.Query(query);
+            string query = $"UPDATE Transactions SET amount = @amount, employee_id = @empID, transaction_date = @date, payment_method = @payMethod WHERE transaction_id = @ID;";
+            Database.Query(query, ("@ID", txt_transID.Text), ("@empID", txt_empID.Text), ("@date", txt_date.Text), ("@payMethod", combo_payMethod.Text), ("@amount", txt_trans_amount.Text));
+
             if (list_ticket_cart.HasItems)
             {
-                query = $"DELETE FROM Ticket WHERE transaction_id = {txt_transID.Text};";
-                Database.Query(query);
+                query = $"DELETE FROM Ticket WHERE transaction_id = @ID;";
+                Database.Query(query, ("@ID", txt_transID.Text));
                 foreach (var listBoxItem in list_ticket_cart.Items)
                 {
-                    query = $"INSERT INTO Ticket (transaction_id, ticket_id, ticket_type) VALUES('{txt_transID.Text}', '{listBoxItem.ToString()}');";
-                    Database.Query(query);
+                    string[] splitval = listBoxItem.ToString().Split(' ');
+
+                    query = $"INSERT INTO Ticket (transaction_id, ticket_id, ticket_type) VALUES (@ID, @ticket_id, @ticket_type);";
+                    Database.Query(query, ("@ID", txt_transID.Text), ("@ticket_id", splitval[0]), ("@ticket_type", splitval[1]));
                 }
             }
             else if (list_item_cart.HasItems)
@@ -277,8 +284,9 @@ namespace DatabaseProject
                 Database.Query(query);
                 foreach (var listBoxItem in list_item_cart.Items)
                 {
-                    query = $"INSERT INTO Item_Sale (transaction_id, item_id, quantity) VALUES('{txt_transID.Text}', '{listBoxItem.ToString()}');";
-                    Database.Query(query);
+                    string[] splitval = listBoxItem.ToString().Split(' ');
+                    query = $"INSERT INTO Item_Sale (transaction_id, item_id, quantity) VALUES(@ID, @item_id, @quantity);";
+                    Database.Query(query, ("@ID", txt_transID.Text), ("@item_id", splitval[0]), ("@quantity", splitval[2]));
                 }
             }
 
@@ -295,12 +303,12 @@ namespace DatabaseProject
                 return;
             }
 
-            string query = $"DELETE FROM Transactions WHERE transaction_id = {txt_transID.Text};";
-            Database.Query(query);
-            query = $"DELETE FROM Ticket WHERE transaction_id = {txt_transID.Text};";
-            Database.Query(query);
-            query = $"Delete FROM Item_Sale WHERE transaction_id = {txt_transID.Text};";
-            Database.Query(query);
+            string query = $"DELETE FROM Transactions WHERE transaction_id = @ID;";
+            Database.Query(query, ("@ID", txt_transID.Text));
+            query = $"DELETE FROM Ticket WHERE transaction_id = @ID;";
+            Database.Query(query, ("@ID", txt_transID.Text));
+            query = $"Delete FROM Item_Sale WHERE transaction_id = @ID;";
+            Database.Query(query, ("@ID", txt_transID.Text));
             ViewTransaction();
             ClearFields();
         }
