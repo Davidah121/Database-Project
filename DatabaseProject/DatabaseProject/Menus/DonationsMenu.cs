@@ -102,7 +102,8 @@ namespace DatabaseProject
                 PopulateDonorDropdown();
                 ViewDonation();
                 ViewDonor();
-
+                
+                // Add event listeners
                 Donor.onAllUpdated += PopulateDonorDropdown;
                 Animal.onAllUpdated += PopulateAnimalDropdown;
                 Habitat.onAllUpdated += PopulateHabitatDropdown;
@@ -110,6 +111,8 @@ namespace DatabaseProject
             else
             {
                 // We were just closed
+                
+                // Remove event listeners
                 Donor.onAllUpdated -= PopulateDonorDropdown;
                 Animal.onAllUpdated -= PopulateAnimalDropdown;
                 Habitat.onAllUpdated -= PopulateHabitatDropdown;
@@ -143,6 +146,7 @@ namespace DatabaseProject
         {
             try
             {
+                // Show or hide menu items based on the type of donation
                 string value = (e.AddedItems[0] as ComboBoxItem).Content as string;
 
                 label_donation_habitat.Visibility = value == HABITAT_DONATION ? Visibility.Visible : Visibility.Collapsed;
@@ -310,14 +314,14 @@ namespace DatabaseProject
 
             if (!string.IsNullOrWhiteSpace(textbox_donation_id.Text) && reduced)
             {
-                query = $"SELECT donation_id, amount, Donation.donor_id, first_name, last_name, email FROM Donation left join Donor on Donation.donor_id = Donor.donor_id WHERE donation_id = {textbox_donation_id.Text};";
+                query = $"SELECT donation_id, amount, Donation.donor_id, first_name, last_name, email FROM Donation left join Donor on Donation.donor_id = Donor.donor_id WHERE donation_id = @ID;";
             }
             else
             {
                 query = $"SELECT donation_id, amount, Donation.donor_id, first_name, last_name, email FROM Donation left join Donor on Donation.donor_id = Donor.donor_id;";
             }
 
-            DataTable table = Query(query);
+            DataTable table = Database.Query(query, ("@ID", DonationID));
 
             datatable_donations.ItemsSource = table?.DefaultView;
         }
@@ -515,7 +519,7 @@ namespace DatabaseProject
 
         private int FindFirstNonIndex(string query)
         {
-            DataTable table = Query(query);
+            DataTable table = Database.Query(query);
 
             List<int> values = new List<int>();
 
@@ -638,6 +642,7 @@ abstract class Donation : IDatabaseObject
 
             for (int i = 0; i < count; i++)
             {
+                // Get data out of data table
                 if (!int.TryParse(table.Rows[i]["donation_id"].ToString().Trim(), out int id)) continue;
                 if (!double.TryParse(table.Rows[i]["amount"].ToString().Trim(), out double amount)) continue;
                 if (!int.TryParse(table.Rows[i]["donor_id"].ToString().Trim(), out int donor_id)) continue;
@@ -648,10 +653,12 @@ abstract class Donation : IDatabaseObject
                 Habitat h = HabitatDonation.GetHabitat(id);
                 if (a != null)
                 {
+                    // if the donation is an animal adoption, make a new animal adoption
                     list.Add(new AnimalAdoption(id, amount, donor, a));
                 }
                 else if (h != null)
                 {
+                    // otherwise we are probably a habitat donation. make a new habitat donation object.
                     list.Add(new HabitatDonation(id, amount, donor, h));
                 }
             }
@@ -689,14 +696,19 @@ class AnimalAdoption : Donation
 
     public static Animal GetAnimal(int donationid)
     {
+        // Initialize parameterized query
         string query = $"SELECT animal_id FROM Animal_Adoption WHERE donation_id = @ID";
 
+        // Query the database and retrieve the table
         DataTable table = Database.Query(query, ("@ID", donationid));
 
-        if (table?.Rows?.Count == 0) return null;
+        // If there are zero rows, return null
+        if (table?.Rows.Count == 0) return null;
 
-        int id = int.TryParse(table.Rows[0]["animal_id"].ToString().Trim(), out int i) ? i : -1;
+        // Parse the animal id from the first row of the table
+        if (!int.TryParse(table.Rows[0]["animal_id"].ToString(), out int id)) return null;
 
+        // Find and return the animal object, null if does not exist
         return Animal.All.Find(x => x.ID == id);
     }
 
@@ -938,7 +950,7 @@ class Donor : IDatabaseObject
             return false;
         }
 
-        string query = $"UPDATE Donor SET donor_id = @ID,first_name = @FName, last_name = @LName, email = @Email WHERE donor_id = @ID;";
+        string query = $"UPDATE Donor SET first_name = @FName, last_name = @LName, email = @Email WHERE donor_id = @ID;";
 
         if (Database.NonQuery(query, ("@ID", ID), ("@FName", FirstName), ("@LName", LastName), ("@Email", Email)))
         {

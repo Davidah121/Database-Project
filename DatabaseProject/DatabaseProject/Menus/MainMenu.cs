@@ -23,6 +23,7 @@ namespace DatabaseProject
         private void Btn_open_emp_Click(object sender, RoutedEventArgs e)
         {
             OpenMenu(menu_employees);
+            populateEmpAnimalCombo();
         }
 
         private void Btn_open_animals_Click(object sender, RoutedEventArgs e)

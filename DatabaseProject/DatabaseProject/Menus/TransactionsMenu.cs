@@ -194,7 +194,7 @@ namespace DatabaseProject
                 query = $"SELECT * FROM Transactions WHERE Transactions.transaction_id = {txt_transID.Text};";
             }
 
-            DataTable table = Query(query);
+            DataTable table = Database.Query(query);
 
             if (table == null)
             {

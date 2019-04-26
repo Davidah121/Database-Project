@@ -6,16 +6,17 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Data;
 using System.Data.SqlClient;
+using System.Configuration;
 
 namespace DatabaseProject
 {
     class Database
     {
-        const string connectionString = "Data Source=DESKTOP-V87K7CH;Initial Catalog=Zoo;Integrated Security=True";
+        private static readonly string CONNECTION_STRING = ConfigurationManager.ConnectionStrings["connection"].ConnectionString;
 
         public static DataTable Query(string query, params (string key, object value)[] p)
         {
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand command = new SqlCommand(query, connection))
             {
                 try
@@ -55,18 +56,23 @@ namespace DatabaseProject
 
         public static bool NonQuery(string query, params (string key, object value)[] p)
         {
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(CONNECTION_STRING))
             using (SqlCommand command = new SqlCommand(query, connection))
             {
                 try
                 {
+                    // Add parameters
                     if (p.Length > 0)
                     {
                         SqlParameter[] sqlParameters = p.Select(x => new SqlParameter(x.key, x.value)).ToArray();
                         command.Parameters.AddRange(sqlParameters);
                     }
 
+                    // Open the connection to the database
                     connection.Open();
+
+
+                    // Return true if at least 1 row was affected.
                     return command.ExecuteNonQuery() > 0;
                 }
                 catch (Exception ex)
