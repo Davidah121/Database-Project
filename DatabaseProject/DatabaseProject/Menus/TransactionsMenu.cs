@@ -34,21 +34,37 @@ namespace DatabaseProject
         private void Btn_new_trans_Click(object sender, RoutedEventArgs e)
         {
             NewTransaction();
+            ClearFields();
         }
 
         private void Btn_view_trans_Click(object sender, RoutedEventArgs e)
         {
             ViewTransaction();
+            ClearFields();
+        }
+
+        private void Btn_view_item_Click(object sender, RoutedEventArgs e)
+        {
+            ViewItemTransaction();
+            ClearFields();
+        }
+
+        private void Btn_view_ticket_Click(object sender, RoutedEventArgs e)
+        {
+            ViewTicketTransaction();
+            ClearFields();
         }
 
         private void Btn_update_trans_Click(object sender, RoutedEventArgs e)
         {
             UpdateTransaction();
+            ClearFields();
         }
 
         private void Btn_delete_trans_Click(object sender, RoutedEventArgs e)
         {
             DeleteTransaction();
+            ClearFields();
         }
 
         private void Btn_clear_fields_Click(object sender, RoutedEventArgs e)
@@ -58,7 +74,16 @@ namespace DatabaseProject
 
         private void Btn_add_ticket_to_cart_Click(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(txt_ticket_id.Text)) return;
+            if (string.IsNullOrWhiteSpace(combo_ticket_selection.Text)) return;
             list_ticket_cart.Items.Add(txt_ticket_id.Text + "', '" + combo_ticket_selection.Text);
+        }
+
+        private void Btn_add_item_to_cart_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txt_item_id.Text)) return;
+            if (string.IsNullOrWhiteSpace(txt_item_quantity.Text)) return;
+            list_item_cart.Items.Add(txt_item_id.Text + "', '" + txt_item_quantity.Text);
         }
 
         private void combo_trans_type_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -76,21 +101,21 @@ namespace DatabaseProject
                     list_ticket_cart.Visibility = Visibility.Collapsed;
                     btn_add_ticket_to_cart.Visibility = Visibility.Collapsed;
 
-                    ItemLabel.Visibility = Visibility.Visible;
-                    combo_item_selection.Visibility = Visibility.Visible;
-                    QuantityLabel.Visibility = Visibility.Visible;
-                    txt_item_quantity.Visibility = Visibility.Visible;
+                    ItemIDLabel.Visibility = Visibility.Visible;
+                    txt_item_id.Visibility = Visibility.Visible;
                     list_item_cart.Visibility = Visibility.Visible;
                     btn_add_item_to_cart.Visibility = Visibility.Visible;
+                    txt_item_quantity.Visibility = Visibility.Visible;
+                    ItemQuantityLabel.Visibility = Visibility.Visible;
                 }
                 if (value == "Ticket Sale")
                 {
-                    ItemLabel.Visibility = Visibility.Collapsed;
-                    combo_item_selection.Visibility = Visibility.Collapsed;
-                    QuantityLabel.Visibility = Visibility.Collapsed;
-                    txt_item_quantity.Visibility = Visibility.Collapsed;
+                    ItemIDLabel.Visibility = Visibility.Collapsed;
+                    txt_item_id.Visibility = Visibility.Collapsed;
                     list_item_cart.Visibility = Visibility.Collapsed;
                     btn_add_item_to_cart.Visibility = Visibility.Collapsed;
+                    txt_item_quantity.Visibility = Visibility.Collapsed;
+                    ItemQuantityLabel.Visibility = Visibility.Collapsed;
 
                     TicketLabel.Visibility = Visibility.Visible;
                     combo_ticket_selection.Visibility = Visibility.Visible;
@@ -136,17 +161,47 @@ namespace DatabaseProject
                 foreach (var listBoxItem in list_ticket_cart.Items)
                 {
                     query = $"INSERT INTO Ticket (transaction_id, ticket_id, ticket_type) VALUES('{id}', '{listBoxItem.ToString()}');";
+                    Database.Query(query);
+                }
+            }
+            else if (list_item_cart.HasItems)
+            {
+                foreach (var listBoxItem in list_item_cart.Items)
+                {
+                    query = $"INSERT INTO Item_Sale (transaction_id, item_id, quantity) VALUES('{id}', '{listBoxItem.ToString()}');";
+                    Database.Query(query);
                 }
             }
 
-            if (NonQuery(query))
-            {
-                ClearFields();
-                ViewTransaction();
-            }
+            ViewTransaction();
+            ClearFields();
         }
 
         private void ViewTransaction()
+        {
+            string query = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(txt_transID.Text))
+            {
+                query = $"SELECT * FROM Transactions;";
+            }
+            else
+            {
+                query = $"SELECT * FROM Transactions WHERE Transactions.transaction_id = {txt_transID.Text};";
+            }
+
+            DataTable table = Query(query);
+
+            if (table == null)
+            {
+                return;
+            }
+
+            datatable_transactions.ItemsSource = table.DefaultView;
+            ClearFields();
+        }
+
+        private void ViewTicketTransaction()
         {
             string query = string.Empty;
 
@@ -169,6 +224,31 @@ namespace DatabaseProject
             datatable_transactions.ItemsSource = table.DefaultView;
         }
 
+        private void ViewItemTransaction()
+        {
+            string query = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(txt_transID.Text))
+            {
+                query = $"SELECT * FROM Transactions FULL OUTER JOIN Item_Sale ON Transactions.transaction_id = Item_Sale.transaction_id";
+            }
+            else
+            {
+                query = $"SELECT * FROM Transactions FULL OUTER JOIN Item_Sale ON Transactions.transaction_id = Item_Sale.transaction_id WHERE Transactions.transaction_id = {txt_transID.Text}";
+            }
+
+            DataTable table = Query(query);
+
+            if (table == null)
+            {
+                return;
+            }
+
+            datatable_transactions.ItemsSource = table.DefaultView;
+        }
+
+
+
         private void UpdateTransaction()
         {
             if (string.IsNullOrWhiteSpace(txt_transID.Text)) return;
@@ -180,8 +260,30 @@ namespace DatabaseProject
 
             //Handling Employee ID?
             string query = $"UPDATE Transactions SET amount = '{txt_trans_amount.Text}', employee_id = '{txt_empID.Text}', transaction_date = '{txt_date.Text}', payment_method = '{combo_payMethod.Text}' WHERE transaction_id = '{txt_transID.Text}';";
+            Database.Query(query);
+            if (list_ticket_cart.HasItems)
+            {
+                query = $"DELETE FROM Ticket WHERE transaction_id = {txt_transID.Text};";
+                Database.Query(query);
+                foreach (var listBoxItem in list_ticket_cart.Items)
+                {
+                    query = $"INSERT INTO Ticket (transaction_id, ticket_id, ticket_type) VALUES('{txt_transID.Text}', '{listBoxItem.ToString()}');";
+                    Database.Query(query);
+                }
+            }
+            else if (list_item_cart.HasItems)
+            {
+                query = $"DELETE FROM Item_Sale WHERE transaction_id = {txt_transID.Text};";
+                Database.Query(query);
+                foreach (var listBoxItem in list_item_cart.Items)
+                {
+                    query = $"INSERT INTO Item_Sale (transaction_id, item_id, quantity) VALUES('{txt_transID.Text}', '{listBoxItem.ToString()}');";
+                    Database.Query(query);
+                }
+            }
 
-            NonQuery(query);
+            ViewTransaction();
+            ClearFields();
         }
 
         private void DeleteTransaction()
@@ -194,11 +296,13 @@ namespace DatabaseProject
             }
 
             string query = $"DELETE FROM Transactions WHERE transaction_id = {txt_transID.Text};";
-            NonQuery(query);
+            Database.Query(query);
             query = $"DELETE FROM Ticket WHERE transaction_id = {txt_transID.Text};";
-            NonQuery(query);
+            Database.Query(query);
             query = $"Delete FROM Item_Sale WHERE transaction_id = {txt_transID.Text};";
-            NonQuery(query);
+            Database.Query(query);
+            ViewTransaction();
+            ClearFields();
         }
         
     
@@ -213,8 +317,8 @@ namespace DatabaseProject
             txt_ticket_id.Text = string.Empty;
             combo_ticket_selection.Text = string.Empty;
             list_ticket_cart.Items.Clear();
-
             list_item_cart.Items.Clear();
+            txt_item_quantity.Text = string.Empty;
 
         }
     }

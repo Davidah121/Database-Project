@@ -30,14 +30,15 @@
             <Button x:Name="btn_delivery" Content="Add New Delivery" HorizontalAlignment="Left" Margin="117,222,0,0" VerticalAlignment="Top" Width="136" Height="46" />
             <Button x:Name="btn_deliveries_back" Content="Main Menu" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="30" Margin="10,10,0,0" Click="OpenMainMenu" />
         </Grid>
-        <Grid x:Name="menu_trans" Margin="10" Visibility= "Hidden" IsVisibleChanged = "Menu_transactions_IsVisibleChanged">
+        <Grid x:Name="menu_trans" Margin="10" Visibility= "Visible" IsVisibleChanged = "Menu_transactions_IsVisibleChanged">
             <Button x:Name="btn_delete_trans" Content="Delete" HorizontalAlignment="Left" Margin="690,430,0,0" VerticalAlignment="Top" Width="80" Height="40" Click="Btn_delete_trans_Click"/>
-            <Button x:Name="btn_manage_items" Content="Manage Items" Visibility="Visible" HorizontalAlignment="Left" Height="40" Margin="643,385,0,0" VerticalAlignment="Top" Width="127"/>
-            <Button x:Name="btn_view_trans" Content="View" HorizontalAlignment="Left" Margin="435,430,0,0" VerticalAlignment="Top" Width="80" Height="40" Click="Btn_view_trans_Click"/>
+            <Button x:Name="btn_view_trans" Content="Transaction" HorizontalAlignment="Left" Margin="520,359,0,0" VerticalAlignment="Top" Width="80" Height="31" Click="Btn_view_trans_Click"/>
+            <Button x:Name="btn_view_item" Content="Item" HorizontalAlignment="Left" Margin="605,359,0,0" VerticalAlignment="Top" Width="80" Height="31" Click="Btn_view_item_Click"/>
+            <Button x:Name="btn_view_ticket" Content="Ticket" HorizontalAlignment="Left" Margin="690,359,0,0" VerticalAlignment="Top" Width="80" Height="31" Click="Btn_view_ticket_Click"/>
             <Button x:Name="btn_new_trans" Content="New" HorizontalAlignment="Left" Margin="520,430,0,0" VerticalAlignment="Top" Width="80" Height="40" Click="Btn_new_trans_Click"/>
             <Button x:Name="btn_update_trans" Content="Update" HorizontalAlignment="Left" Margin="605,430,0,0" VerticalAlignment="Top" Width="80" Height="40" Click="Btn_update_trans_Click"/>
             <Button x:Name="btn_trans_back" Content="Main Menu" HorizontalAlignment="Left" VerticalAlignment="Top" Width="80" Height="40" Margin="10,10,0,0" Click="OpenMainMenu" />
-            <Button x:Name="btn_clear_fields" Content="Clear Fields" HorizontalAlignment="Left" Height="40" Margin="435,385,0,0" VerticalAlignment="Top" Width="80" Click="Btn_clear_fields_Click"/>
+            <Button x:Name="btn_clear_fields" Content="Clear Fields" HorizontalAlignment="Left" Height="40" Margin="435,430,0,0" VerticalAlignment="Top" Width="80" Click="Btn_clear_fields_Click"/>
             <Label x:Name="TransactionIDLabel" Content="Transaction ID" HorizontalAlignment="Left" Height="23" Margin="10,50,0,0" VerticalAlignment="Top" Width="189"/>
             <Label x:Name="EmployeeIDLabel" Content="Employee ID" HorizontalAlignment="Left" Margin="10,96,0,0" VerticalAlignment="Top" Width="189" Height="27" RenderTransformOrigin="-0.589,1.908"/>
             <Label x:Name="DateLabel" Content="Date" HorizontalAlignment="Left" VerticalAlignment="Top" Width="189" Height="23" RenderTransformOrigin="-0.589,1.908" Margin="10,146,0,0"/>
@@ -59,12 +60,12 @@
             </ComboBox>
             <DataGrid x:Name="datatable_transactions" HorizontalAlignment="Left" Height="344" Margin="214,10,0,0" VerticalAlignment="Top" Width="566" IsReadOnly="True"/>
 
-            <Label x:Name="ItemLabel" Content="Item" Visibility="Collapsed" HorizontalAlignment="Left" VerticalAlignment="Top" Width="127" Height="27" RenderTransformOrigin="-0.589,1.908" Margin="10,339,0,0"/>
-            <ComboBox x:Name="combo_item_selection"  Visibility="Collapsed" HorizontalAlignment="Left" Height="23" Margin="10,366,0,0" VerticalAlignment="Top" Width="138" MaxDropDownHeight="50"/>
-            <Label x:Name="QuantityLabel" Content="Quantity" Visibility="Collapsed" HorizontalAlignment="Left" Height="26" Margin="148,340,0,0" VerticalAlignment="Top" Width="66"/>
-            <TextBox x:Name="txt_item_quantity" Visibility="Collapsed" HorizontalAlignment="Left" Height="23" Margin="153,366,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="46"/>
-            <ListBox x:Name="list_item_cart" Visibility="Collapsed" HorizontalAlignment="Left" Height="76" Margin="10,394,0,0" VerticalAlignment="Top" Width="274"/>
-            <Button x:Name="btn_add_item_to_cart" Content="Add Item" Visibility="Collapsed" HorizontalAlignment="Left" Height="23" Margin="214,366,0,0" VerticalAlignment="Top" Width="70"/>
+            <Label x:Name="ItemIDLabel" Content="Item ID" Visibility="Collapsed" HorizontalAlignment="Left" VerticalAlignment="Top" Width="127" Height="27" RenderTransformOrigin="-0.589,1.908" Margin="10,339,0,0"/>
+            <ListBox x:Name="list_item_cart" Visibility="Collapsed" HorizontalAlignment="Left" Height="76" Margin="10,394,0,0" VerticalAlignment="Top" Width="189"/>
+            <Button x:Name="btn_add_item_to_cart" Content="Add Item" Visibility="Collapsed" HorizontalAlignment="Left" Height="23" Margin="214,366,0,0" VerticalAlignment="Top" Width="70" Click="Btn_add_item_to_cart_Click"/>
+            <TextBox x:Name="txt_item_id" Visibility="Collapsed" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="127" Margin="10,366,0,0"/>
+            <TextBox x:Name="txt_item_quantity" Visibility="Collapsed" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="57" Margin="142,366,0,0"/>
+            <Label x:Name="ItemQuantityLabel" Content="Quantity" Visibility="Collapsed" HorizontalAlignment="Left" VerticalAlignment="Top" Width="127" Height="27" RenderTransformOrigin="-0.589,1.908" Margin="137,339,0,0"/>
 
             <Label x:Name="TicketLabel" Content="Ticket Type" Visibility="Collapsed" HorizontalAlignment="Left" VerticalAlignment="Top" Width="127" Height="27" RenderTransformOrigin="-0.589,1.908" Margin="119,338,0,0"/>
             <ComboBox x:Name="combo_ticket_selection"  Visibility="Collapsed" HorizontalAlignment="Left" Height="23" Margin="119,365,0,0" VerticalAlignment="Top" Width="80" MaxDropDownHeight="50">
@@ -76,7 +77,7 @@
             <ListBox x:Name="list_ticket_cart" Visibility="Collapsed" HorizontalAlignment="Left" Height="76" Margin="10,394,0,0" VerticalAlignment="Top" Width="274"/>
             <Button x:Name="btn_add_ticket_to_cart" Content="Add Ticket" Visibility="Collapsed" HorizontalAlignment="Left" Height="23" Margin="214,365,0,0" VerticalAlignment="Top" Width="70" Click="Btn_add_ticket_to_cart_Click"/>
         </Grid>
-        <Grid x:Name="menu_donations" Margin="10" Visibility="Visible" IsVisibleChanged="Menu_donations_IsVisibleChanged">
+        <Grid x:Name="menu_donations" Margin="10" Visibility="Collapsed" IsVisibleChanged="Menu_donations_IsVisibleChanged">
             <Button x:Name="btn_donation_back" Content="Main Menu" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="30" Margin="10,10,0,0" Click="OpenMainMenu" />
             <Button x:Name="btn_donation_new_donor" Content="New Donor" HorizontalAlignment="Left" VerticalAlignment="Top" Width="137" Height="37" Margin="347,10,0,0" Click="Btn_donation_new_donor_Click"/>
             <Button x:Name="btn_donation_view_donor" Content=" View Donor" HorizontalAlignment="Left" VerticalAlignment="Top" Width="136" Height="37" Margin="204,10,0,0" Click="Btn_donation_view_donor_Click"/>
