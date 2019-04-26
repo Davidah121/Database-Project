@@ -102,7 +102,8 @@ namespace DatabaseProject
                 PopulateDonorDropdown();
                 ViewDonation();
                 ViewDonor();
-
+                
+                // Add event listeners
                 Donor.onAllUpdated += PopulateDonorDropdown;
                 Animal.onAllUpdated += PopulateAnimalDropdown;
                 Habitat.onAllUpdated += PopulateHabitatDropdown;
@@ -110,6 +111,8 @@ namespace DatabaseProject
             else
             {
                 // We were just closed
+                
+                // Remove event listeners
                 Donor.onAllUpdated -= PopulateDonorDropdown;
                 Animal.onAllUpdated -= PopulateAnimalDropdown;
                 Habitat.onAllUpdated -= PopulateHabitatDropdown;
@@ -143,6 +146,7 @@ namespace DatabaseProject
         {
             try
             {
+                // Show or hide menu items based on the type of donation
                 string value = (e.AddedItems[0] as ComboBoxItem).Content as string;
 
                 label_donation_habitat.Visibility = value == HABITAT_DONATION ? Visibility.Visible : Visibility.Collapsed;
@@ -638,6 +642,7 @@ abstract class Donation : IDatabaseObject
 
             for (int i = 0; i < count; i++)
             {
+                // Get data out of data table
                 if (!int.TryParse(table.Rows[i]["donation_id"].ToString().Trim(), out int id)) continue;
                 if (!double.TryParse(table.Rows[i]["amount"].ToString().Trim(), out double amount)) continue;
                 if (!int.TryParse(table.Rows[i]["donor_id"].ToString().Trim(), out int donor_id)) continue;
@@ -648,10 +653,12 @@ abstract class Donation : IDatabaseObject
                 Habitat h = HabitatDonation.GetHabitat(id);
                 if (a != null)
                 {
+                    // if the donation is an animal adoption, make a new animal adoption
                     list.Add(new AnimalAdoption(id, amount, donor, a));
                 }
                 else if (h != null)
                 {
+                    // otherwise we are probably a habitat donation. make a new habitat donation object.
                     list.Add(new HabitatDonation(id, amount, donor, h));
                 }
             }

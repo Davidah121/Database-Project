@@ -120,7 +120,7 @@ namespace DatabaseProject
                 }
             }
             //MessageBox.Show(query);
-            datagrid_emp.ItemsSource = Query(query, ("@EID", emp_field_id.Text)?.DefaultView;
+            datagrid_emp.ItemsSource = Database.Query(query, ("@EID", emp_field_id.Text))?.DefaultView;
         }
         private void Btn_emp_update_Click(object sender, RoutedEventArgs e)
         {
@@ -142,7 +142,7 @@ namespace DatabaseProject
                         if (emp_combo_animal.Text.Equals("None"))
                         {
                             query = "delete from handler where employee_id=" + emp_field_id.Text;
-                            NonQuery(query);
+                            Database.NonQuery(query);
                         }
                         else
                         {
@@ -152,7 +152,7 @@ namespace DatabaseProject
                                 Database.NonQuery(query, ("@EID", emp_field_id.Text));
                             }
                             query = "insert into handler (employee_id, animal_id) values (@EID, @Animal);";
-                            Database.NonQuery(query, ("@EID", emp_field_id.Text), ("@Animal", Get_AnimalId(emp_combo_animal.Text));
+                            Database.NonQuery(query, ("@EID", emp_field_id.Text), ("@Animal", Get_AnimalId(emp_combo_animal.Text)));
                         }
                     }
                     MessageBox.Show("Updated Employee with id: " + emp_field_id.Text);
@@ -176,7 +176,7 @@ namespace DatabaseProject
                 try
                 {
                     query = "select * from employee where employee_id=@EID;";
-                    var employee_exists = Query(query).Rows[0].ItemArray.Select(x => x.ToString().Trim()).ToArray()[0];
+                    var employee_exists = Database.Query(query).Rows[0].ItemArray.Select(x => x.ToString().Trim()).ToArray()[0];
                     if(MessageBox.Show("Are you sure you want to remove employee with id: " + emp_field_id.Text + "?", "Warning!", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                     {
                         query = "delete from employee where employee_id=@EID";
@@ -207,11 +207,11 @@ namespace DatabaseProject
                     query = "select employee_id from employee;";
                     int next_emp_id = FindFirstNonIndex(query);
                     query = "insert into employee (employee_id, department_id, first_name, last_name, email, phone_number, employment_type, birthday, ssn) VALUES ("+ next_emp_id +", "+ get_dep_id +", '"+ emp_field_fname.Text + "', '" + emp_field_lname.Text + "', '" + emp_field_email.Text + "', '" + emp_field_phone.Text + "', '" + emp_field_type.Text + "', '" + emp_field_date.Text + "', '" + emp_field_ssn.Password +"');";
-                    NonQuery(query);
+                    Database.NonQuery(query);
                     if (!emp_combo_animal.Text.Equals("") && !emp_combo_animal.Text.Equals("None"))
                     {
                         query = "insert into handler (employee_id, animal_id) values ("+next_emp_id+", "+Get_AnimalId(emp_combo_animal.Text)+");";
-                        NonQuery(query);
+                        Database.NonQuery(query);
                     }
                     MessageBox.Show("Added " + emp_field_fname.Text + " to the database.");
                 }

@@ -105,5 +105,8 @@
   <ItemGroup>
     <Resource Include="Images\database_background.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\database_background_v2.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
