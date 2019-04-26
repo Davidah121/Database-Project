@@ -696,14 +696,19 @@ class AnimalAdoption : Donation
 
     public static Animal GetAnimal(int donationid)
     {
+        // Initialize parameterized query
         string query = $"SELECT animal_id FROM Animal_Adoption WHERE donation_id = @ID";
 
+        // Query the database and retrieve the table
         DataTable table = Database.Query(query, ("@ID", donationid));
 
-        if (table?.Rows?.Count == 0) return null;
+        // If there are zero rows, return null
+        if (table?.Rows.Count == 0) return null;
 
-        int id = int.TryParse(table.Rows[0]["animal_id"].ToString().Trim(), out int i) ? i : -1;
+        // Parse the animal id from the first row of the table
+        if (!int.TryParse(table.Rows[0]["animal_id"].ToString(), out int id)) return null;
 
+        // Find and return the animal object, null if does not exist
         return Animal.All.Find(x => x.ID == id);
     }
 
@@ -945,7 +950,7 @@ class Donor : IDatabaseObject
             return false;
         }
 
-        string query = $"UPDATE Donor SET donor_id = @ID,first_name = @FName, last_name = @LName, email = @Email WHERE donor_id = @ID;";
+        string query = $"UPDATE Donor SET first_name = @FName, last_name = @LName, email = @Email WHERE donor_id = @ID;";
 
         if (Database.NonQuery(query, ("@ID", ID), ("@FName", FirstName), ("@LName", LastName), ("@Email", Email)))
         {
