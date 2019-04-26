@@ -26,9 +26,34 @@
             <Button x:Name="btn_animals" Content="Add Animal" HorizontalAlignment="Left" Margin="117,222,0,0" VerticalAlignment="Top" Width="136" Height="46"/>
             <Button x:Name="btn_animals_back" Content="Main Menu" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="30" Margin="10,10,0,0" Click="OpenMainMenu" />
         </Grid>
-        <Grid x:Name="menu_deliveries" Margin="10" Visibility="Hidden">
-            <Button x:Name="btn_delivery" Content="Add New Delivery" HorizontalAlignment="Left" Margin="117,222,0,0" VerticalAlignment="Top" Width="136" Height="46" />
+        <Grid x:Name="menu_deliveries" Margin="10" Visibility="Visible">
+            <Button x:Name="btn_items" Content="Add Items" HorizontalAlignment="Left" Margin="227,424,0,0" VerticalAlignment="Top" Width="136" Height="46" Background="#FF13D61C" Click="btn_item_Click" RenderTransformOrigin="0.499,0.563" />
+            <Button x:Name="btn_view_items" Content="View Items" HorizontalAlignment="Left" Margin="25,424,0,0" VerticalAlignment="Top" Width="136" Height="46" Background="#FF0FC9B8" Click="btn_view_items_Click" RenderTransformOrigin="0.499,0.563" />
+            <Button x:Name="btn_rmv_items" Content="Remove Items" HorizontalAlignment="Left" Margin="434,424,0,0" VerticalAlignment="Top" Width="136" Height="46" Background="#FFB80000" Click="btn_rmv_item_Click" />
+            <Button x:Name="btn_update_items" Content="Update Items" HorizontalAlignment="Left" Margin="613,424,0,0" VerticalAlignment="Top" Width="136" Height="46" Click="btn_update_item_Click"/>
+
+            <Button x:Name="btn_unloader" Content="Add Unloaders" HorizontalAlignment="Left" Margin="227,359,0,0" VerticalAlignment="Top" Width="136" Height="46" Background="#FF13D61C" Click="btn_unloader_Click" RenderTransformOrigin="0.499,0.563" />
+            <Button x:Name="btn_view_unloaders" Content="View Unloaders" HorizontalAlignment="Left" Margin="25,359,0,0" VerticalAlignment="Top" Width="136" Height="46" Background="#FF0FC9B8" Click="btn_view_unloaders_Click" RenderTransformOrigin="0.435,-0.649" />
+            <Button x:Name="btn_rmv_unloaders" Content="Remove Unloaders" HorizontalAlignment="Left" Margin="434,359,0,0" VerticalAlignment="Top" Width="136" Height="46" Background="#FFB80000" Click="btn_rmv_unloaders_Click" />
+
             <Button x:Name="btn_deliveries_back" Content="Main Menu" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="30" Margin="10,10,0,0" Click="OpenMainMenu" />
+            <Label x:Name="delivery_ID" Content="Delivery ID" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="25,63,0,0" Width="68" RenderTransformOrigin="0.743,0.522"/>
+            <TextBox x:Name="delivery_ID_textBox" TextWrapping="Wrap" Text="" Height="30" Width="100" Margin="160,63,520,387"/>
+            <Label x:Name="delivery_type" Content="Delivery Type" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="25,116,0,0" Width="80"/>
+            <ComboBox x:Name="delivery_type_textBox" Text="" Height="30" Width="100" Margin="160,116,520,334">
+                <ComboBoxItem Content="Concessions" HorizontalAlignment="Left" Width="97.7777777777778"/>
+                <ComboBoxItem Content="Souvenirs" HorizontalAlignment="Left" Width="97.7777777777778"/>
+                <ComboBoxItem Content="Animal Food" HorizontalAlignment="Left" Width="97.7777777777778"/>
+                <ComboBoxItem Content="Animal Medicine" HorizontalAlignment="Left" Width="97.7777777777778"/>
+
+            </ComboBox>
+            <Label x:Name="item_ID" Content="Item ID" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="25,172,0,0" Width="50"/>
+            <TextBox x:Name="item_ID_textBox" TextWrapping="Wrap" Text="" Height="30" Width="100" Margin="160,232,520,218"/>
+            <Label x:Name="quantity_delivered" Content="Quantity Delivered" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="25,232,0,0" Width="113"/>
+            <TextBox x:Name="quantity_delivered_textBox" TextWrapping="Wrap" Text="" Height="30" Width="100" Margin="160,172,520,278"/>
+            <Label x:Name="employee_ID" Content="Employee ID" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="25,293,0,0" Width="113" Height="30"/>
+            <TextBox x:Name="Employee_ID_textBox" TextWrapping="Wrap" Text="" Height="30" Width="100" Margin="160,293,520,157"/>
+            <DataGrid x:Name="delivery_dataGrid" HorizontalAlignment="Left" Height="334" Margin="303,10,0,0" VerticalAlignment="Top" Width="467"/>
         </Grid>
         <Grid x:Name="menu_trans" Margin="10" Visibility= "Hidden" IsVisibleChanged = "Menu_transactions_IsVisibleChanged">
             <Button x:Name="btn_delete_trans" Content="Delete" HorizontalAlignment="Left" Margin="690,430,0,0" VerticalAlignment="Top" Width="80" Height="40" Click="Btn_delete_trans_Click"/>
@@ -76,7 +101,7 @@
             <ListBox x:Name="list_ticket_cart" Visibility="Collapsed" HorizontalAlignment="Left" Height="76" Margin="10,394,0,0" VerticalAlignment="Top" Width="274"/>
             <Button x:Name="btn_add_ticket_to_cart" Content="Add Ticket" Visibility="Collapsed" HorizontalAlignment="Left" Height="23" Margin="214,365,0,0" VerticalAlignment="Top" Width="70" Click="Btn_add_ticket_to_cart_Click"/>
         </Grid>
-        <Grid x:Name="menu_donations" Margin="10" Visibility="Visible" IsVisibleChanged="Menu_donations_IsVisibleChanged">
+        <Grid x:Name="menu_donations" Margin="10" Visibility="Hidden" IsVisibleChanged="Menu_donations_IsVisibleChanged">
             <Button x:Name="btn_donation_back" Content="Main Menu" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="30" Margin="10,10,0,0" Click="OpenMainMenu" />
             <Button x:Name="btn_donation_new_donor" Content="New Donor" HorizontalAlignment="Left" VerticalAlignment="Top" Width="137" Height="37" Margin="347,10,0,0" Click="Btn_donation_new_donor_Click"/>
             <Button x:Name="btn_donation_view_donor" Content=" View Donor" HorizontalAlignment="Left" VerticalAlignment="Top" Width="136" Height="37" Margin="204,10,0,0" Click="Btn_donation_view_donor_Click"/>

@@ -65,6 +65,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Database.cs" />
+    <Compile Include="Menus\DeliveriesMenu.cs" />
     <Compile Include="Menus\DonationsMenu.cs" />
     <Compile Include="Menus\AnimalsMenu.cs" />
     <Compile Include="Menus\EmployeesMenu.cs" />
