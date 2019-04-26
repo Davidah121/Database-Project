@@ -191,10 +191,10 @@ namespace DatabaseProject
             }
             else
             {
-                query = $"SELECT * FROM Transactions WHERE Transactions.transaction_id = {txt_transID.Text};";
+                query = $"SELECT * FROM Transactions WHERE Transactions.transaction_id = @TransID;";
             }
 
-            DataTable table = Database.Query(query);
+            DataTable table = Database.Query(query, ("@TransID", txt_transID.Text));
 
             if (table == null)
             {
@@ -215,10 +215,10 @@ namespace DatabaseProject
             }
             else
             {
-                query = $"SELECT * FROM Ticket Left JOIN Transactions ON Transactions.transaction_id = Ticket.transaction_id WHERE Transactions.transaction_id = {txt_transID.Text}";
+                query = $"SELECT * FROM Ticket Left JOIN Transactions ON Transactions.transaction_id = Ticket.transaction_id WHERE Transactions.transaction_id = @TransID";
             }
 
-            DataTable table = Query(query);
+            DataTable table = Database.Query(query, ("@TransID", txt_transID.Text));
 
             if (table == null)
             {
@@ -238,10 +238,10 @@ namespace DatabaseProject
             }
             else
             {
-                query = $"SELECT * FROM Item_Sale Left JOIN Transactions ON Transactions.transaction_id = Item_Sale.transaction_id WHERE Transactions.transaction_id = {txt_transID.Text}";
+                query = $"SELECT * FROM Item_Sale Left JOIN Transactions ON Transactions.transaction_id = Item_Sale.transaction_id WHERE Transactions.transaction_id = @TransID";
             }
 
-            DataTable table = Query(query);
+            DataTable table = Database.Query(query, ("@TransID", txt_transID.Text));
 
             if (table == null)
             {
