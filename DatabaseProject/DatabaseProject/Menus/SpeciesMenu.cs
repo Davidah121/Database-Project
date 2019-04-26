@@ -23,16 +23,28 @@ namespace DatabaseProject
         {
             try
             {
+                //First, try to parse all of the entries into usable values.
+                //If any can't be parsed or are empty, we stop.
                 int idVal = int.Parse(txt_species_id.Text);
                 string specName = txt_species_name.Text;
                 string specClass = txt_species_class.Text;
 
-                string query = "INSERT INTO SPECIES VALUES(@ID, @SPENAME, @CLASSNAME);";
-                Database.NonQuery(query, ("@ID", idVal), ("@SPENAME", specName), ("@CLASSNAME", specClass));
+                if(specName!="" && specClass!="")
+                {
+                    //Make the base of the query
+                    string query = "INSERT INTO SPECIES VALUES(@ID, @SPENAME, @CLASSNAME);";
+                    
+                    //Then run the query while replacing the placeholders with our values.
+                    Database.NonQuery(query, ("@ID", idVal), ("@SPENAME", specName), ("@CLASSNAME", specClass));
+                }
+                else
+                {
+                    MessageBox.Show("One or more boxes were left blank");
+                }
             }
             catch
             {
-                MessageBox.Show("One or more boxes are invalid because they are not numbers");
+                MessageBox.Show("One or more boxes are invalid because they are not numbers.");
             }
         }
 
@@ -44,9 +56,15 @@ namespace DatabaseProject
                 int idVal;
                 string specName, specClass;
 
+                //Make two queries. One if they enter nothing and
+                //one if they have entered something
+
                 string defaultQuery = "SELECT * FROM SPECIES;";
                 string query = "SELECT * FROM SPECIES WHERE ";
 
+                //Check each indivual field to determine if it is empty
+                //If the field is filled, add it to the where statement
+                //by just adding to the end.
                 if (txt_species_id.Text != "")
                 {
                     hasParams = true;
@@ -66,10 +84,15 @@ namespace DatabaseProject
                     query += "class_name = '" + specClass + "' and ";
                 }
 
+                //Add a semicolon to the end to signify the end of the query
                 query += ";";
 
+                //Lastly, remove the additional and statement along with the
+                //addition space.
                 query = query.Remove(query.Length - 5, 4);
 
+                //If there are parameters to search by, use the made query
+                //otherwise use the default query
                 if(hasParams)
                     datagrid_species.ItemsSource = Database.Query(query)?.DefaultView;
                 else
@@ -85,17 +108,28 @@ namespace DatabaseProject
         {
             try
             {
+                //First try to parse all fields
                 int idVal = int.Parse(txt_species_id.Text);
                 string specName = txt_species_name.Text;
                 string specClass = txt_species_class.Text;
 
-                string query = "UPDATE SPECIES " +
-                            "SET species_name=(@SPENAME), " +
-                            "class_name=(@CLASSNAME) " +
-                            "WHERE species_id=(@ID);";
+                //If species_name or species_class are empty,
+                //do not update. Otherwise create a query to update
+                //the species at the specified id.
+                if(specName!="" && specClass!="")
+                {
+                    string query = "UPDATE SPECIES " +
+                                "SET species_name=(@SPENAME), " +
+                                "class_name=(@CLASSNAME) " +
+                                "WHERE species_id=(@ID);";
 
-                Database.NonQuery(query, ("@ID", idVal), ("@SPENAME", specName), ("@CLASSNAME", specClass));
-            }
+                    Database.NonQuery(query, ("@ID", idVal), ("@SPENAME", specName), ("@CLASSNAME", specClass));
+                }
+                else
+                {
+                    MessageBox.Show("One or more boxes were left blank");
+                }
+        }
             catch
             {
                 MessageBox.Show("One or more boxes are invalid because they are not numbers");
@@ -108,14 +142,19 @@ namespace DatabaseProject
             {
                 try
                 {
+                    //First, parse the id if you can.
                     int idVal = int.Parse(txt_species_id.Text);
 
+                    //Create the query to delete that species
                     string query = "DELETE FROM SPECIES WHERE species_id=(@ID);";
 
+                    //Lastly, check if the species is used. If it is,
+                    //Don't delete this species.
                     bool notInAnimal = Database.Query("SELECT * FROM ANIMAL WHERE species_id=(@ID);", ("@ID", idVal)).Rows.Count > 0;
 
                     if (notInAnimal)
                     {
+                        //If the id does not exist, let the user know.
                         bool validID = Database.NonQuery(query, ("@ID", idVal));
 
                         if (validID == false)
@@ -124,6 +163,8 @@ namespace DatabaseProject
                         }
                     }
 
+                    //Report to the user that the habitat is still used by
+                    //animals in the zoo.
                     if (notInAnimal == false)
                     {
                         MessageBox.Show("This Habitat is still listed in Animal and can't be deleted");

@@ -23,14 +23,28 @@ namespace DatabaseProject
         {
             try
             {
+                //First, try to parse all of the fields
                 int idVal = int.Parse(txt_habitat_id.Text);
                 string habName = txt_habitat_name.Text;
                 int humiVal = int.Parse(txt_habitat_humidity.Text);
                 int tempVal = int.Parse(txt_habitat_temperature.Text);
 
-                string query = "INSERT INTO HABITAT VALUES(@ID, @HABNAME, @HUMI, @TEMP);";
-                Database.NonQuery(query, ("@ID", idVal), ("@HABNAME", habName), ("@HUMI", humiVal),
-                                        ("@TEMP", tempVal));
+                //If the habitat name is blank, do not insert
+                //and relay that to the user
+                if (habName != "")
+                {
+                    //First create the base query to insert with placeholders
+                    string query = "INSERT INTO HABITAT VALUES(@ID, @HABNAME, @HUMI, @TEMP);";
+
+                    //Replace the placeholders with the user's values and
+                    //then run the query.
+                    Database.NonQuery(query, ("@ID", idVal), ("@HABNAME", habName), ("@HUMI", humiVal),
+                                            ("@TEMP", tempVal));
+                }
+                else
+                {
+                    MessageBox.Show("One or more boxes were left blank.");
+                }
             }
             catch
             {
@@ -47,10 +61,15 @@ namespace DatabaseProject
                 int idVal, humiVal, tempVal;
                 string habName;
 
+                //Create the default query that will select all of the habitats
                 string defaultQuery = "SELECT * FROM HABITAT;";
 
+                //Create a separate query that can be used for more specific
+                //searching.
                 string query = "SELECT * FROM HABITAT WHERE ";
 
+                //Only add to the Where statement if the field is filled
+                //by something
                 if (txt_habitat_id.Text != "")
                 {
                     hasParams = true;
@@ -75,10 +94,15 @@ namespace DatabaseProject
                     query += "temperature = '" + tempVal + "' and ";
                 }
 
+                //Add a semicolon to end the statement
                 query += ";";
 
+                //Next, remove the additional add statement along with the
+                //extra space before the semicolon.
                 query = query.Remove(query.Length - 5, 4);
 
+                //If the user did not enter any search parameters, use the
+                //default query. Otherwise, use the query with the where statement.
                 if(hasParams)
                     datagrid_habitat.ItemsSource = Database.Query(query)?.DefaultView;
                 else
@@ -94,20 +118,29 @@ namespace DatabaseProject
         {
             try
             {
+                //Try to parse the fields
                 int idVal = int.Parse(txt_habitat_id.Text);
                 string habName = txt_habitat_name.Text;
                 int humiVal = int.Parse(txt_habitat_humidity.Text);
                 int tempVal = int.Parse(txt_habitat_temperature.Text);
 
+                //If the habitat_name is blank, do not update the query
+                //and report to the user why.
+                if (habName != "")
+                {
+                    string query = "UPDATE HABITAT " +
+                      "SET habitat_name=(@HABNAME), " +
+                      "humidity=(@HUMIVAL), " +
+                      "temperature=(@TEMP), " +
+                      "WHERE habitat_id=(@ID);";
 
-                string query = "UPDATE HABITAT " +
-                                "SET habitat_name=(@HABNAME), " +
-                                "humidity=(@HUMIVAL), " +
-                                "temperature=(@TEMP), " +
-                                "WHERE habitat_id=(@ID);";
-
-                Database.NonQuery(query, ("@ID", idVal), ("@HABNAME", habName), ("@HUMI", humiVal),
-                                        ("@TEMP", tempVal));
+                    Database.NonQuery(query, ("@ID", idVal), ("@HABNAME", habName), ("@HUMI", humiVal),
+                                            ("@TEMP", tempVal));
+                }
+                else
+                {
+                    MessageBox.Show("One or more boxes were left blank.");
+                }
             }
             catch
             {
@@ -121,22 +154,32 @@ namespace DatabaseProject
             {
                 try
                 {
+                    //Parse the id of the habitat from the text boxes
                     int idVal = int.Parse(txt_habitat_id.Text);
 
+                    //Next, build the query to delete the habitat at the
+                    //specified id value.
                     string query = "DELETE FROM HABITAT WHERE habitat_id=(@ID);";
 
+                    //Determine if the habitat is used by an animal
                     bool notInAnimal = Database.Query("SELECT * FROM ANIMAL WHERE habitat_id=(@ID);", ("@ID", idVal)).Rows.Count > 0;
 
+                    //If the habitat is used by an animal, do not delete it
+                    //and report that to the user
                     if (notInAnimal)
                     {
+                        //Replace the placeholder, and run the query
                         bool validID = Database.NonQuery(query, ("@ID", idVal));
 
+                        //If the query fails, the id was invalid. Report that to the
+                        //user.
                         if (validID == false)
                         {
                             MessageBox.Show("Could not delete because no habitat has the ID value");
                         }
                     }
 
+                    //Report to the user if the habitat is still used by an animal.
                     if (notInAnimal == false)
                     {
                         MessageBox.Show("This Habitat is still listed in Animal and can't be deleted");

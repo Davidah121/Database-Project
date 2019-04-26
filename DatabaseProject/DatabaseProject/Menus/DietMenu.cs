@@ -23,6 +23,7 @@ namespace DatabaseProject
         {
             try
             {
+                //First, try to parse all of the fields
                 int idVal = int.Parse(txt_diet_id.Text);
                 string dType = txt_diet_type.Text;
                 string dRestrictions = txt_diet_restrictions.Text;
@@ -30,10 +31,22 @@ namespace DatabaseProject
                 string dSecondary = txt_diet_secondary_food.Text;
                 string dTreats = txt_diet_treats.Text;
 
-                string query = "INSERT INTO DIET VALUES(@ID, @DTYPE, @RES, @PRIM, @SECO, @TREATS); ";
-                
-                Database.NonQuery(query, ("@ID", idVal), ("@DTYPE", dType), ("@RES", dRestrictions), 
-                                ("@PRIM", dPrimary), ("@SECO", dSecondary), ("@TREATS", dTreats));
+                //If any of boxes are blank, do not insert and inform the user
+                if (dType != "" && dRestrictions != "" && dPrimary != ""
+                    && dSecondary != "" && dTreats != "")
+                {
+                    //Create the query to insert with placeholders
+                    string query = "INSERT INTO DIET VALUES(@ID, @DTYPE, @RES, @PRIM, @SECO, @TREATS); ";
+
+                    //Replace the placeholders with the user's values and
+                    //run the query
+                    Database.NonQuery(query, ("@ID", idVal), ("@DTYPE", dType), ("@RES", dRestrictions),
+                                    ("@PRIM", dPrimary), ("@SECO", dSecondary), ("@TREATS", dTreats));
+                }
+                else
+                {
+                    MessageBox.Show("One or more boxes are blank.");
+                }
             }
             catch
             {
@@ -50,10 +63,14 @@ namespace DatabaseProject
                 int idVal;
                 string dType, dRestrictions, dPrimary, dSecondary, dTreats;
 
+                //Create the default query which selects all of the diets.
                 string defaultQuery = "SELECT * FROM DIET;";
 
+                //Create a second query that can be more specific
                 string query = "SELECT * FROM DIET WHERE ";
 
+                //Check through all of the fields and if they are not empty,
+                //add them to the where statement.
                 if (txt_diet_id.Text!="")
                 {
                     hasParams = true;
@@ -92,11 +109,15 @@ namespace DatabaseProject
                     query += "treats = " + dTreats + " and ";
                 }
                 
-
+                //Add a semicolon to the specific search query to end the statement.
                 query += ";";
                 
+                //Remove the additional add statement along with the extra space behind
+                //the semicolon.
                 query = query.Remove(query.Length - 5, 4);
 
+
+                //If the user did not enter any data, use the default query.
                 if (hasParams)
                     datagrid_diet.ItemsSource = Database.Query(query)?.DefaultView;
                 else
@@ -113,6 +134,7 @@ namespace DatabaseProject
         {
             try
             {
+                //First, try to parse the values entered by the user.
                 int idVal = int.Parse(txt_diet_id.Text);
                 string dType = txt_diet_type.Text;
                 string dRestrictions = txt_diet_restrictions.Text;
@@ -120,17 +142,28 @@ namespace DatabaseProject
                 string dSecondary = txt_diet_secondary_food.Text;
                 string dTreats = txt_diet_treats.Text;
 
-                string query = "UPDATE DIET " +
-                    "SET dietary_type=(@DTYPE), " +
-                    "restrictions=(@RES), " +
-                    "primary_food=(@PRIM), " +
-                    "secondary_food=(@SECO), " +
-                    "treats=(@TREATS) " +
-                    "WHERE diet_id=(@ID);";
+                //If any of boxes are blank, do not insert and inform the user
+                if (dType != "" && dRestrictions != "" && dPrimary != ""
+                    && dSecondary != "" && dTreats != "")
+                {
+                    //Create the update query with placeholders
+                    string query = "UPDATE DIET " +
+                        "SET dietary_type=(@DTYPE), " +
+                        "restrictions=(@RES), " +
+                        "primary_food=(@PRIM), " +
+                        "secondary_food=(@SECO), " +
+                        "treats=(@TREATS) " +
+                        "WHERE diet_id=(@ID);";
 
-
-                Database.NonQuery(query, ("@ID", idVal), ("@DTYPE", dType), ("@RES", dRestrictions),
-                                                ("@PRIM", dPrimary), ("@SECO", dSecondary), ("@TREATS", dTreats));
+                    //Replace the placeholders with the user's values and
+                    //run the query.
+                    Database.NonQuery(query, ("@ID", idVal), ("@DTYPE", dType), ("@RES", dRestrictions),
+                                                    ("@PRIM", dPrimary), ("@SECO", dSecondary), ("@TREATS", dTreats));
+                }
+                else
+                {
+                    MessageBox.Show("One or more boxes are blank.");
+                }
             }
             catch
             {
@@ -146,22 +179,31 @@ namespace DatabaseProject
             {
                 try
                 {
+                    //First, parse the id value
                     int idVal = int.Parse(txt_diet_id.Text);
 
+                    //Create the delete query with a placeholder for the id.
                     string query = "DELETE FROM DIET WHERE diet_id=(@ID);";
 
+                    //Check if the diet is used by an animal
                     bool notInAnimal = Database.Query("SELECT * FROM ANIMAL WHERE diet_id=(@ID);", ("@ID", idVal)).Rows.Count > 0;
                     
+                    //Delete the diet if it isn't used by anything.
                     if (notInAnimal)
                     {
+                        //run the query after replacing the placeholder with the
+                        //id value
                         bool validID = Database.NonQuery(query, ("@ID", idVal));
 
+                        //If the query did not work, it is due to an invalid id value.
+                        //Report this to the user.
                         if (validID == false)
                         {
                             MessageBox.Show("Could not delete because no diet has the ID value");
                         }
                     }
 
+                    //If the diet is used by an animal, do not delete it.
                     if (notInAnimal == false)
                     {
                         MessageBox.Show("This Diet is still listed in Animal and can't be deleted");

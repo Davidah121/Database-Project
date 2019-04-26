@@ -21,18 +21,22 @@ namespace DatabaseProject
 
         private void OpenHabitatsMenu(object sender, RoutedEventArgs e)
         {
+            //Opens the habitat menu
             OpenMenu(menu_animals_habitat);
         }
         private void OpenAnimalsMenu(object sender, RoutedEventArgs e)
         {
+            //Opens the animal menu
             OpenMenu(menu_animals);
         }
         private void OpenSpeciesMenu(object sender, RoutedEventArgs e)
         {
+            //Opens the species menu
             OpenMenu(menu_animals_species);
         }
         private void OpenDietMenu(object sender, RoutedEventArgs e)
         {
+            //Opens the diet menu
             OpenMenu(menu_animals_diet);
         }
 
@@ -40,6 +44,7 @@ namespace DatabaseProject
         {
             try
             {
+                //First, try to parse all of the fields
                 int idVal = int.Parse(txt_animal_id.Text);
                 int habIdVal = int.Parse(txt_animal_habitat_id.Text);
                 int speIdVal = int.Parse(txt_animal_species_id.Text);
@@ -47,15 +52,24 @@ namespace DatabaseProject
                 string animalDate = date_animal_birthday.Text;
                 int wei = int.Parse(txt_animal_weight.Text);
                 int dietID = int.Parse(txt_animal_diet_id.Text);
+
+                //Prevent adding into the table if the animal has no name
+                //or birthday.
+                if (animalName != "" && animalDate != "")
+                {
+                    //Create the query with placeholders that will insert into the table
+                    string query = "INSERT INTO ANIMAL VALUES(@ID, @HABID, @SPEID, @NAME, @BIRTHDAY, @WEIGHT, @DIETID);";
+
+                    //Replace the placeholders with the values to insert and run the query
+                    Database.NonQuery(query, ("@ID", idVal), ("@HABID", habIdVal), ("@SPEID", speIdVal),
+                                            ("@NAME", animalName), ("@BIRTHDAY", animalDate), ("@WEIGHT", wei),
+                                            ("@DIETID", dietID));
+                }
+                else
+                {
+                    MessageBox.Show("One or more boxes were left blank.");
+                }
                 
-                string query = "INSERT INTO ANIMAL VALUES(@ID, @HABID, @SPEID, @NAME, @BIRTHDAY, @WEIGHT, @DIETID);";
-                Database.NonQuery(query, ("@ID", idVal), ("@HABID", habIdVal), ("@SPEID", speIdVal),
-                                        ("@NAME", animalName), ("@BIRTHDAY", animalDate), ("@WEIGHT", wei),
-                                        ("@DIETID", dietID));
-                /*
-                string query = "INSERT INTO ANIMAL (animal_id, habitat_id, species_id, animal_name, birthday, weight, diet_id) " +
-                    $"VALUES (@animal_id,id, '" + habIdVal + "', '" + speIdVal + "', '" + animalName + "', '" + animalDate + "', '" + wei + "', '" + dietID + "');";
-                */
             }
             catch
             {
@@ -72,10 +86,15 @@ namespace DatabaseProject
                 int idVal, habIdVal, speIdVal, wei, dietID;
                 string animalName, animalDate;
 
+                //Create the default query which will select every animal
                 string defaultQuery = "SELECT * FROM ANIMAL;";
 
+                //Create the query that will select animals with some
+                //specified attribute
                 string query = "SELECT * FROM ANIMAL WHERE ";
 
+                //Check each field to determine if it should be added
+                //to the search attributes. If it is blank, it is left out
                 if (txt_animal_id.Text!="")
                 {
                     hasParams = true;
@@ -120,10 +139,16 @@ namespace DatabaseProject
                     query += "diet_id = " + dietID + " and ";
                 }
 
+                //add a semicolon to end the specific search query
                 query += ";";
                 
+                //Take out the last and with the additional space from
+                //that query.
                 query = query.Remove(query.Length - 5, 4);
 
+
+                //If the user did not enter any data, use the default query
+                //else use the query that we have been modifying.
                 if (hasParams)
                     datagrid_animals.ItemsSource = Database.Query(query)?.DefaultView;
                 else
@@ -140,6 +165,7 @@ namespace DatabaseProject
         {
             try
             {
+                //First try to parse all of the fields
                 int idVal = int.Parse(txt_animal_id.Text);
                 int habIdVal = int.Parse(txt_animal_habitat_id.Text);
                 int speIdVal = int.Parse(txt_animal_species_id.Text);
@@ -150,19 +176,29 @@ namespace DatabaseProject
                 int wei = int.Parse(txt_animal_weight.Text);
                 int dietID = int.Parse(txt_animal_diet_id.Text);
 
-                string query = "UPDATE ANIMAL " +
-                    "SET habitat_id=(@HABID), " +
-                    "species_id=(@SPEID), " +
-                    "animal_name=(@NAME), "+
-                    "birthday=(@BIRTHDAY), "+
-                    "weight=(@WEIGHT), "+
-                    "diet_id=(@DIETID), "+
-                    "WHERE animal_id=(@ID);";
+                if (animalName != "" && animalDate != "")
+                {
+                    //Create the query to update an animal that has the
+                    //specified id value leaving placeholders.
+                    string query = "UPDATE ANIMAL " +
+                        "SET habitat_id=(@HABID), " +
+                        "species_id=(@SPEID), " +
+                        "animal_name=(@NAME), " +
+                        "birthday=(@BIRTHDAY), " +
+                        "weight=(@WEIGHT), " +
+                        "diet_id=(@DIETID), " +
+                        "WHERE animal_id=(@ID);";
 
-
-                Database.NonQuery(query, ("@ID", idVal), ("@HABID", habIdVal), ("@SPEID", speIdVal),
-                                        ("@NAME", animalName), ("@BIRTHDAY", animalDate), ("@WEIGHT", wei),
-                                        ("@DIETID", dietID));
+                    //Replace the placeholders with the users values and
+                    //then run the query.
+                    Database.NonQuery(query, ("@ID", idVal), ("@HABID", habIdVal), ("@SPEID", speIdVal),
+                                            ("@NAME", animalName), ("@BIRTHDAY", animalDate), ("@WEIGHT", wei),
+                                            ("@DIETID", dietID));
+                }
+                else
+                {
+                    MessageBox.Show("One or more boxes were left blank.");
+                }
             }
             catch
             {
@@ -178,24 +214,33 @@ namespace DatabaseProject
             {
                 try
                 {
+                    //First try to parse the id field
                     int idVal = int.Parse(txt_animal_id.Text);
 
+                    //Create the query that delete the animal with the
+                    //specified field
                     string query = "DELETE FROM ANIMAL WHERE animal_id=(@ID);";
 
+                    //Check if the animal is listed in the handlers table or
+                    //the animal_adoption table
                     bool notInHandler = Database.Query("SELECT * FROM HANDLER WHERE animal_id=(@ID);", ("@ID", idVal)).Rows.Count > 0;
                     bool notInAdopt = Database.Query("SELECT * FROM ANIMAL_ADOPTION WHERE animal_id=(@ID);", ("@ID", idVal)).Rows.Count > 0;
                     
 
+                    //If it is not in those tables, it is safe to delete
                     if(notInAdopt && notInAdopt)
                     {
                         bool validID = Database.NonQuery(query, ("@ID", idVal));
 
+                        //If the id wasn't valid, report that to the user
                         if(validID==false)
                         {
                             MessageBox.Show("Could not delete because no animal has the ID value");
                         }
                     }
 
+                    //Report whether the animal is listed in either the animal_adoption or
+                    //Handlers table.
                     if(notInAdopt==false)
                     {
                         MessageBox.Show("This animal is still listed in Animal Adoption and can't be deleted");
