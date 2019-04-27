@@ -49,7 +49,7 @@
             <ComboBox Visibility="Visible" x:Name="emp_combo_animal" HorizontalAlignment="Left" Margin="155,362,0,0" VerticalAlignment="Top" Width="199" Height="26" IsEditable="True" Background="#FFDF7878" />
             <Label Visibility="Visible" x:Name="emp_combo_animal_lbl" Content="Animal Handled:" HorizontalAlignment="Left" Margin="44,362,0,0" VerticalAlignment="Top" Width="102"/>
         </Grid>
-        <Grid x:Name="menu_deliveries" Margin="10" Visibility="Visible">
+        <Grid x:Name="menu_deliveries" Margin="10" Visibility="Visible" IsVisibleChanged="Menu_delivery_IsVisibleChanged">
             <Button x:Name="btn_items" Content="Add Items" HorizontalAlignment="Left" Margin="227,424,0,0" VerticalAlignment="Top" Width="136" Height="46" Background="#FF13D61C" Click="btn_item_Click" RenderTransformOrigin="0.499,0.563" />
             <Button x:Name="btn_view_items" Content="View Items" HorizontalAlignment="Left" Margin="25,424,0,0" VerticalAlignment="Top" Width="136" Height="46" Background="#FF0FC9B8" Click="btn_view_items_Click" RenderTransformOrigin="0.499,0.563" />
             <Button x:Name="btn_rmv_items" Content="Remove Items" HorizontalAlignment="Left" Margin="434,424,0,0" VerticalAlignment="Top" Width="136" Height="46" Background="#FFB80000" Click="btn_rmv_item_Click" />
@@ -71,9 +71,9 @@
 
             </ComboBox>
             <Label x:Name="item_ID" Content="Item ID" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="25,172,0,0" Width="50"/>
-            <TextBox x:Name="item_ID_textBox" TextWrapping="Wrap" Text="" Height="30" Width="100" Margin="160,232,520,218"/>
+            <TextBox x:Name="item_ID_textBox" TextWrapping="Wrap" Text="" Height="30" Width="100" Margin="160,172,520,278"/>
             <Label x:Name="quantity_delivered" Content="Quantity Delivered" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="25,232,0,0" Width="113"/>
-            <TextBox x:Name="quantity_delivered_textBox" TextWrapping="Wrap" Text="" Height="30" Width="100" Margin="160,172,520,278"/>
+            <TextBox x:Name="quantity_delivered_textBox" TextWrapping="Wrap" Text="" Height="30" Width="100" Margin="160,228,520,222"/>
             <Label x:Name="employee_ID" Content="Employee ID" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="25,293,0,0" Width="113" Height="30"/>
             <TextBox x:Name="Employee_ID_textBox" TextWrapping="Wrap" Text="" Height="30" Width="100" Margin="160,293,520,157"/>
             <DataGrid x:Name="delivery_dataGrid" HorizontalAlignment="Left" Height="334" Margin="303,10,0,0" VerticalAlignment="Top" Width="467"/>

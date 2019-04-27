@@ -59,20 +59,11 @@ namespace DatabaseProject
                 // We were just opened
 
                 ClearDeliveryFields();
-                //PopulateDonorDropdown();
                 ViewItems();
-                //ViewDonor();
-
-                //Donor.onAllUpdated += PopulateDonorDropdown;
-                //Animal.onAllUpdated += PopulateAnimalDropdown;
-                //Habitat.onAllUpdated += PopulateHabitatDropdown;
             }
             else
             {
                 // We were just closed
-                //Donor.onAllUpdated -= PopulateDonorDropdown;
-                //Animal.onAllUpdated -= PopulateAnimalDropdown;
-                //Habitat.onAllUpdated -= PopulateHabitatDropdown;
             }
         }
 
@@ -80,7 +71,7 @@ namespace DatabaseProject
 
         private void btn_item_Click(object sender, RoutedEventArgs e)
         {
-            NewItems();
+            NewItem();
         }
         private void btn_view_items_Click(object sender, RoutedEventArgs e)
         {
@@ -113,69 +104,77 @@ namespace DatabaseProject
 
         //ITEMS
 
-
-
-        //Trying to copy Nick's 
-        private void NewItems()
+        private void NewItem()
         {
-            if (DeliveryID != null && MessageBox.Show("Do you want to create a new donation? A new donation id will be generated.", "Warning!", MessageBoxButton.YesNo) == MessageBoxResult.No) return;
-
-            if (ItemID == null)
+            if (string.IsNullOrWhiteSpace(DeliveryID))
             {
-                MessageBox.Show("Please enter the item ID.");
+                MessageBox.Show("Please enter a DeliveryID.");
                 return;
             }
+
+            if (string.IsNullOrWhiteSpace(DeliveryType))
+            {
+                MessageBox.Show("Please enter a DeliveryType.");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(ItemID))
+            {
+                MessageBox.Show("Please enter a ItemID.");
+                return;
+            }
+
             if (string.IsNullOrWhiteSpace(QuantityDelivered))
             {
-                MessageBox.Show("Please enter the quantity delivered.");
+                MessageBox.Show("Please enter a QuantityDelivered.");
                 return;
             }
 
-            if (DeliveryType == null)
+            if (string.IsNullOrWhiteSpace(EmployeeID))
             {
-                MessageBox.Show("Please select a delivery type.");
+                MessageBox.Show("Please enter a EmployeeID.");
                 return;
             }
 
-            if (EmployeeID == null)
+            if (!string.IsNullOrWhiteSpace(DeliveryID))
             {
-                MessageBox.Show("Please enter an Employee ID.");
-                return;
+                string query = $"INSERT INTO Delivery VALUES(@DELIVERY_ID, @DELIVERY_TYPE);";
+                Database.NonQuery(query, ("@DELIVERY_ID", DeliveryID), ("@DELIVERY_TYPE", DeliveryType));
             }
 
-            //obviously I don't have a delivery constructor, because I was unsure if I needed to make one. but this bit would reference that?
-           // Delivery delivery = CreateDelivery();
+            if (!string.IsNullOrWhiteSpace(DeliveryID))
+            {
+                string query = $"INSERT INTO Delivery_Item VALUES(@DELIVERY_ID, @ITEM_ID, @QUANTITY_DELIVERED);";
+                Database.NonQuery(query, ("@DELIVERY_ID", DeliveryID), ("@ITEM_ID", ItemID), ("@QUANTITY_DELIVERED", QuantityDelivered));
+            }
 
-            //if (delivery == null)
-            //{
-            //    MessageBox.Show("Could not create new donation.");
-            //    return;
-            //}
-            //DEFINE A dIFFERENT UPDATE METHODDDDDDDD!!!!!
-           // Delivery.UpdateItems();
+            if (!string.IsNullOrWhiteSpace(DeliveryID))
+            {
+                string query = $"INSERT INTO Delivery_Unloader VALUES(@DELIVERY_ID, @EMPLOYEE_ID);";
+                Database.NonQuery(query, ("@DELIVERY_ID", DeliveryID), ("@EMPLOYEE_ID", EmployeeID));
+            }
 
-            ClearDonationFields();
-            ViewDonation();
+            ViewItems();
         }
 
         private void ViewItems()
         {
             string query;
-            //delete repeated column
+
             if (!string.IsNullOrWhiteSpace(DeliveryID))
             {
-                query = "SELECT DELIVERY.delivery_id, deliery_type, item_id, quantity_delivered FROM Delivery RIGHT JOIN DELIVERY_ITEM ON DELIVERY_ITEM.delivery_id = DELIVERY.delivery_id WHERE delivery_id = @DELIVERY_ID";
+                query = "SELECT DELIVERY.delivery_id, delivery_type, item_id, quantity_delivered FROM Delivery RIGHT JOIN DELIVERY_ITEM ON DELIVERY_ITEM.delivery_id = DELIVERY.delivery_id WHERE DELIVERY.delivery_id = @DELIVERY_ID";
             }
             else
             {
-                query = "SELECT DELIVERY.delivery_id, deliery_type, item_id, quantity_delivered FROM Delivery RIGHT JOIN DELIVERY_ITEM ON DELIVERY_ITEM.delivery_id = DELIVERY.delivery_id";
+                query = "SELECT DELIVERY.delivery_id, delivery_type, item_id, quantity_delivered FROM Delivery RIGHT JOIN DELIVERY_ITEM ON DELIVERY_ITEM.delivery_id = DELIVERY.delivery_id";
             }
             DataTable table = Database.Query(query, ("@DELIVERY_ID", DeliveryID));
             delivery_dataGrid.ItemsSource = table?.DefaultView;
         }
 
 
-        //does not work big time
+        //checks to see if any elements of a delivery are attempting to be updated
         private void UpdateItems()
         {
             if (string.IsNullOrWhiteSpace(DeliveryID)) return;
@@ -185,8 +184,8 @@ namespace DatabaseProject
             }
 
             if (!string.IsNullOrWhiteSpace(DeliveryType)) 
-            { //change when pushing to git (mispelled table)
-                string query = $"UPDATE Delivery SET DELIVERY.deliery_type = @DELIVERY_TYPE WHERE delivery_id = @DELIVERY_ID;";
+            { 
+                string query = $"UPDATE Delivery SET DELIVERY.delivery_type = @DELIVERY_TYPE WHERE delivery_id = @DELIVERY_ID;";
                 Database.NonQuery(query, ("@DELIVERY_TYPE", DeliveryType), ("@DELIVERY_ID", DeliveryID));
             }
 
@@ -207,8 +206,10 @@ namespace DatabaseProject
                 string query = $"UPDATE Delivery_Unloader SET DELIVERY_UNLOADER.employee_id = @EMPLOYEE_ID WHERE delivery_id = @DELIVERY_ID;";
                 Database.NonQuery(query, ("@EMPLOYEE_ID", EmployeeID), ("@DELIVERY_ID", DeliveryID));
             }
+            ViewItems();
         }
 
+        //Remove Items boi
         private void RemoveItems()
         {
             if (string.IsNullOrWhiteSpace(DeliveryID)) return;
@@ -228,38 +229,40 @@ namespace DatabaseProject
         }
 
         //UNLOADERS
-        //also does not work big time. I'm pretty sure it's not referencing the right stuff
+        //adds employees to the delivery unloader table
         private void NewUnloaders()
         {
-            if (!string.IsNullOrWhiteSpace(DeliveryID)) return;
+            if (string.IsNullOrWhiteSpace(DeliveryID)) return;
             if (string.IsNullOrWhiteSpace(EmployeeID)) return;
 
-            int id = FindFirstNonIndex("SELECT Employee_id FROM Delivery_Unloader order by 1");
-            //fix
-            string query = $"INSERT INTO Delivery VALUES({id}, {QuantityDelivered});";
+          //  int id = FindFirstNonIndex("SELECT Employee_id FROM Delivery_Unloader order by 1");
+ 
+            string query = $"INSERT INTO Delivery_Unloader VALUES(@DELIVERY_ID, @EMPLOYEE_ID);";
 
-            if (Database.NonQuery(query))
+
+            if (Database.NonQuery(query, ("@DELIVERY_ID", DeliveryID), ("@EMPLOYEE_ID", EmployeeID)))
             {
-                ClearFields();
+                ClearDeliveryFields();
                 ViewUnloaders();
             }
         }
-
+        //look at them unloading bois
         private void ViewUnloaders()
         {
             string query;
             if (!string.IsNullOrWhiteSpace(DeliveryID))
             {
-                query = "SELECT * FROM DELIVERY_UNLOADER WHERE employee_id = @EMPLOYEE_ID";
+                query = "SELECT Delivery_ID, Employee.employee_ID, first_name, last_name FROM DELIVERY_UNLOADER JOIN Employee ON Delivery_Unloader.employee_id = employee.employee_id WHERE Delivery_Unloader.delivery_id = @delivery_id";
             }
             else
             {
-                query = "SELECT * FROM DELIVERY_UNLOADER";
+                query = "SELECT Delivery_ID, Employee.employee_ID, first_name, last_name FROM DELIVERY_UNLOADER JOIN Employee ON Delivery_Unloader.employee_id = employee.employee_id ";
             }
-            DataTable table = Database.Query(query, ("@EMPLOYEE_ID", EmployeeID));
+            DataTable table = Database.Query(query, ("@delivery_id", DeliveryID));
             delivery_dataGrid.ItemsSource = table?.DefaultView;
         }
 
+        //remove an unloader in case wrongly entered
         private void RemoveUnloaders()
         {
             if (string.IsNullOrWhiteSpace(DeliveryID)) return;
@@ -269,9 +272,9 @@ namespace DatabaseProject
             }
           
             string query = $"DELETE FROM Delivery_Unloader WHERE delivery_id = @DELIVERY_ID;";
-            Database.Query(query, ("@DELIVERY_ID", DeliveryID));
+            
            
-            if (Database.NonQuery(query))
+            if (Database.NonQuery(query, ("@DELIVERY_ID", DeliveryID)))
             {
                 DeliveryID = string.Empty;
                 ViewUnloaders();
@@ -281,11 +284,11 @@ namespace DatabaseProject
 
         private void ClearDeliveryFields()
         {
-            DeliveryID = null;
+            DeliveryID = string.Empty;
             DeliveryType = string.Empty;
-            ItemID = null;
-            QuantityDelivered = null;
-            EmployeeID = null;
+            ItemID = string.Empty;
+            QuantityDelivered = string.Empty;
+            EmployeeID = string.Empty;
 
         }
 
