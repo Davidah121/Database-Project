@@ -17,7 +17,7 @@
             <Button x:Name="btn_open_deliveries" Content="Deliveries" HorizontalAlignment="Left" Margin="621,424,0,0" VerticalAlignment="Top" Width="149" Height="46" Click="Btn_open_deliveries_Click" FontSize="16"/>
             <Button x:Name="btn_open_donations" Content="Donations" HorizontalAlignment="Left" Margin="468,424,0,0" VerticalAlignment="Top" Width="149" Height="46" Click="Btn_open_donations_Click" FontSize="16"/>
         </Grid>
-        <Grid x:Name="menu_employees" Margin="10" Visibility="Visible">
+        <Grid x:Name="menu_employees" Margin="10" Visibility="Hidden">
             <DatePicker x:Name="emp_field_date" Margin="155,84,495,370" />
             <Button x:Name="btn_emp_add" Content="Add Employee" HorizontalAlignment="Left" Margin="201,424,0,0" VerticalAlignment="Top" Width="186" Height="46" Click="Btn_emp_add_Click"/>
             <Button x:Name="btn_emp_back" Content="Main Menu" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="30" Margin="10,10,0,0" Click="OpenMainMenu" />
@@ -49,22 +49,18 @@
             <ComboBox Visibility="Visible" x:Name="emp_combo_animal" HorizontalAlignment="Left" Margin="155,362,0,0" VerticalAlignment="Top" Width="199" Height="26" IsEditable="True" Background="#FFDF7878" />
             <Label Visibility="Visible" x:Name="emp_combo_animal_lbl" Content="Animal Handled:" HorizontalAlignment="Left" Margin="44,362,0,0" VerticalAlignment="Top" Width="102"/>
         </Grid>
-        <Grid x:Name="menu_animals" Margin="10" Visibility="Hidden">
-            <Button x:Name="btn_animals" Content="Add Animal" HorizontalAlignment="Left" Margin="117,222,0,0" VerticalAlignment="Top" Width="136" Height="46"/>
-            <Button x:Name="btn_animals_back" Content="Main Menu" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="30" Margin="10,10,0,0" Click="OpenMainMenu" />
-        </Grid>
         <Grid x:Name="menu_deliveries" Margin="10" Visibility="Hidden">
             <Button x:Name="btn_delivery" Content="Add New Delivery" HorizontalAlignment="Left" Margin="117,222,0,0" VerticalAlignment="Top" Width="136" Height="46" />
             <Button x:Name="btn_deliveries_back" Content="Main Menu" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="30" Margin="10,10,0,0" Click="OpenMainMenu" />
         </Grid>
         <Grid x:Name="menu_animals" Margin="10" Visibility="Hidden">
             <Button x:Name="btn_animals_back" Content="Main Menu" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="30" Margin="10,10,0,0" Click="OpenMainMenu" />
-            
+
             <Button x:Name="btn_animals_edit_animals" Content="Edit Animals" HorizontalAlignment="Left" Margin="115,10,0,0" VerticalAlignment="Top" Width="100" Height="30" Click="OpenAnimalsMenu"/>
             <Button x:Name="btn_animals_edit_habitats" Content="Edit Habitats" HorizontalAlignment="Left" Margin="220,10,0,0" VerticalAlignment="Top" Width="100" Height="30" Click="OpenHabitatsMenu"/>
             <Button x:Name="btn_animals_edit_species" Content="Edit Species" HorizontalAlignment="Left" Margin="325,10,0,0" VerticalAlignment="Top" Width="100" Height="30" Click="OpenSpeciesMenu"/>
             <Button x:Name="btn_animals_edit_diet" Content="Edit Diet" HorizontalAlignment="Left" Margin="430,10,0,0" VerticalAlignment="Top" Width="100" Height="30" Click="OpenDietMenu"/>
-            
+
             <Button x:Name="btn_animals_add" Content="Add Animal" HorizontalAlignment="Left" Margin="10,385,0,0" VerticalAlignment="Top" Width="120" Height="40" Click="Btn_animals_add_Click"/>
             <Button x:Name="btn_animals_delete" Content="Delete Animal" HorizontalAlignment="Left" Margin="135,430,0,0" VerticalAlignment="Top" Width="120" Height="40" Click="Btn_animals_delete_Click"/>
             <Button x:Name="btn_animals_update" Content="Update Animal" HorizontalAlignment="Left" Margin="10,430,0,0" VerticalAlignment="Top" Width="120" Height="40" Click="Btn_animals_update_Click"/>
@@ -91,16 +87,16 @@
             </ScrollViewer>
 
             <DataGrid x:Name="datagrid_animals" HorizontalAlignment="Left" Height="410" Margin="322,60,0,0" VerticalAlignment="Top" Width="448" IsReadOnly="True"/>
-            
+
         </Grid>
         <Grid x:Name="menu_animals_habitat" Margin="10" Visibility="Hidden">
             <Button x:Name="btn_habitat_back" Content="Main Menu" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="30" Margin="10,10,0,0" Click="OpenMainMenu" />
-            
+
             <Button x:Name="btn_habitat_edit_animals" Content="Edit Animals" HorizontalAlignment="Left" Margin="115,10,0,0" VerticalAlignment="Top" Width="100" Height="30" Click="OpenAnimalsMenu"/>
             <Button x:Name="btn_habitat_edit_habitats" Content="Edit Habitats" HorizontalAlignment="Left" Margin="220,10,0,0" VerticalAlignment="Top" Width="100" Height="30" Click="OpenHabitatsMenu"/>
             <Button x:Name="btn_habitat_edit_species" Content="Edit Species" HorizontalAlignment="Left" Margin="325,10,0,0" VerticalAlignment="Top" Width="100" Height="30" Click="OpenSpeciesMenu"/>
             <Button x:Name="btn_habitat_edit_diet" Content="Edit Diet" HorizontalAlignment="Left" Margin="430,10,0,0" VerticalAlignment="Top" Width="100" Height="30" Click="OpenDietMenu"/>
-            
+
             <Button x:Name="btn_habitat_add" Content="Add Habitat" HorizontalAlignment="Left" Margin="10,385,0,0" VerticalAlignment="Top" Width="120" Height="40" Click="Btn_habitat_add_Click"/>
             <Button x:Name="btn_habitat_delete" Content="Delete Habitat" HorizontalAlignment="Left" Margin="135,430,0,0" VerticalAlignment="Top" Width="120" Height="40" Click="Btn_habitat_delete_Click"/>
             <Button x:Name="btn_habitat_update" Content="Update Habitat" HorizontalAlignment="Left" Margin="10,430,0,0" VerticalAlignment="Top" Width="120" Height="40" Click="Btn_habitat_update_Click"/>
@@ -124,7 +120,7 @@
             <Button x:Name="btn_species_edit_habitats" Content="Edit Habitats" HorizontalAlignment="Left" Margin="220,10,0,0" VerticalAlignment="Top" Width="100" Height="30" Click="OpenHabitatsMenu"/>
             <Button x:Name="btn_species_edit_species" Content="Edit Species" HorizontalAlignment="Left" Margin="325,10,0,0" VerticalAlignment="Top" Width="100" Height="30" Click="OpenSpeciesMenu"/>
             <Button x:Name="btn_species_edit_diet" Content="Edit Diet" HorizontalAlignment="Left" Margin="430,10,0,0" VerticalAlignment="Top" Width="100" Height="30" Click="OpenDietMenu"/>
-            
+
             <Button x:Name="btn_species_add" Content="Add Species" HorizontalAlignment="Left" Margin="10,385,0,0" VerticalAlignment="Top" Width="120" Height="40" Click="Btn_species_add_Click"/>
             <Button x:Name="btn_species_delete" Content="Delete Species" HorizontalAlignment="Left" Margin="135,430,0,0" VerticalAlignment="Top" Width="120" Height="40" Click="Btn_species_delete_Click"/>
             <Button x:Name="btn_species_update" Content="Update Species" HorizontalAlignment="Left" Margin="10,430,0,0" VerticalAlignment="Top" Width="120" Height="40" Click="Btn_species_update_Click"/>
@@ -139,7 +135,7 @@
 
             <DataGrid x:Name="datagrid_species" HorizontalAlignment="Left" Height="410" Margin="322,60,0,0" VerticalAlignment="Top" Width="448" IsReadOnly="True"/>
         </Grid>
-        <Grid x:Name="menu_animals_diet" Margin="10" Visibility="Visible">
+        <Grid x:Name="menu_animals_diet" Margin="10" Visibility="Hidden">
             <Button x:Name="btn_diet_back" Content="Main Menu" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="30" Margin="10,10,0,0" Click="OpenMainMenu" />
             <Button x:Name="btn_diet_edit_animals" Content="Edit Animals" HorizontalAlignment="Left" Margin="115,10,0,0" VerticalAlignment="Top" Width="100" Height="30" Click="OpenAnimalsMenu"/>
             <Button x:Name="btn_diet_edit_habitats" Content="Edit Habitats" HorizontalAlignment="Left" Margin="220,10,0,0" VerticalAlignment="Top" Width="100" Height="30" Click="OpenHabitatsMenu"/>
@@ -165,12 +161,12 @@
                     <Label Content="Secondary Food" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.579,0.128" Margin="0,216,0,0"/>
                     <TextBox x:Name="txt_diet_treats" HorizontalAlignment="Left" Height="24" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Margin="0,301,0,0"/>
                     <Label Content="Treats" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.579,0.128" Margin="0,270,0,0"/>
-                    
+
                 </Grid>
             </ScrollViewer>
 
             <DataGrid x:Name="datagrid_diet" HorizontalAlignment="Left" Height="410" Margin="322,60,0,0" VerticalAlignment="Top" Width="448" IsReadOnly="True"/>
-
+        </Grid>
         <Grid x:Name="menu_trans" Margin="10" Visibility="Hidden" IsVisibleChanged = "Menu_transactions_IsVisibleChanged">
             <Button x:Name="btn_delete_trans" Content="Delete" HorizontalAlignment="Left" Margin="584,430,0,0" VerticalAlignment="Top" Width="186" Height="40" Click="Btn_delete_trans_Click"/>
             <Button x:Name="btn_view_trans" Content="Transaction" HorizontalAlignment="Left" Margin="214,359,0,0" VerticalAlignment="Top" Width="178" Height="31" Click="Btn_view_trans_Click"/>
