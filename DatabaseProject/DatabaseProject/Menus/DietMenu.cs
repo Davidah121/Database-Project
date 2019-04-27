@@ -40,8 +40,11 @@ namespace DatabaseProject
 
                     //Replace the placeholders with the user's values and
                     //run the query
-                    Database.NonQuery(query, ("@ID", idVal), ("@DTYPE", dType), ("@RES", dRestrictions),
+                    bool valid = Database.NonQuery(query, ("@ID", idVal), ("@DTYPE", dType), ("@RES", dRestrictions),
                                     ("@PRIM", dPrimary), ("@SECO", dSecondary), ("@TREATS", dTreats));
+
+                    if (valid)
+                        MessageBox.Show("Added a Diet.");
                 }
                 else
                 {
@@ -157,8 +160,11 @@ namespace DatabaseProject
 
                     //Replace the placeholders with the user's values and
                     //run the query.
-                    Database.NonQuery(query, ("@ID", idVal), ("@DTYPE", dType), ("@RES", dRestrictions),
+                    bool valid = Database.NonQuery(query, ("@ID", idVal), ("@DTYPE", dType), ("@RES", dRestrictions),
                                                     ("@PRIM", dPrimary), ("@SECO", dSecondary), ("@TREATS", dTreats));
+
+                    if (valid)
+                        MessageBox.Show("Updated a Diet.");
                 }
                 else
                 {
@@ -186,7 +192,7 @@ namespace DatabaseProject
                     string query = "DELETE FROM DIET WHERE diet_id=(@ID);";
 
                     //Check if the diet is used by an animal
-                    bool notInAnimal = Database.Query("SELECT * FROM ANIMAL WHERE diet_id=(@ID);", ("@ID", idVal)).Rows.Count > 0;
+                    bool notInAnimal = Database.Query("SELECT * FROM ANIMAL WHERE diet_id=(@ID);", ("@ID", idVal)).Rows.Count == 0;
                     
                     //Delete the diet if it isn't used by anything.
                     if (notInAnimal)
@@ -200,6 +206,10 @@ namespace DatabaseProject
                         if (validID == false)
                         {
                             MessageBox.Show("Could not delete because no diet has the ID value");
+                        }
+                        else
+                        {
+                            MessageBox.Show("Deleted a Diet.");
                         }
                     }
 

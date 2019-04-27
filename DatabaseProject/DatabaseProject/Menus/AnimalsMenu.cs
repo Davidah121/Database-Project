@@ -61,9 +61,12 @@ namespace DatabaseProject
                     string query = "INSERT INTO ANIMAL VALUES(@ID, @HABID, @SPEID, @NAME, @BIRTHDAY, @WEIGHT, @DIETID);";
 
                     //Replace the placeholders with the values to insert and run the query
-                    Database.NonQuery(query, ("@ID", idVal), ("@HABID", habIdVal), ("@SPEID", speIdVal),
+                    bool valid = Database.NonQuery(query, ("@ID", idVal), ("@HABID", habIdVal), ("@SPEID", speIdVal),
                                             ("@NAME", animalName), ("@BIRTHDAY", animalDate), ("@WEIGHT", wei),
                                             ("@DIETID", dietID));
+
+                    if(valid)
+                        MessageBox.Show("Added an Animal.");
                 }
                 else
                 {
@@ -191,9 +194,12 @@ namespace DatabaseProject
 
                     //Replace the placeholders with the users values and
                     //then run the query.
-                    Database.NonQuery(query, ("@ID", idVal), ("@HABID", habIdVal), ("@SPEID", speIdVal),
+                    bool valid = Database.NonQuery(query, ("@ID", idVal), ("@HABID", habIdVal), ("@SPEID", speIdVal),
                                             ("@NAME", animalName), ("@BIRTHDAY", animalDate), ("@WEIGHT", wei),
                                             ("@DIETID", dietID));
+
+                    if (valid)
+                        MessageBox.Show("Updated an Animal.");
                 }
                 else
                 {
@@ -223,8 +229,8 @@ namespace DatabaseProject
 
                     //Check if the animal is listed in the handlers table or
                     //the animal_adoption table
-                    bool notInHandler = Database.Query("SELECT * FROM HANDLER WHERE animal_id=(@ID);", ("@ID", idVal)).Rows.Count > 0;
-                    bool notInAdopt = Database.Query("SELECT * FROM ANIMAL_ADOPTION WHERE animal_id=(@ID);", ("@ID", idVal)).Rows.Count > 0;
+                    bool notInHandler = Database.Query("SELECT * FROM HANDLER WHERE animal_id=(@ID);", ("@ID", idVal)).Rows.Count == 0;
+                    bool notInAdopt = Database.Query("SELECT * FROM ANIMAL_ADOPTION WHERE animal_id=(@ID);", ("@ID", idVal)).Rows.Count == 0;
                     
 
                     //If it is not in those tables, it is safe to delete
@@ -236,6 +242,10 @@ namespace DatabaseProject
                         if(validID==false)
                         {
                             MessageBox.Show("Could not delete because no animal has the ID value");
+                        }
+                        else
+                        {
+                            MessageBox.Show("Deleted the animal.");
                         }
                     }
 

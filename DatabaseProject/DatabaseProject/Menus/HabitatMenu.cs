@@ -38,8 +38,11 @@ namespace DatabaseProject
 
                     //Replace the placeholders with the user's values and
                     //then run the query.
-                    Database.NonQuery(query, ("@ID", idVal), ("@HABNAME", habName), ("@HUMI", humiVal),
+                    bool valid = Database.NonQuery(query, ("@ID", idVal), ("@HABNAME", habName), ("@HUMI", humiVal),
                                             ("@TEMP", tempVal));
+
+                    if (valid)
+                        MessageBox.Show("Added a Habitat.");
                 }
                 else
                 {
@@ -134,8 +137,11 @@ namespace DatabaseProject
                       "temperature=(@TEMP), " +
                       "WHERE habitat_id=(@ID);";
 
-                    Database.NonQuery(query, ("@ID", idVal), ("@HABNAME", habName), ("@HUMI", humiVal),
+                    bool valid = Database.NonQuery(query, ("@ID", idVal), ("@HABNAME", habName), ("@HUMI", humiVal),
                                             ("@TEMP", tempVal));
+
+                    if (valid)
+                        MessageBox.Show("Updated a Habitat.");
                 }
                 else
                 {
@@ -162,7 +168,7 @@ namespace DatabaseProject
                     string query = "DELETE FROM HABITAT WHERE habitat_id=(@ID);";
 
                     //Determine if the habitat is used by an animal
-                    bool notInAnimal = Database.Query("SELECT * FROM ANIMAL WHERE habitat_id=(@ID);", ("@ID", idVal)).Rows.Count > 0;
+                    bool notInAnimal = Database.Query("SELECT * FROM ANIMAL WHERE habitat_id=(@ID);", ("@ID", idVal)).Rows.Count == 0;
 
                     //If the habitat is used by an animal, do not delete it
                     //and report that to the user
@@ -176,6 +182,10 @@ namespace DatabaseProject
                         if (validID == false)
                         {
                             MessageBox.Show("Could not delete because no habitat has the ID value");
+                        }
+                        else
+                        {
+                            MessageBox.Show("Deleted a Habitat.");
                         }
                     }
 

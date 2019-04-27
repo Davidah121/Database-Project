@@ -35,7 +35,10 @@ namespace DatabaseProject
                     string query = "INSERT INTO SPECIES VALUES(@ID, @SPENAME, @CLASSNAME);";
                     
                     //Then run the query while replacing the placeholders with our values.
-                    Database.NonQuery(query, ("@ID", idVal), ("@SPENAME", specName), ("@CLASSNAME", specClass));
+                    bool valid = Database.NonQuery(query, ("@ID", idVal), ("@SPENAME", specName), ("@CLASSNAME", specClass));
+
+                    if (valid)
+                        MessageBox.Show("Added a Species.");
                 }
                 else
                 {
@@ -123,7 +126,10 @@ namespace DatabaseProject
                                 "class_name=(@CLASSNAME) " +
                                 "WHERE species_id=(@ID);";
 
-                    Database.NonQuery(query, ("@ID", idVal), ("@SPENAME", specName), ("@CLASSNAME", specClass));
+                    bool valid = Database.NonQuery(query, ("@ID", idVal), ("@SPENAME", specName), ("@CLASSNAME", specClass));
+
+                    if (valid)
+                        MessageBox.Show("Update an Species.");
                 }
                 else
                 {
@@ -150,7 +156,7 @@ namespace DatabaseProject
 
                     //Lastly, check if the species is used. If it is,
                     //Don't delete this species.
-                    bool notInAnimal = Database.Query("SELECT * FROM ANIMAL WHERE species_id=(@ID);", ("@ID", idVal)).Rows.Count > 0;
+                    bool notInAnimal = Database.Query("SELECT * FROM ANIMAL WHERE species_id=(@ID);", ("@ID", idVal)).Rows.Count == 0;
 
                     if (notInAnimal)
                     {
@@ -160,6 +166,10 @@ namespace DatabaseProject
                         if (validID == false)
                         {
                             MessageBox.Show("Could not delete because no species has the ID value");
+                        }
+                        else
+                        {
+                            MessageBox.Show("Deleted a Species");
                         }
                     }
 
