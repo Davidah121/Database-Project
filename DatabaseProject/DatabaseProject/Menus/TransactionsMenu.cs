@@ -34,21 +34,37 @@ namespace DatabaseProject
         private void Btn_new_trans_Click(object sender, RoutedEventArgs e)
         {
             NewTransaction();
+            ClearFields();
         }
 
         private void Btn_view_trans_Click(object sender, RoutedEventArgs e)
         {
             ViewTransaction();
+            ClearFields();
+        }
+
+        private void Btn_view_item_Click(object sender, RoutedEventArgs e)
+        {
+            ViewItemTransaction();
+            ClearFields();
+        }
+
+        private void Btn_view_ticket_Click(object sender, RoutedEventArgs e)
+        {
+            ViewTicketTransaction();
+            ClearFields();
         }
 
         private void Btn_update_trans_Click(object sender, RoutedEventArgs e)
         {
             UpdateTransaction();
+            ClearFields();
         }
 
         private void Btn_delete_trans_Click(object sender, RoutedEventArgs e)
         {
             DeleteTransaction();
+            ClearFields();
         }
 
         private void Btn_clear_fields_Click(object sender, RoutedEventArgs e)
@@ -58,7 +74,16 @@ namespace DatabaseProject
 
         private void Btn_add_ticket_to_cart_Click(object sender, RoutedEventArgs e)
         {
-            list_ticket_cart.Items.Add(txt_ticket_id.Text + "', '" + combo_ticket_selection.Text);
+            if (string.IsNullOrWhiteSpace(txt_ticket_id.Text)) return;
+            if (string.IsNullOrWhiteSpace(combo_ticket_selection.Text)) return;
+            list_ticket_cart.Items.Add(txt_ticket_id.Text + " " + combo_ticket_selection.Text);
+        }
+
+        private void Btn_add_item_to_cart_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txt_item_id.Text)) return;
+            if (string.IsNullOrWhiteSpace(txt_item_quantity.Text)) return;
+            list_item_cart.Items.Add(txt_item_id.Text + " " + txt_item_quantity.Text);
         }
 
         private void combo_trans_type_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -76,21 +101,21 @@ namespace DatabaseProject
                     list_ticket_cart.Visibility = Visibility.Collapsed;
                     btn_add_ticket_to_cart.Visibility = Visibility.Collapsed;
 
-                    ItemLabel.Visibility = Visibility.Visible;
-                    combo_item_selection.Visibility = Visibility.Visible;
-                    QuantityLabel.Visibility = Visibility.Visible;
-                    txt_item_quantity.Visibility = Visibility.Visible;
+                    ItemIDLabel.Visibility = Visibility.Visible;
+                    txt_item_id.Visibility = Visibility.Visible;
                     list_item_cart.Visibility = Visibility.Visible;
                     btn_add_item_to_cart.Visibility = Visibility.Visible;
+                    txt_item_quantity.Visibility = Visibility.Visible;
+                    ItemQuantityLabel.Visibility = Visibility.Visible;
                 }
                 if (value == "Ticket Sale")
                 {
-                    ItemLabel.Visibility = Visibility.Collapsed;
-                    combo_item_selection.Visibility = Visibility.Collapsed;
-                    QuantityLabel.Visibility = Visibility.Collapsed;
-                    txt_item_quantity.Visibility = Visibility.Collapsed;
+                    ItemIDLabel.Visibility = Visibility.Collapsed;
+                    txt_item_id.Visibility = Visibility.Collapsed;
                     list_item_cart.Visibility = Visibility.Collapsed;
                     btn_add_item_to_cart.Visibility = Visibility.Collapsed;
+                    txt_item_quantity.Visibility = Visibility.Collapsed;
+                    ItemQuantityLabel.Visibility = Visibility.Collapsed;
 
                     TicketLabel.Visibility = Visibility.Visible;
                     combo_ticket_selection.Visibility = Visibility.Visible;
@@ -128,22 +153,32 @@ namespace DatabaseProject
             if (string.IsNullOrWhiteSpace(Transaction_Amount)) return;
 
             int id = FindFirstNonIndex("Select transaction_id from Transactions order by 1");
-            string query = $"INSERT INTO Transactions VALUES('{id}','{Employee_ID}', '{Date_Of_Transaction}', '{Payment_Method}', '{Transaction_Amount}')";
-            Database.Query(query);
+            string query = $"INSERT INTO Transactions VALUES(@ID, @empID, @date, @payMethod, @amount)";
+            Database.Query(query, ("@ID", id), ("@empID", txt_empID.Text), ("@date", txt_date.Text), ("@payMethod", combo_payMethod.Text), ("@amount", txt_trans_amount.Text));
             // Use foreach loop to get all tickets in cart to the right id
+
             if (list_ticket_cart.HasItems)
             {
                 foreach (var listBoxItem in list_ticket_cart.Items)
                 {
-                    query = $"INSERT INTO Ticket (transaction_id, ticket_id, ticket_type) VALUES('{id}', '{listBoxItem.ToString()}');";
+                    string[] splitval = listBoxItem.ToString().Split(' ');
+
+                    query = $"INSERT INTO Ticket (transaction_id, ticket_id, ticket_type) VALUES (@ID, @ticket_id, @ticket_type);";
+                    Database.Query(query, ("@ID", id), ("@ticket_id", splitval[0]), ("@ticket_type", splitval[1]));
+                }
+            }
+            else if (list_item_cart.HasItems)
+            {
+                foreach (var listBoxItem in list_item_cart.Items)
+                {
+                    string[] splitval = listBoxItem.ToString().Split(' ');
+                    query = $"INSERT INTO Item_Sale (transaction_id, item_id, quantity) VALUES(@ID, @item_id, @quantity);";
+                    Database.Query(query, ("@ID", id), ("@item_id", splitval[0]), ("@quantity", splitval[1]));
                 }
             }
 
-            if (Database.NonQuery(query))
-            {
-                ClearFields();
-                ViewTransaction();
-            }
+            ViewTransaction();
+            ClearFields();
         }
 
         private void ViewTransaction()
@@ -152,14 +187,38 @@ namespace DatabaseProject
 
             if (string.IsNullOrWhiteSpace(txt_transID.Text))
             {
-                query = $"SELECT * FROM Transactions FULL OUTER JOIN Ticket ON Transactions.transaction_id = Ticket.transaction_id";
+                query = $"SELECT * FROM Transactions;";
             }
             else
             {
-                query = $"SELECT * FROM Transactions FULL OUTER JOIN Ticket ON Transactions.transaction_id = Ticket.transaction_id WHERE Transactions.transaction_id = {txt_transID.Text}";
+                query = $"SELECT * FROM Transactions WHERE Transactions.transaction_id = @TransID;";
             }
 
-            DataTable table = Database.Query(query);
+            DataTable table = Database.Query(query, ("@TransID", txt_transID.Text));
+
+            if (table == null)
+            {
+                return;
+            }
+
+            datatable_transactions.ItemsSource = table.DefaultView;
+            ClearFields();
+        }
+
+        private void ViewTicketTransaction()
+        {
+            string query = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(txt_transID.Text))
+            {
+                query = $"SELECT * FROM Ticket Left JOIN Transactions ON Transactions.transaction_id = Ticket.transaction_id";
+            }
+            else
+            {
+                query = $"SELECT * FROM Ticket Left JOIN Transactions ON Transactions.transaction_id = Ticket.transaction_id WHERE Transactions.transaction_id = @TransID";
+            }
+
+            DataTable table = Database.Query(query, ("@TransID", txt_transID.Text));
 
             if (table == null)
             {
@@ -168,6 +227,31 @@ namespace DatabaseProject
 
             datatable_transactions.ItemsSource = table.DefaultView;
         }
+
+        private void ViewItemTransaction()
+        {
+            string query = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(txt_transID.Text))
+            {
+                query = $"SELECT * FROM Item_Sale Left JOIN Transactions ON Transactions.transaction_id = Item_Sale.transaction_id";
+            }
+            else
+            {
+                query = $"SELECT * FROM Item_Sale Left JOIN Transactions ON Transactions.transaction_id = Item_Sale.transaction_id WHERE Transactions.transaction_id = @TransID";
+            }
+
+            DataTable table = Database.Query(query, ("@TransID", txt_transID.Text));
+
+            if (table == null)
+            {
+                return;
+            }
+
+            datatable_transactions.ItemsSource = table.DefaultView;
+        }
+
+
 
         private void UpdateTransaction()
         {
@@ -179,9 +263,35 @@ namespace DatabaseProject
             }
 
             //Handling Employee ID?
-            string query = $"UPDATE Transactions SET amount = '{txt_trans_amount.Text}', employee_id = '{txt_empID.Text}', transaction_date = '{txt_date.Text}', payment_method = '{combo_payMethod.Text}' WHERE transaction_id = '{txt_transID.Text}';";
+            string query = $"UPDATE Transactions SET amount = @amount, employee_id = @empID, transaction_date = @date, payment_method = @payMethod WHERE transaction_id = @ID;";
+            Database.Query(query, ("@ID", txt_transID.Text), ("@empID", txt_empID.Text), ("@date", txt_date.Text), ("@payMethod", combo_payMethod.Text), ("@amount", txt_trans_amount.Text));
 
-            Database.NonQuery(query);
+            if (list_ticket_cart.HasItems)
+            {
+                query = $"DELETE FROM Ticket WHERE transaction_id = @ID;";
+                Database.Query(query, ("@ID", txt_transID.Text));
+                foreach (var listBoxItem in list_ticket_cart.Items)
+                {
+                    string[] splitval = listBoxItem.ToString().Split(' ');
+
+                    query = $"INSERT INTO Ticket (transaction_id, ticket_id, ticket_type) VALUES (@ID, @ticket_id, @ticket_type);";
+                    Database.Query(query, ("@ID", txt_transID.Text), ("@ticket_id", splitval[0]), ("@ticket_type", splitval[1]));
+                }
+            }
+            else if (list_item_cart.HasItems)
+            {
+                query = $"DELETE FROM Item_Sale WHERE transaction_id = {txt_transID.Text};";
+                Database.Query(query);
+                foreach (var listBoxItem in list_item_cart.Items)
+                {
+                    string[] splitval = listBoxItem.ToString().Split(' ');
+                    query = $"INSERT INTO Item_Sale (transaction_id, item_id, quantity) VALUES(@ID, @item_id, @quantity);";
+                    Database.Query(query, ("@ID", txt_transID.Text), ("@item_id", splitval[0]), ("@quantity", splitval[2]));
+                }
+            }
+
+            ViewTransaction();
+            ClearFields();
         }
 
         private void DeleteTransaction()
@@ -193,19 +303,14 @@ namespace DatabaseProject
                 return;
             }
 
-            string query = $"DELETE FROM Transactions WHERE transaction_id = {txt_transID.Text};";
-
-
-            if (Database.NonQuery(query))
-            {
-                txt_transID.Text = string.Empty;
-                ViewTransaction();
-            }
-            Database.NonQuery(query);
-            query = $"DELETE FROM Ticket WHERE transaction_id = {txt_transID.Text};";
-            Database.NonQuery(query);
-            query = $"Delete FROM Item_Sale WHERE transaction_id = {txt_transID.Text};";
-            Database.NonQuery(query);
+            string query = $"DELETE FROM Transactions WHERE transaction_id = @ID;";
+            Database.Query(query, ("@ID", txt_transID.Text));
+            query = $"DELETE FROM Ticket WHERE transaction_id = @ID;";
+            Database.Query(query, ("@ID", txt_transID.Text));
+            query = $"Delete FROM Item_Sale WHERE transaction_id = @ID;";
+            Database.Query(query, ("@ID", txt_transID.Text));
+            ViewTransaction();
+            ClearFields();
         }
         
     
@@ -220,8 +325,8 @@ namespace DatabaseProject
             txt_ticket_id.Text = string.Empty;
             combo_ticket_selection.Text = string.Empty;
             list_ticket_cart.Items.Clear();
-
             list_item_cart.Items.Clear();
+            txt_item_quantity.Text = string.Empty;
 
         }
     }

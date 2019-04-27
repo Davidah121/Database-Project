@@ -64,6 +64,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Menus\DietMenu.cs" />
+    <Compile Include="Menus\SpeciesMenu.cs" />
+    <Compile Include="Menus\HabitatMenu.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="Menus\DeliveriesMenu.cs" />
     <Compile Include="Menus\DonationsMenu.cs" />
@@ -105,6 +108,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\database_background.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\database_background_v2.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
