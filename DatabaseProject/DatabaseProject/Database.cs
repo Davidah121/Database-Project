@@ -61,13 +61,18 @@ namespace DatabaseProject
             {
                 try
                 {
+                    // Add parameters
                     if (p.Length > 0)
                     {
                         SqlParameter[] sqlParameters = p.Select(x => new SqlParameter(x.key, x.value)).ToArray();
                         command.Parameters.AddRange(sqlParameters);
                     }
 
+                    // Open the connection to the database
                     connection.Open();
+
+
+                    // Return true if at least 1 row was affected.
                     return command.ExecuteNonQuery() > 0;
                 }
                 catch (Exception ex)

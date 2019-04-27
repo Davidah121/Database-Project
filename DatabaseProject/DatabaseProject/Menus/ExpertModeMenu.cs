@@ -40,12 +40,14 @@ namespace DatabaseProject
 
         private void Submit(string query)
         {
+            // If the query starts with select, we want to perform a normal query
             if (query.StartsWith("select", StringComparison.OrdinalIgnoreCase))
             {
                 datagrid_expmode.ItemsSource = Database.Query(query)?.DefaultView;
             }
             else
             {
+                // otherwise we want to perform what is known as a nonquery. This does not return any rows, only the rows affected
                 if (Database.NonQuery(query))
                 {
                     MessageBox.Show("Query executed successfully!");
