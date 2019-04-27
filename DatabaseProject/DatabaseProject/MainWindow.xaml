@@ -9,7 +9,7 @@
     <Grid Margin="0" Height="500" VerticalAlignment="Center" HorizontalAlignment="Center" Width="800">
         <Image Source="Images/database_background_v2.png"/>
         <Border BorderBrush="Black" BorderThickness="1" Margin="10"></Border>
-        <Grid x:Name="menu_main" Margin="10" Visibility="Visible">
+        <Grid x:Name="menu_main" Margin="10" Visibility="Hidden">
             <Button x:Name="btn_open_emp" Content="Employees" HorizontalAlignment="Left" Margin="163,424,0,0" VerticalAlignment="Top" Width="149" Height="46" Click="Btn_open_emp_Click" FontSize="16"/>
             <Button x:Name="btn_open_animals" Content="Animals" HorizontalAlignment="Left" Margin="10,424,0,0" VerticalAlignment="Top" Width="149" Height="46" Click="Btn_open_animals_Click" FontSize="16"/>
             <Button x:Name="btn_open_trans" Content="Transactions" HorizontalAlignment="Left" Margin="315,424,0,0" VerticalAlignment="Top" Width="150" Height="46" Click="Btn_open_trans_Click" RenderTransformOrigin="0.629,0.87" FontSize="16"/>
@@ -50,14 +50,14 @@
             <Label Visibility="Visible" x:Name="emp_combo_animal_lbl" Content="Animal Handled:" HorizontalAlignment="Left" Margin="44,362,0,0" VerticalAlignment="Top" Width="102"/>
         </Grid>
         <Grid x:Name="menu_deliveries" Margin="10" Visibility="Visible" IsVisibleChanged="Menu_delivery_IsVisibleChanged">
-            <Button x:Name="btn_items" Content="Add Items" HorizontalAlignment="Left" Margin="227,424,0,0" VerticalAlignment="Top" Width="136" Height="46" Background="#FF13D61C" Click="btn_item_Click" RenderTransformOrigin="0.499,0.563" />
-            <Button x:Name="btn_view_items" Content="View Items" HorizontalAlignment="Left" Margin="25,424,0,0" VerticalAlignment="Top" Width="136" Height="46" Background="#FF0FC9B8" Click="btn_view_items_Click" RenderTransformOrigin="0.499,0.563" />
-            <Button x:Name="btn_rmv_items" Content="Remove Items" HorizontalAlignment="Left" Margin="434,424,0,0" VerticalAlignment="Top" Width="136" Height="46" Background="#FFB80000" Click="btn_rmv_item_Click" />
-            <Button x:Name="btn_update_items" Content="Update Items" HorizontalAlignment="Left" Margin="613,424,0,0" VerticalAlignment="Top" Width="136" Height="46" Click="btn_update_item_Click"/>
+            <Button x:Name="btn_items" Content="Add Item" HorizontalAlignment="Left" Margin="201,424,0,0" VerticalAlignment="Top" Width="186" Height="46" Click="btn_item_Click" RenderTransformOrigin="0.499,0.563" />
+            <Button x:Name="btn_view_items" Content="Get Item" HorizontalAlignment="Left" Margin="10,424,0,0" VerticalAlignment="Top" Width="186" Height="46" Click="btn_view_items_Click" RenderTransformOrigin="0.499,0.563" />
+            <Button x:Name="btn_rmv_items" Content="Delete Item" HorizontalAlignment="Left" Margin="584,424,0,0" VerticalAlignment="Top" Width="186" Height="46" Click="btn_rmv_item_Click" />
+            <Button x:Name="btn_update_items" Content="Update Item" HorizontalAlignment="Left" Margin="393,424,0,0" VerticalAlignment="Top" Width="186" Height="46" Click="btn_update_item_Click"/>
 
-            <Button x:Name="btn_unloader" Content="Add Unloaders" HorizontalAlignment="Left" Margin="227,359,0,0" VerticalAlignment="Top" Width="136" Height="46" Background="#FF13D61C" Click="btn_unloader_Click" RenderTransformOrigin="0.499,0.563" />
-            <Button x:Name="btn_view_unloaders" Content="View Unloaders" HorizontalAlignment="Left" Margin="25,359,0,0" VerticalAlignment="Top" Width="136" Height="46" Background="#FF0FC9B8" Click="btn_view_unloaders_Click" RenderTransformOrigin="0.435,-0.649" />
-            <Button x:Name="btn_rmv_unloaders" Content="Remove Unloaders" HorizontalAlignment="Left" Margin="434,359,0,0" VerticalAlignment="Top" Width="136" Height="46" Background="#FFB80000" Click="btn_rmv_unloaders_Click" />
+            <Button x:Name="btn_unloader" Content="Add Unloader" HorizontalAlignment="Left" Margin="435,10,0,0" VerticalAlignment="Top" Width="165" Height="46" Click="btn_unloader_Click" RenderTransformOrigin="0.499,0.563" />
+            <Button x:Name="btn_view_unloaders" Content="Get Unloader" HorizontalAlignment="Left" Margin="265,10,0,0" VerticalAlignment="Top" Width="164" Height="46" Click="btn_view_unloaders_Click" RenderTransformOrigin="0.435,-0.649" />
+            <Button x:Name="btn_rmv_unloaders" Content="Delete Unloader" HorizontalAlignment="Left" Margin="606,10,0,0" VerticalAlignment="Top" Width="164" Height="46" Click="btn_rmv_unloaders_Click" />
 
             <Button x:Name="btn_deliveries_back" Content="Main Menu" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="30" Margin="10,10,0,0" Click="OpenMainMenu" />
             <Label x:Name="delivery_ID" Content="Delivery ID" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="25,63,0,0" Width="68" RenderTransformOrigin="0.743,0.522"/>
@@ -76,7 +76,7 @@
             <TextBox x:Name="quantity_delivered_textBox" TextWrapping="Wrap" Text="" Height="30" Width="100" Margin="160,228,520,222"/>
             <Label x:Name="employee_ID" Content="Employee ID" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="25,293,0,0" Width="113" Height="30"/>
             <TextBox x:Name="Employee_ID_textBox" TextWrapping="Wrap" Text="" Height="30" Width="100" Margin="160,293,520,157"/>
-            <DataGrid x:Name="delivery_dataGrid" HorizontalAlignment="Left" Height="334" Margin="303,10,0,0" VerticalAlignment="Top" Width="467"/>
+            <DataGrid x:Name="delivery_dataGrid" HorizontalAlignment="Left" Height="333" Margin="265,61,0,0" VerticalAlignment="Top" Width="505" IsReadOnly="True"/>
         </Grid>
         <Grid x:Name="menu_animals" Margin="10" Visibility="Hidden">
             <Button x:Name="btn_animals_back" Content="Main Menu" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Height="30" Margin="10,10,0,0" Click="OpenMainMenu" />
@@ -204,7 +204,7 @@
             <TextBox x:Name="txt_transID" HorizontalAlignment="Left" Height="23" Margin="10,73,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="189"/>
             <TextBox x:Name="txt_empID" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="189" Margin="10,123,0,0"/>
             <TextBox x:Name="txt_date" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="189" Margin="10,169,0,0"/>
-            <TextBox x:Name="txt_trans_amount" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="189" Margin="10,265,0,0" TextChanged="txt_trans_amount_TextChanged"/>
+            <TextBox x:Name="txt_trans_amount" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="189" Margin="10,265,0,0"/>
             <ComboBox x:Name="combo_payMethod" HorizontalAlignment="Left" Height="23" Margin="10,219,0,0" VerticalAlignment="Top" Width="189"  MaxDropDownHeight="80">
                 <ComboBoxItem Content="Cash"/>
                 <ComboBoxItem Content="Credit"/>
