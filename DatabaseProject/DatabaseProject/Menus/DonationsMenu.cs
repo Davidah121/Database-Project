@@ -314,11 +314,11 @@ namespace DatabaseProject
 
             if (!string.IsNullOrWhiteSpace(textbox_donation_id.Text) && reduced)
             {
-                query = $"SELECT donation_id, amount, Donation.donor_id, first_name, last_name, email FROM Donation left join Donor on Donation.donor_id = Donor.donor_id WHERE donation_id = @ID;";
+                query = $"SELECT d.donation_id, amount, animal_id, habitat_id, d.donor_id FROM Donation as d left join Animal_Adoption as a on d.donation_id = a.donation_id left join Habitat_Donation as h on d.donation_id = h.donation_id WHERE donation_id = @ID;";
             }
             else
             {
-                query = $"SELECT donation_id, amount, Donation.donor_id, first_name, last_name, email FROM Donation left join Donor on Donation.donor_id = Donor.donor_id;";
+                query = $"SELECT d.donation_id, amount, animal_id, habitat_id, d.donor_id FROM Donation as d left join Animal_Adoption as a on d.donation_id = a.donation_id left join Habitat_Donation as h on d.donation_id = h.donation_id;";
             }
 
             DataTable table = Database.Query(query, ("@ID", DonationID));
